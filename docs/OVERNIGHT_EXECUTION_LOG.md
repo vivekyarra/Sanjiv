@@ -56,7 +56,7 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 - Data classification: ISPRL public site-capacity factual metadata is `OBSERVED`/`CACHED`; current fill is absent and `UNKNOWN`. PPAC-shaped operating values, UN Comtrade-shaped supplier allocations, routes, grade properties, and refinery limits are CC0 `SYNTHETIC_FIXTURE` inputs classified `ASSUMPTION`, never live, and expire 2027-07-20. No upstream raw publication is bundled.
 - Assumptions: demo refinery capacities/limits, supplier volumes, route capacities/transit/distance, grade properties, and topology are visible, expiring fixture assumptions. Compatibility configuration component is a visible versioned calibration.
 - Incomplete items and risks: no live PPAC/Comtrade acquisition is claimed; official endpoint/licensing verification remains required before observed imports. Browser screenshots are deferred to the Phase 9 Playwright gate. npm continues to report two pre-existing moderate advisories; no forced/breaking fix was applied.
-- Commit SHA: pending.
+- Phase commit: `94a51f8991c8cb2d4fcaaa0e8dd690c57bd44fcc` (`feat(phase-2): add India energy network digital twin`), pushed to origin.
 
 ## Phase 3 - Scenario compiler and impact simulator
 
@@ -88,6 +88,6 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 
 ## Final pull request and CI
 
-- Pull request: pending Phase 2 checkpoint.
-- CI status: not started.
+- Pull request: draft [#2](https://github.com/vivekyarra/Sanjiv/pull/2) against `main`.
+- CI status after Phase 2 push: two `verify` runs in progress (branch push and pull-request event).
 - Ready for review: no.
