@@ -89,5 +89,5 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 ## Final pull request and CI
 
 - Pull request: draft [#2](https://github.com/vivekyarra/Sanjiv/pull/2) against `main`.
-- CI status after Phase 2 push: two `verify` runs in progress (branch push and pull-request event).
+- CI status after Phase 2 push: the first remote run exposed a stale hard-coded `20260720_0002` head assertion. The migration itself succeeded; CI configuration was corrected to assert `20260720_0003` while preserving the full downgrade to `0001`. Replacement runs are pending.
 - Ready for review: no.
