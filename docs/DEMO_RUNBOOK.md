@@ -10,7 +10,7 @@
 
 ## Phase 1 demonstration path
 
-1. Start PostgreSQL, upgrade migrations, then start the API and web commands from `docs/PHASE_1_LIVE_MARITIME_WATCH.md`.
+1. Set `SANJIV_REPLAY_SPEED=1`, start PostgreSQL, upgrade migrations, then start the web and API commands from `docs/PHASE_1_LIVE_MARITIME_WATCH.md` close together so the 70-second fixture movement is visible.
 2. Open `http://localhost:3000` on Live Maritime Watch.
 3. Point to connection state, source health, last update, and freshness before interpreting a marker.
 4. With no AISStream key, show the persistent `REPLAY — NOT LIVE DATA` banner and explain `AISSTREAM_NOT_CONFIGURED`. State that the dataset is a synthetic fixture with fictional vessels.

@@ -23,7 +23,7 @@ In another terminal:
 npm run dev:web
 ```
 
-Open `http://localhost:3000`. With `AISSTREAM_API_KEY` empty, the API transitions to replay automatically and the yellow `REPLAY — NOT LIVE DATA` banner must remain visible. `SANJIV_REPLAY_SPEED=20` means twenty times the original fixture interval; set `SANJIV_REPLAY_LOOP=true` only for a looping demo. Replay speed changes delivery timing, never the source timestamps.
+Open `http://localhost:3000`. With `AISSTREAM_API_KEY` empty, the API transitions to replay automatically and the yellow `REPLAY — NOT LIVE DATA` banner must remain visible. `SANJIV_REPLAY_SPEED=20` means twenty times the original fixture interval; use `SANJIV_REPLAY_SPEED=1` for a visible 70-second walkthrough. Replay speed changes delivery timing, never the source timestamps. Loop mode is intended for adapter endurance checks: deterministic record IDs are correctly deduplicated after the first persisted pass, so it does not repeat the visual animation.
 
 ## Optional AISStream operation
 
