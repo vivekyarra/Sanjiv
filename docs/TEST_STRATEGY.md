@@ -1,0 +1,43 @@
+# Sanjiv Test Strategy
+
+Tests must prove truth handling and physical/solver invariants, not only endpoint success. Fixed inputs use fixed seeds, frozen clocks, canonical units, and versioned golden files.
+
+## Test layers
+
+- Unit/property tests: Pydantic validation, normalization, geometry, freshness, formulas, claim rules, and solver invariants.
+- Contract tests: source payload fixtures, OpenAPI snapshots, generated TypeScript drift, error shapes, and WebSocket schemas.
+- Integration tests: PostgreSQL/PostGIS/TimescaleDB, Redis, MinIO, migrations, worker outbox, replay, API, and HiGHS.
+- End-to-end tests: browser workflow from map mode through scenario confirmation, plans, evidence, and approval.
+- Non-functional tests: latency, vessel/map load, source failures, security, recovery, and reproducibility.
+
+## Required cases
+
+| Area | Minimum assertions |
+|---|---|
+| Coordinates | Accept boundary values; reject NaN, latitude outside ±90, longitude outside ±180; preserve WGS84 order. |
+| Timestamp ordering | Reject effective after fetched or fetched after computed; handle equal times and timezone normalization. |
+| AIS deduplication | Duplicate provider ID and duplicate vessel/time/position are idempotent; legitimate same-time corrections are versioned. |
+| Geofence intersection | Crossing, tangent, boundary, dateline, and no-intersection cases; known chokepoint fixtures. |
+| Source freshness | Cadence-specific boundary, stale transition, unavailable health, cache age, and replay status. |
+| Sanctions matching | Exact IMO/MMSI, aliases, normalized names, fuzzy review threshold, false positives, and source version. |
+| Inventory mass balance | Residual within tolerance for every site/time; no hidden creation, loss, or negative stock. |
+| Closed route | 100% capacity loss forces zero flow; alternative edge must be explicit. |
+| Refinery capacity | Throughput never exceeds effective capacity; outages and interval conversion respected. |
+| Reserve floor | Draw never exceeds stock/rate or breaches policy floor; transit delay conserved. |
+| Optimiser feasibility | Independent checker reports zero hard violations; infeasible inputs return diagnostics and no plan. |
+| Reproducibility | Same canonical inputs, versions, and seed yield the same allocations/objective within tolerance. |
+| Grade exclusion | Hard-incompatible or sanctioned grades have zero allocation despite lower cost. |
+| Claim blocking | Cargo ownership, charter availability, private inventory/contract/fill, and exact price claims are blocked without supplied evidence. |
+| Replay fallback | Mode switch is visible, acknowledged, audited, and uses original timestamps; replay is never `LIVE`. |
+| API failure | Timeouts, 429, malformed payloads, unavailable stores, duplicate idempotency keys, and partial commit rollback. |
+| LLM fallback | Invalid JSON, unknown asset, timeout, prompt injection, and no credential produce the structured form without running. |
+| Performance | Measure ingest-to-map p95, compile, simulation, optimisation, end-to-end latency, WebSocket loss, and map FPS under declared load. |
+
+Additional model properties: increasing a disruption cannot improve the paired no-action case absent an explicitly modeled side effect; initial inventory plus inflow equals processing plus ending inventory plus declared loss; landed-cost components reconcile; supplier/corridor concentration limits hold; uncertainty outputs retain seed and distributions; stability is invariant to action ordering.
+
+## Gates
+
+- Phase gate: all phase unit, integration, failure, and contract tests pass; no skipped critical invariant.
+- Decision release: zero unsupported definitive claims, zero hard solver violations, 100% evidence coverage for decision KPIs, and migrations upgrade/downgrade cleanly.
+- Performance numbers are labeled targets until produced by a stored benchmark report including hardware, dataset size, run ID, percentile, and timestamp.
+- Security gate: dependency and image scan, secret scan, authorization tests, upload limits, log-redaction test, and no browser-visible server keys.

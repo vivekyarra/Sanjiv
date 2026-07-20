@@ -1,0 +1,88 @@
+# Sanjiv Architecture
+
+## System context
+
+Sanjiv is a human-in-the-loop decision-intelligence system for national energy-supply resilience. Analysts observe sourced signals, compile a disruption, compare the no-action consequence with deterministic response plans, inspect evidence, and explicitly approve or reject a plan. External sources never call operational systems through Sanjiv, and Sanjiv does not place orders or release reserves.
+
+```text
+Official/public sources + user inputs
+                 |
+          adapters and validation
+                 v
+     evidence ledger + operational stores
+                 |
+ live twin -> scenario -> simulation -> procurement/reserve solvers
+                 |                         |
+                 +------ evidence audit ---+
+                              |
+                    command-center UI
+                              |
+                    human approval record
+```
+
+## Containers and components
+
+- **Web:** Next.js UI, MapLibre/deck.gl map, ECharts, REST queries, WebSocket updates, evidence drawer, and approval UI. It never holds source or LLM secrets.
+- **API modular monolith:** FastAPI modules for contracts, sources, evidence, maritime, twin, scenarios, simulation, procurement, reserves, risk, audit, replay, approvals, and exports. Modules communicate through typed application services, not internal HTTP.
+- **Workers:** `ingestion` for streaming sources, `refresh` for scheduled sources, and `compute` for simulation/optimisation jobs. All import the same domain modules as the API.
+- **PostgreSQL:** authoritative relational state. PostGIS stores geometry; TimescaleDB hypertables store vessel positions and time series.
+- **Redis:** cache, rate coordination, WebSocket fan-out, job progress, and short leases. It is not authoritative evidence storage.
+- **MinIO/S3:** immutable raw captures, replay segments, exported briefings, and large source artifacts. PostgreSQL stores hashes and metadata.
+
+## Data and execution flows
+
+### Ingestion and evidence ledger
+
+1. Scheduler or streaming worker checks adapter capability and circuit state.
+2. Adapter retrieves a payload with server-side credentials and records fetch metadata.
+3. Raw bytes are hashed and written immutably to object storage when licensing permits.
+4. Schema validation, normalization, deduplication, coordinate/time checks, and source-ID mapping run deterministically.
+5. One or more evidence records link the source record, raw hash, transformation, effective/fetch times, license, and truth class.
+6. Valid observations are committed with an outbox event; rejects are quarantined with a non-secret reason.
+7. The outbox publishes normalized updates to Redis after commit.
+
+### Live WebSocket
+
+The browser obtains an authenticated snapshot cursor over REST and opens `/ws/v1/operations?after=<cursor>`. The gateway emits versioned envelopes with monotonically increasing sequence IDs. The client applies deltas idempotently, detects gaps, and refetches a snapshot. Heartbeats carry server time, mode, and source health; reconnect uses bounded backoff. Replay and live events cannot share a mode session.
+
+### Digital twin
+
+Versioned suppliers, ports, chokepoints, routes, refineries, reserve sites, grades, and baseline flows form a directed NetworkX graph. A snapshot builder resolves one effective time, records every evidence/assumption dependency, validates units and connectivity, and produces a content-addressed immutable `TwinSnapshot`. Simulation and optimisation consume only a snapshot ID, never mutable “latest” tables.
+
+### Scenario execution
+
+1. Provider-neutral interpreter returns typed candidate JSON, or the user completes the structured form.
+2. Deterministic validation resolves canonical asset IDs, ranges, defaults, and visible assumptions.
+3. User confirms the scenario; the API freezes scenario and twin fingerprints.
+4. Compute worker runs no-action baseline, disrupted case, and requested uncertainty samples.
+5. Progress events stream over the scenario WebSocket.
+6. Results are persisted as metric envelopes and pass the evidence auditor before display.
+
+### Procurement optimisation
+
+The simulator produces time-indexed demand, arrivals, inventory, and affected capacities. Pyomo constructs the selected plan profile—lowest cost, balanced, or highest resilience—with the same hard constraints and different versioned objective weights. HiGHS returns status, variables, objective components, violations, and diagnostics. An independent checker recalculates feasibility and landed cost before persistence. Phase 4 treats reserve availability as a fixed policy input.
+
+### Reserve optimisation
+
+Phase 5 adds site/time/refinery release variables, connectivity, draw limits, minimum floors, replenishment, and future-vulnerability penalties. Procurement and reserve models coordinate through a single combined input snapshot and shared mass balance. Policy modes alter calibrated objective weights, never safety constraints.
+
+### Audit and explanation
+
+The evidence auditor verifies schema completeness, allowed truth transitions, evidence existence, freshness policy, assumption visibility, model versions, claim policy, and metric recomputation hashes. Failed metrics are blocked, not silently omitted. Narrative generation receives only audited structured results and evidence summaries. Every run, mode transition, edit, approval, export, and failure creates an append-only audit event.
+
+### Replay and fallback
+
+Recorded segments have signed/checksummed manifests, source attribution, capture times, and license/redaction metadata. Starting replay requires an explicit API command or acknowledged source-failure transition and creates a new mode session. The UI permanently shows `LIVE`, `REPLAY`, `FIXTURE`, or `CACHED`; timestamps do not advance to mimic live data. Returning to live requires a healthy-source check and another audited transition.
+
+## Security boundaries
+
+- Browser: untrusted input; no infrastructure, source, solver, or LLM credentials.
+- API: authentication, authorization, validation, rate limits, CSRF/origin policy, and approval enforcement.
+- Workers: least-privilege source and storage credentials; no interactive user session.
+- Data stores: private network only, separate roles, encrypted transport, restricted object buckets, backups, and retention policy.
+- External/user data: SSRF-safe adapters, size/type limits, malware scanning for uploads, license enforcement, and log redaction.
+- Solver/LLM: bounded resources and strict typed input/output; neither receives secrets or unnecessary raw private data.
+
+## Deployment topology
+
+Local and demo deployment uses Docker Compose: `web`, `api`, three worker processes, PostgreSQL with PostGIS/TimescaleDB, Redis, MinIO, and an optional reverse proxy/telemetry profile. Production begins with the same containers on a single managed host or small container service, managed databases/object storage where available, TLS termination, backups, and OpenTelemetry export. Scaling is vertical first, then worker replicas by measured queue latency. Kubernetes and domain microservices require an ADR backed by workload measurements.

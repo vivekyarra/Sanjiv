@@ -1,0 +1,71 @@
+# Sanjiv Data Contracts
+
+Canonical contracts are Pydantic v2 models exposed through OpenAPI and generated into TypeScript. IDs are UUIDs unless a stable external code is explicitly named. Timestamps are UTC RFC 3339. Geometries use WGS84/EPSG:4326 GeoJSON; longitude is `[-180,180]` and latitude `[-90,90]`.
+
+## Common types
+
+```json
+{
+  "value": 74.0,
+  "unit": "percent",
+  "truth_class": "MODELED",
+  "confidence": 0.77,
+  "evidence_ids": ["018f..."],
+  "source_refs": [{"source_id":"PPAC","record_id":"capacity-2025-04"}],
+  "effective_at": "2026-07-20T10:00:00Z",
+  "fetched_at": "2026-07-20T10:00:02Z",
+  "computed_at": "2026-07-20T10:00:04Z",
+  "freshness_status": "CURRENT",
+  "transformation": "scenario-engine.inventory_cover.v1",
+  "model_version": "impact-engine-1.0.0"
+}
+```
+
+- `TruthClass`: `OBSERVED | DERIVED | INFERRED | MODELED | ASSUMPTION`.
+- `FreshnessStatus`: `LIVE | RECENT | CURRENT | STALE | REPLAY | UNAVAILABLE`.
+- `DataMode`: `LIVE | CACHED | REPLAY | FIXTURE | USER_SUPPLIED`.
+- `Confidence`: decimal in `[0,1]`; it is evidence/model confidence, never probability unless a calibrated field explicitly says so.
+- `MetricEnvelope[T]`: fields shown above; timestamps are required and `effective_at <= fetched_at <= computed_at`. For direct observations, `computed_at` is normalization time and `transformation` names the normalizer.
+
+## Reference and operational entities
+
+| Entity | Required fields and constraints |
+|---|---|
+| `Vessel` | `id`, `mmsi` (9 digits), optional `imo`, names/aliases, ship type, flag, dimensions, sanctions summary, created/updated times. Ownership/cargo fields are absent unless user supplied. |
+| `VesselPosition` | `id`, `vessel_id`, source message ID, timestamp, point, SOG, COG, heading, navigation status, optional draught/destination/ETA, mode, evidence ID. Unique source+message ID; duplicate natural key is vessel+time+position. |
+| `Port` | `id`, code/name/country, point or polygon, draught metric, supported vessel classes, handling-capacity metric, source version. |
+| `Chokepoint` | `id`, name, polygon/crossing line, directional baseline metrics, nominal capacity metric, alternative route IDs. |
+| `Refinery` | `id`, name/operator, point, annual-capacity metric, complexity assumption, grade limits, connected port/route IDs, utilization limits. Private inventory is not a base field. |
+| `Supplier` | `id`, country/entity, load ports, export-capacity metric, available-grade IDs, sanctions state, availability truth class. |
+| `CrudeGrade` | `id`, name, origin, load ports, API gravity metric, sulfur metric, differential metric, vessel classes, sanctions state, version. |
+| `Route` | `id`, origin/destination, LineString, distance/travel-time/capacity/cost/risk/emissions metrics, chokepoint IDs, vessel/draught restrictions, availability multiplier. |
+| `ReserveSite` | `id`, name, point, public capacity metric, optional current-fill metric, minimum-floor assumption/policy, connected assets, delivery limits. Current fill must never default to observed. |
+
+## Intelligence, scenario, and plan entities
+
+| Entity | Required fields and constraints |
+|---|---|
+| `GeopoliticalEvent` | `id`, event type, title/summary, locations, effective interval, actor/entity references, source signal IDs, severity metric, confidence, status. Media records do not prove physical closure. |
+| `RiskEvent` | `id`, type, affected asset IDs, start/end, severity metric, evidence-confidence metric, completeness metric, contribution list, status, model version. Severity is not probability. |
+| `Scenario` | `id`, name, original text, typed event list, asset/commodity IDs, start, duration, horizon, reserve policy, uncertainty ranges, assumption IDs, validation status, creator, content hash. |
+| `ScenarioRun` | `id`, scenario/twin snapshot IDs and hashes, mode, model versions, seed, state, start/end/runtime, baseline/simulation IDs, failure, audit IDs. |
+| `SimulationOutput` | `id`, run/case, time grid, arrivals, inventory, throughput, shortage, delay, cost/risk/concentration/emissions metrics, uncertainty summary, invariant report. |
+| `ProcurementPlan` | `id`, run ID, `LOWEST_COST | BALANCED | HIGHEST_RESILIENCE`, solver metadata/status, objective components, actions, metrics, constraints report, rejected options, input hash, lifecycle state. |
+| `ReservePlan` | `id`, run/policy, site-time-refinery actions, remaining inventory/cover, replenishment guidance, objective components, constraints, solver metadata, lifecycle state. |
+
+## Governance entities
+
+| Entity | Required fields and constraints |
+|---|---|
+| `Assumption` | `id`, key, typed value/unit, rationale, source gap, owner, entered/approved times and actors, effective/expiry times, status, scenario scope, supersedes ID. Always `ASSUMPTION`. |
+| `EvidenceRecord` | `id`, source/record IDs, source URL, dataset/version, effective/fetched times, mode, truth class, raw hash/object reference, transformation/version, confidence, license, parent evidence IDs. Immutable. |
+| `SourceHealthRecord` | `id`, source ID, capability state, checked/last-success times, expected cadence, stale-after, lag, message/error counts, circuit state, mode, redacted error code. |
+| `AuditEvent` | `id`, timestamp, actor/service, action, resource type/ID, before/after hashes, reason, correlation/causation IDs, IP/session metadata policy, outcome. Append-only. |
+
+## Contract rules
+
+- Preserve raw source values separately from normalized values.
+- A derived/inferred/modeled metric references all material parent evidence or assumptions.
+- Evidence and audit records cannot be updated; corrections append superseding records.
+- Scenario and plan hashes use canonical JSON. A changed assumption creates a new run.
+- A plan cannot become `APPROVED` when audit status is failed, evidence is missing, solver status is not feasible/optimal, or the plan hash differs from the reviewed hash.
