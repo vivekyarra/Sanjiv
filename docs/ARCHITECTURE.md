@@ -53,6 +53,8 @@ The Phase 1 browser obtains a snapshot cursor over read-only REST and opens `/ws
 
 Versioned suppliers, ports, chokepoints, routes, refineries, reserve sites, grades, and baseline flows form a directed NetworkX graph. A snapshot builder resolves one effective time, records every evidence/assumption dependency, validates units and connectivity, and produces a content-addressed immutable `TwinSnapshot`. Simulation and optimisation consume only a snapshot ID, never mutable “latest” tables.
 
+Phase 2 implements this boundary in `sanjiv/twin`. PPAC-, ISPRL-, UN Comtrade-, and repository-shaped importers validate typed offline reference batches without making network calls. Canonical UUIDv5 identifiers are derived from stable domain IDs. A deterministic `MultiDiGraph` validates endpoints, supplier/reserve-to-refinery reachability, weak connectivity, route capacity, grade compatibility, and node/global mass balance before snapshot construction. The snapshot fingerprint covers ordered content, evidence, assumptions, compatibility, and the mass-balance report; the database migration rejects `UPDATE` and `DELETE` on stored snapshots. The current committed twin is an assumption-driven fixture except for cited ISPRL public capacity metadata and is never presented as live operational state.
+
 ### Scenario execution
 
 1. Provider-neutral interpreter returns typed candidate JSON, or the user completes the structured form.

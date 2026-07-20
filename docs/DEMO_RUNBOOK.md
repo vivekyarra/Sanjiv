@@ -37,6 +37,16 @@
 12. Show the measured signal-to-recommendation latency from the run record. If it exceeds 10 seconds, show the actual value and call 10 seconds a target.
 13. Ask for and run a second supported scenario. Unsupported assets produce a controlled refusal and supported choices, never invented data.
 
+## Phase 2 Digital Twin path
+
+1. Open `http://localhost:3000/digital-twin` and read the persistent assumption-driven, non-live banner before interpreting the graph.
+2. Show snapshot version and fingerprint, then the mass-balance card. The committed reference result is 250.0 ktonne/day supply, 250.0 ktonne/day demand, and 0.0 residual at `1e-6` tolerance.
+3. Select a supplier, load port, chokepoint, Indian port, refinery, and reserve site. For each, show its canonical ID, unit, truth class, confidence, evidence, and any expiring assumption.
+4. On a reserve site, show public capacity as `OBSERVED` and current fill as `UNKNOWN`. Do not infer available drawdown.
+5. Select a maritime/logistics edge and show capacity, transit time, distance, endpoints, and input provenance.
+6. Select a crude grade and compare its deterministic refinery-compatibility classes and component explanation. State that the committed grade properties and refinery operating limits are fixture assumptions.
+7. Open `/api/v1/twin/snapshots/current` and verify the UI version/fingerprint exactly match the API response.
+
 ## Failure branches
 
 - AIS fails: show interruption and age, then show the automatic audited replay transition, dataset classification, original interval, and persistent non-live banner.

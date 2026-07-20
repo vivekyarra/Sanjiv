@@ -35,6 +35,8 @@ Tests must prove truth handling and physical/solver invariants, not only endpoin
 
 Additional model properties: increasing a disruption cannot improve the paired no-action case absent an explicitly modeled side effect; initial inventory plus inflow equals processing plus ending inventory plus declared loss; landed-cost components reconcile; supplier/corridor concentration limits hold; uncertainty outputs retain seed and distributions; stability is invariant to action ordering.
 
+Phase 2 additionally fixes the snapshot twice and requires identical fingerprints/UUIDs; checks all graph endpoints and canonical-ID uniqueness; proves supplier, transit-node, refinery, and global mass balance; rejects route over-capacity and incompatible allocations; verifies all entity evidence/assumption links; asserts assumptions expire; keeps reserve fill unknown; contract-tests all four import boundaries; cycles migration `0002 -> 0003 -> 0002 -> 0003`; and asserts the UI exposes snapshot, truth, evidence, assumptions, compatibility, and non-live fixture labels.
+
 ## Gates
 
 - Phase gate: all phase unit, integration, failure, and contract tests pass; no skipped critical invariant.

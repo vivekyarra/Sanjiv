@@ -1,6 +1,18 @@
 {
   "components": {
     "schemas": {
+      "AssetKind": {
+        "enum": [
+          "SUPPLIER",
+          "LOAD_PORT",
+          "CHOKEPOINT",
+          "INDIAN_PORT",
+          "REFINERY",
+          "RESERVE_SITE"
+        ],
+        "title": "AssetKind",
+        "type": "string"
+      },
       "Assumption": {
         "additionalProperties": false,
         "properties": {
@@ -266,6 +278,78 @@
         "title": "AuditOutcome",
         "type": "string"
       },
+      "BaselineFlow": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "grade_id": {
+            "format": "uuid",
+            "title": "Grade Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "route_id": {
+            "format": "uuid",
+            "title": "Route Id",
+            "type": "string"
+          },
+          "supplier_id": {
+            "format": "uuid",
+            "title": "Supplier Id",
+            "type": "string"
+          },
+          "volume": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "id",
+          "route_id",
+          "supplier_id",
+          "grade_id",
+          "volume",
+          "evidence_ids"
+        ],
+        "title": "BaselineFlow",
+        "type": "object"
+      },
+      "Commodity": {
+        "enum": [
+          "CRUDE_OIL"
+        ],
+        "title": "Commodity",
+        "type": "string"
+      },
+      "CompatibilityClass": {
+        "enum": [
+          "PREFERRED",
+          "ACCEPTABLE",
+          "DIFFICULT",
+          "DISALLOWED"
+        ],
+        "title": "CompatibilityClass",
+        "type": "string"
+      },
       "ConnectionState": {
         "enum": [
           "CONNECTING",
@@ -275,6 +359,84 @@
         ],
         "title": "ConnectionState",
         "type": "string"
+      },
+      "CrudeGrade": {
+        "additionalProperties": false,
+        "properties": {
+          "api_gravity": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "canonical_id": {
+            "pattern": "^[a-z0-9][a-z0-9:_-]{2,127}$",
+            "title": "Canonical Id",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "load_port_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Load Port Ids",
+            "type": "array"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "origin_country_code": {
+            "maxLength": 2,
+            "minLength": 2,
+            "title": "Origin Country Code",
+            "type": "string"
+          },
+          "sanctions_state": {
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Sanctions State",
+            "type": "string"
+          },
+          "sulfur_pct": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "id",
+          "canonical_id",
+          "name",
+          "origin_country_code",
+          "load_port_ids",
+          "api_gravity",
+          "sulfur_pct",
+          "sanctions_state",
+          "evidence_ids"
+        ],
+        "title": "CrudeGrade",
+        "type": "object"
       },
       "DataMode": {
         "enum": [
@@ -678,6 +840,49 @@
         "title": "InferenceContribution",
         "type": "object"
       },
+      "MassBalanceReport": {
+        "additionalProperties": false,
+        "properties": {
+          "absolute_residual": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "conserved": {
+            "title": "Conserved",
+            "type": "boolean"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "node_residuals": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Node Residuals",
+            "type": "object"
+          },
+          "tolerance": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "total_demand": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "total_supply": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "total_supply",
+          "total_demand",
+          "absolute_residual",
+          "tolerance",
+          "conserved",
+          "node_residuals",
+          "model_version"
+        ],
+        "title": "MassBalanceReport",
+        "type": "object"
+      },
       "MetricEnvelope_float_": {
         "additionalProperties": false,
         "properties": {
@@ -1001,6 +1206,73 @@
         "title": "OperationsSnapshot",
         "type": "object"
       },
+      "RefineryCompatibility": {
+        "additionalProperties": false,
+        "properties": {
+          "allowed": {
+            "title": "Allowed",
+            "type": "boolean"
+          },
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/CompatibilityClass"
+          },
+          "component_scores": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Component Scores",
+            "type": "object"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "explanation": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Explanation",
+            "type": "string"
+          },
+          "grade_id": {
+            "format": "uuid",
+            "title": "Grade Id",
+            "type": "string"
+          },
+          "refinery_id": {
+            "format": "uuid",
+            "title": "Refinery Id",
+            "type": "string"
+          },
+          "score": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "grade_id",
+          "refinery_id",
+          "score",
+          "classification",
+          "allowed",
+          "component_scores",
+          "evidence_ids",
+          "explanation"
+        ],
+        "title": "RefineryCompatibility",
+        "type": "object"
+      },
       "SanctionsAssessment": {
         "additionalProperties": false,
         "properties": {
@@ -1209,6 +1481,310 @@
         ],
         "title": "TruthClass",
         "type": "string"
+      },
+      "TwinNode": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "attributes": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "title": "Attributes",
+            "type": "object"
+          },
+          "baseline_demand": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "baseline_supply": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "canonical_id": {
+            "pattern": "^[a-z0-9][a-z0-9:_-]{2,127}$",
+            "title": "Canonical Id",
+            "type": "string"
+          },
+          "capacity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "country_code": {
+            "maxLength": 2,
+            "minLength": 2,
+            "title": "Country Code",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/AssetKind"
+          },
+          "latitude": {
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Latitude",
+            "type": "number"
+          },
+          "longitude": {
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Longitude",
+            "type": "number"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "canonical_id",
+          "kind",
+          "name",
+          "country_code",
+          "latitude",
+          "longitude",
+          "evidence_ids"
+        ],
+        "title": "TwinNode",
+        "type": "object"
+      },
+      "TwinRoute": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "available": {
+            "default": true,
+            "title": "Available",
+            "type": "boolean"
+          },
+          "canonical_id": {
+            "pattern": "^[a-z0-9][a-z0-9:_-]{2,127}$",
+            "title": "Canonical Id",
+            "type": "string"
+          },
+          "capacity": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "chokepoint_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Chokepoint Ids",
+            "type": "array"
+          },
+          "commodity": {
+            "$ref": "#/components/schemas/Commodity",
+            "default": "CRUDE_OIL"
+          },
+          "destination_id": {
+            "format": "uuid",
+            "title": "Destination Id",
+            "type": "string"
+          },
+          "distance": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "origin_id": {
+            "format": "uuid",
+            "title": "Origin Id",
+            "type": "string"
+          },
+          "transit_time": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "id",
+          "canonical_id",
+          "origin_id",
+          "destination_id",
+          "capacity",
+          "transit_time",
+          "distance",
+          "evidence_ids"
+        ],
+        "title": "TwinRoute",
+        "type": "object"
+      },
+      "TwinSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "$ref": "#/components/schemas/Assumption"
+            },
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "baseline_flows": {
+            "items": {
+              "$ref": "#/components/schemas/BaselineFlow"
+            },
+            "minItems": 1,
+            "title": "Baseline Flows",
+            "type": "array"
+          },
+          "compatibility": {
+            "items": {
+              "$ref": "#/components/schemas/RefineryCompatibility"
+            },
+            "minItems": 1,
+            "title": "Compatibility",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "evidence_records": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceRecord"
+            },
+            "minItems": 1,
+            "title": "Evidence Records",
+            "type": "array"
+          },
+          "fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "grades": {
+            "items": {
+              "$ref": "#/components/schemas/CrudeGrade"
+            },
+            "maxItems": 20,
+            "minItems": 12,
+            "title": "Grades",
+            "type": "array"
+          },
+          "mass_balance": {
+            "$ref": "#/components/schemas/MassBalanceReport"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/TwinNode"
+            },
+            "minItems": 1,
+            "title": "Nodes",
+            "type": "array"
+          },
+          "routes": {
+            "items": {
+              "$ref": "#/components/schemas/TwinRoute"
+            },
+            "minItems": 1,
+            "title": "Routes",
+            "type": "array"
+          },
+          "snapshot_id": {
+            "format": "uuid",
+            "title": "Snapshot Id",
+            "type": "string"
+          },
+          "version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "snapshot_id",
+          "version",
+          "effective_at",
+          "created_at",
+          "fingerprint",
+          "nodes",
+          "routes",
+          "grades",
+          "compatibility",
+          "baseline_flows",
+          "evidence_records",
+          "mass_balance"
+        ],
+        "title": "TwinSnapshot",
+        "type": "object"
       },
       "ValidationError": {
         "properties": {
@@ -1726,6 +2302,91 @@
         "summary": "Source Health",
         "tags": [
           "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/twin/network": {
+      "get": {
+        "operationId": "network_api_v1_twin_network_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwinSnapshot"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Network",
+        "tags": [
+          "digital-twin"
+        ]
+      }
+    },
+    "/api/v1/twin/snapshots/current": {
+      "get": {
+        "operationId": "current_snapshot_api_v1_twin_snapshots_current_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwinSnapshot"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Current Snapshot",
+        "tags": [
+          "digital-twin"
+        ]
+      }
+    },
+    "/api/v1/twin/snapshots/{snapshot_id}": {
+      "get": {
+        "operationId": "snapshot_by_id_api_v1_twin_snapshots__snapshot_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "snapshot_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Snapshot Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwinSnapshot"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Snapshot By Id",
+        "tags": [
+          "digital-twin"
         ]
       }
     },

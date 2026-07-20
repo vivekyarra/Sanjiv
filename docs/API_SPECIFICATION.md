@@ -20,6 +20,16 @@ Phase 1 snapshots return `operating_mode`, `mode_explanation`, `connection_state
 
 WebSocket messages use `{schema_version, sequence, event_type, occurred_at, operating_mode, payload}`. Event types are `VESSEL_POSITION | GEOFENCE_EVENT | MODE_TRANSITION | HEARTBEAT | RESYNC_REQUIRED | ERROR`. Sequence is monotonic within an API process. On reconnect the client sends its last cursor; retained events are delivered in order. A cursor outside retention or a bounded-queue overflow yields `RESYNC_REQUIRED` with the snapshot URL. An invalid cursor closes with policy code `1008`. Idle connections receive heartbeats at `SANJIV_WEBSOCKET_HEARTBEAT_SECONDS`.
 
+## Digital twin
+
+```text
+GET /api/v1/twin/network
+GET /api/v1/twin/snapshots/current
+GET /api/v1/twin/snapshots/{snapshot_id}
+```
+
+These read-only endpoints expose the same immutable `TwinSnapshot` contract. The response includes canonical nodes and routes, 12-20 crude grades, compatibility, baseline flows, evidence and assumptions, version/fingerprint, and the mass-balance report. `current` resolves the configured frozen reference snapshot; scenario execution in Phase 3 must persist and submit its exact snapshot ID rather than resolving mutable latest state. Unknown UUIDs return `404`.
+
 ## Scenarios and computation
 
 ```text

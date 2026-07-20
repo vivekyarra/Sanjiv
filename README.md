@@ -5,7 +5,7 @@
 
 Sanjiv is a decision-intelligence system for observing threats to India’s energy-supply corridors, compiling validated disruption scenarios, simulating no-action consequences, and producing deterministic, evidence-backed procurement and strategic-reserve response plans.
 
-The repository includes **Phase 0** and the **Phase 1 Live Maritime Watch** vertical slice. It runs from a deterministic, explicitly synthetic replay fixture without credentials and can use AISStream when a key is supplied. Energy-network modelling, scenarios, simulation, and optimisation remain intentionally unimplemented.
+The repository includes the Phase 0 truth foundation, Phase 1 Live Maritime Watch, and the Phase 2 India energy-network digital twin. Both operational screens work without credentials: maritime replay is explicitly synthetic, and the energy twin is an assumption-driven, content-addressed reference snapshot with cited ISPRL public capacity metadata. Scenario execution, simulation, and optimisation remain gated behind later phases.
 
 ## Principles
 
@@ -41,7 +41,7 @@ In a second terminal:
 npm run dev:web
 ```
 
-The Live Maritime Watch runs at `http://localhost:3000`; API documentation is at `http://localhost:8000/docs`. With no `AISSTREAM_API_KEY`, the service automatically records an audited transition to `REPLAY`, and the UI displays a persistent `REPLAY — NOT LIVE DATA` banner.
+The Live Maritime Watch runs at `http://localhost:3000`, the Digital Twin at `http://localhost:3000/digital-twin`, and API documentation at `http://localhost:8000/docs`. With no `AISSTREAM_API_KEY`, the service automatically records an audited transition to `REPLAY`, and the UI displays a persistent `REPLAY — NOT LIVE DATA` banner. The Digital Twin separately displays `ASSUMPTION-DRIVEN REFERENCE TWIN — NOT LIVE OPERATIONAL DATA` and exposes every source/assumption.
 
 For optional live operation, create an AISStream account, set `AISSTREAM_API_KEY` only in `.env`, and leave `SANJIV_AIS_ENABLED=true`. Never place the key in browser variables or committed files. See [the Phase 1 operator guide](docs/PHASE_1_LIVE_MARITIME_WATCH.md) for replay controls, database validation, troubleshooting, and data-use limits.
 

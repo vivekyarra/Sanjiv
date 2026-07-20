@@ -53,3 +53,15 @@
 **Decision:** Phase 1 renders its bounded vessel, track, and polygon fixture set with MapLibre-native GeoJSON layers. deck.gl is reserved for a measured scale threshold.
 
 **Why:** Native layers meet the current operational slice with fewer runtime dependencies. **Rejected:** paid map SDKs and adding a second renderer before browser profiling shows a need.
+
+## ADR-010: Phases 2-9 supersede the stale Phase 0 immediate-task note
+
+**Decision:** The dependency-ordered Phase 2 through Phase 9 sections of `IMPLEMENTATION_PLAN.md` control the current integration program. The old final sentence limiting work to Phase 0 is historical drift: Phase 0 and Phase 1 are already merged into `main`, and the explicitly authorized Phases 2-9 program supersedes that sentence.
+
+**Why:** Continuing to apply an already-completed Phase 0-only instruction would contradict repository history, the merged Phase 1 status, and the current task without improving safety. All existing truth, evidence, approval, testing, licensing, and failure gates remain binding. **Rejected:** silently deleting the conflict or weakening later phase gates.
+
+## ADR-011: Phase 2 offline reference twin and assumption boundary
+
+**Decision:** Phase 2 ships a deterministic, content-addressed reference twin through provider-neutral PPAC, ISPRL, UN Comtrade, and repository-fixture import interfaces. ISPRL public site capacity is represented as sourced `OBSERVED` factual metadata; current reserve fill remains absent and `UNKNOWN`. Supplier flows, operating capacities, routes, refinery limits, grade properties, and baseline allocations in the committed demo are expiring `ASSUMPTION` records from CC0 project fixtures. No upstream raw publication is redistributed.
+
+**Why:** CI and the primary demo must be credential-free and legally safe, while sparse or non-public operational values must not be fabricated as observations. The fixture exercises the same typed import boundary as future verified source payloads, preserves provenance, and makes replacement explicit. **Rejected:** scraping undocumented endpoints, bundling data with unclear redistribution rights, treating public reserve capacity as fill, or labelling calibrated demo values live.

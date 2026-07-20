@@ -22,6 +22,7 @@ from sanjiv.maritime.routes import router as maritime_router
 from sanjiv.maritime.routes import websocket_router
 from sanjiv.maritime.service import MaritimeWatchService
 from sanjiv.settings import Settings, get_settings
+from sanjiv.twin.routes import router as twin_router
 
 
 class HealthResponse(BaseModel):
@@ -113,6 +114,7 @@ def create_app(
     )
     application.include_router(maritime_router)
     application.include_router(websocket_router)
+    application.include_router(twin_router)
 
     @application.get("/health/live", response_model=HealthResponse, tags=["health"])
     async def liveness() -> HealthResponse:

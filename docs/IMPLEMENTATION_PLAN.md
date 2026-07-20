@@ -29,6 +29,7 @@ Phases are dependency ordered. Complexity is relative: S/M/L/XL. A phase closes 
 
 ## Phase 2 — India energy network digital twin (L)
 
+- **Status (2026-07-20):** Implemented on `feature/phases-2-9-overnight-integration`; phase gate results and checkpoint are recorded in `OVERNIGHT_EXECUTION_LOG.md`.
 - **Goal:** versioned, mass-conserving crude-supply graph.
 - **Deliverables/modules:** `twin/{assets,graph,snapshots}`, PPAC/ISPRL/Comtrade/reference importers, suppliers, ports, refineries, reserve sites, routes, 12–20 sourced crude grades, compatibility matrix, baseline flows, network UI.
 - **Dependencies/order:** reference adapter imports → canonical IDs → graph/connectivity → compatibility assumptions → baseline calibration → immutable snapshot.
@@ -115,6 +116,6 @@ Phases are dependency ordered. Complexity is relative: S/M/L/XL. A phase closes 
 - **Risks:** demo network/hardware variance and late integration. Freeze a release candidate and retain explicit recorded-real replay.
 - **Parallel:** security, performance, browser automation, and runbook rehearsal on the same release candidate.
 
-## Immediate implementation task
+## Current implementation program
 
-Implement only Phase 0’s repository foundation and canonical truth-contract vertical slice: workspace/manifests, service shells, Compose dependencies, truth/freshness/metric/evidence/source-health/assumption/audit contracts, first migration, generated TypeScript copy with drift check, health/readiness, and tests. Do not add AIS, maps, scenario execution, simulation, optimisation, or other Phase 1+ behavior.
+Phase 0 and Phase 1 are merged. The active program implements Phases 2-9 in dependency order with a hard full-repository gate and pushed checkpoint after every phase. No later phase may start while the preceding gate is failing.

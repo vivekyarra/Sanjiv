@@ -89,6 +89,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/twin/network": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Network */
+        get: operations["network_api_v1_twin_network_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/twin/snapshots/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Current Snapshot */
+        get: operations["current_snapshot_api_v1_twin_snapshots_current_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/twin/snapshots/{snapshot_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Snapshot By Id */
+        get: operations["snapshot_by_id_api_v1_twin_snapshots__snapshot_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/vessels/{vessel_id}": {
         parameters: {
             query?: never;
@@ -161,6 +212,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * AssetKind
+         * @enum {string}
+         */
+        AssetKind: "SUPPLIER" | "LOAD_PORT" | "CHOKEPOINT" | "INDIAN_PORT" | "REFINERY" | "RESERVE_SITE";
         /** Assumption */
         Assumption: {
             /** Approved At */
@@ -252,11 +308,73 @@ export interface components {
          * @enum {string}
          */
         AuditOutcome: "SUCCEEDED" | "FAILED" | "BLOCKED";
+        /** BaselineFlow */
+        BaselineFlow: {
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Grade Id
+             * Format: uuid
+             */
+            grade_id: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Route Id
+             * Format: uuid
+             */
+            route_id: string;
+            /**
+             * Supplier Id
+             * Format: uuid
+             */
+            supplier_id: string;
+            volume: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /**
+         * Commodity
+         * @enum {string}
+         */
+        Commodity: "CRUDE_OIL";
+        /**
+         * CompatibilityClass
+         * @enum {string}
+         */
+        CompatibilityClass: "PREFERRED" | "ACCEPTABLE" | "DIFFICULT" | "DISALLOWED";
         /**
          * ConnectionState
          * @enum {string}
          */
         ConnectionState: "CONNECTING" | "CONNECTED" | "DISCONNECTED" | "DEGRADED";
+        /** CrudeGrade */
+        CrudeGrade: {
+            api_gravity: components["schemas"]["MetricEnvelope_float_"];
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            /** Canonical Id */
+            canonical_id: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Load Port Ids */
+            load_port_ids: string[];
+            /** Name */
+            name: string;
+            /** Origin Country Code */
+            origin_country_code: string;
+            /** Sanctions State */
+            sanctions_state: string;
+            sulfur_pct: components["schemas"]["MetricEnvelope_float_"];
+        };
         /**
          * DataMode
          * @enum {string}
@@ -416,6 +534,21 @@ export interface components {
             /** Weight */
             weight: number;
         };
+        /** MassBalanceReport */
+        MassBalanceReport: {
+            absolute_residual: components["schemas"]["MetricEnvelope_float_"];
+            /** Conserved */
+            conserved: boolean;
+            /** Model Version */
+            model_version: string;
+            /** Node Residuals */
+            node_residuals: {
+                [key: string]: number;
+            };
+            tolerance: components["schemas"]["MetricEnvelope_float_"];
+            total_demand: components["schemas"]["MetricEnvelope_float_"];
+            total_supply: components["schemas"]["MetricEnvelope_float_"];
+        };
         /** MetricEnvelope[float] */
         MetricEnvelope_float_: {
             /**
@@ -543,6 +676,33 @@ export interface components {
             /** Vessels */
             vessels: components["schemas"]["VesselOperationalView"][];
         };
+        /** RefineryCompatibility */
+        RefineryCompatibility: {
+            /** Allowed */
+            allowed: boolean;
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            classification: components["schemas"]["CompatibilityClass"];
+            /** Component Scores */
+            component_scores: {
+                [key: string]: number;
+            };
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /** Explanation */
+            explanation: string;
+            /**
+             * Grade Id
+             * Format: uuid
+             */
+            grade_id: string;
+            /**
+             * Refinery Id
+             * Format: uuid
+             */
+            refinery_id: string;
+            score: components["schemas"]["MetricEnvelope_float_"];
+        };
         /** SanctionsAssessment */
         SanctionsAssessment: {
             /** Confidence */
@@ -619,6 +779,109 @@ export interface components {
          * @enum {string}
          */
         TruthClass: "OBSERVED" | "DERIVED" | "INFERRED" | "MODELED" | "ASSUMPTION";
+        /** TwinNode */
+        TwinNode: {
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            /** Attributes */
+            attributes?: {
+                [key: string]: string | number | boolean;
+            };
+            baseline_demand?: components["schemas"]["MetricEnvelope_float_"] | null;
+            baseline_supply?: components["schemas"]["MetricEnvelope_float_"] | null;
+            /** Canonical Id */
+            canonical_id: string;
+            capacity?: components["schemas"]["MetricEnvelope_float_"] | null;
+            /** Country Code */
+            country_code: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            kind: components["schemas"]["AssetKind"];
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /** Name */
+            name: string;
+        };
+        /** TwinRoute */
+        TwinRoute: {
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            /**
+             * Available
+             * @default true
+             */
+            available: boolean;
+            /** Canonical Id */
+            canonical_id: string;
+            capacity: components["schemas"]["MetricEnvelope_float_"];
+            /** Chokepoint Ids */
+            chokepoint_ids?: string[];
+            /** @default CRUDE_OIL */
+            commodity: components["schemas"]["Commodity"];
+            /**
+             * Destination Id
+             * Format: uuid
+             */
+            destination_id: string;
+            distance: components["schemas"]["MetricEnvelope_float_"];
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Origin Id
+             * Format: uuid
+             */
+            origin_id: string;
+            transit_time: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** TwinSnapshot */
+        TwinSnapshot: {
+            /** Assumptions */
+            assumptions?: components["schemas"]["Assumption"][];
+            /** Baseline Flows */
+            baseline_flows: components["schemas"]["BaselineFlow"][];
+            /** Compatibility */
+            compatibility: components["schemas"]["RefineryCompatibility"][];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /** Evidence Records */
+            evidence_records: components["schemas"]["EvidenceRecord"][];
+            /** Fingerprint */
+            fingerprint: string;
+            /** Grades */
+            grades: components["schemas"]["CrudeGrade"][];
+            mass_balance: components["schemas"]["MassBalanceReport"];
+            /** Nodes */
+            nodes: components["schemas"]["TwinNode"][];
+            /** Routes */
+            routes: components["schemas"]["TwinRoute"][];
+            /**
+             * Snapshot Id
+             * Format: uuid
+             */
+            snapshot_id: string;
+            /** Version */
+            version: string;
+        };
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -864,6 +1127,77 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SourceHealthRecord"][];
+                };
+            };
+        };
+    };
+    network_api_v1_twin_network_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinSnapshot"];
+                };
+            };
+        };
+    };
+    current_snapshot_api_v1_twin_snapshots_current_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinSnapshot"];
+                };
+            };
+        };
+    };
+    snapshot_by_id_api_v1_twin_snapshots__snapshot_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                snapshot_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinSnapshot"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

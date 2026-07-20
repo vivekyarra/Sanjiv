@@ -79,3 +79,12 @@ Canonical contracts are Pydantic v2 models exposed through OpenAPI and generated
 - Evidence and audit records cannot be updated; corrections append superseding records.
 - Scenario and plan hashes use canonical JSON. A changed assumption creates a new run.
 - A plan cannot become `APPROVED` when audit status is failed, evidence is missing, solver status is not feasible/optimal, or the plan hash differs from the reviewed hash.
+
+## Phase 2 digital-twin contracts
+
+- `TwinNode` uses a deterministic UUIDv5 plus a stable canonical ID and one of `SUPPLIER`, `LOAD_PORT`, `CHOKEPOINT`, `INDIAN_PORT`, `REFINERY`, or `RESERVE_SITE`. Coordinates are WGS84. Capacity, baseline supply, and baseline demand are complete metric envelopes when present.
+- `TwinRoute` names canonical endpoints, commodity, capacity, transit time, distance, chokepoint dependencies, availability, evidence, and assumptions. Unknown endpoints and duplicate routes are rejected.
+- `CrudeGrade` carries 12-20 catalogued grades with load-port IDs, enveloped API gravity and sulfur, sanctions-screening state, evidence, and assumptions.
+- `RefineryCompatibility` stores the deterministic component scores, enveloped weighted score, classification, hard `allowed` result, explanation, and complete dependencies.
+- `BaselineFlow` links supplier, grade, and route with `ktonne_per_day` volume and full provenance. The Phase 2 fixture conserves 250.0 ktonne/day of supply and demand with zero residual at the configured `1e-6 ktonne_per_day` tolerance.
+- `TwinSnapshot` contains the complete ordered graph, catalogue, compatibility matrix, flows, evidence, assumptions, and mass-balance report. Its SHA-256 fingerprint and UUIDv5 snapshot ID are recalculated on validation. A changed input produces a new identity; mutation is rejected in storage.

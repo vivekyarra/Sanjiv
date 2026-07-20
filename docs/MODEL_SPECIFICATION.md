@@ -28,6 +28,10 @@ A 100% loss gives multiplier zero and therefore zero flow. Alternative routes ar
 
 Grade/refinery compatibility is the weighted sum of normalized gravity, sulfur, configuration, and logistics components. **Calibration:** component weights and classification thresholds. A hard `allowed[g,r]` matrix is derived from sourced limits plus visible assumptions; `allowed=0` prevents flow regardless of the soft score.
 
+Phase 2 calibration uses `0.35 gravity + 0.35 sulfur + 0.15 configuration + 0.15 logistics`. Gravity and sulfur scores fall from one outside the visible assumed refinery range/tolerance; configuration is currently a visible `0.75` fixture assumption and logistics is one only for the connected reference network. Classification thresholds remain `PREFERRED >= 0.80`, `ACCEPTABLE >= 0.60`, `DIFFICULT >= 0.40`, and otherwise `DISALLOWED`. These are model parameters, not observed refinery operating limits.
+
+The baseline graph validator aggregates each supplier-grade allocation over every route in its explicit path. Supplier outflow equals declared baseline supply, every load port/chokepoint/Indian port has inflow equal to outflow, refinery inflow equals declared demand, and global supply equals demand within `1e-6 ktonne_per_day`. A route over capacity, disconnected supplier/reserve site, unknown endpoint, incompatible delivered grade, or non-zero residual blocks snapshot creation.
+
 ## India-bound confidence and corridor risk
 
 ```text
