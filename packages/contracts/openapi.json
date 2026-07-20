@@ -333,6 +333,31 @@
         "title": "BaselineFlow",
         "type": "object"
       },
+      "BaselineResult": {
+        "additionalProperties": false,
+        "properties": {
+          "refinery_throughput": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "shortfall": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "total_demand": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "total_supply": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "total_supply",
+          "total_demand",
+          "refinery_throughput",
+          "shortfall"
+        ],
+        "title": "BaselineResult",
+        "type": "object"
+      },
       "Commodity": {
         "enum": [
           "CRUDE_OIL"
@@ -349,6 +374,120 @@
         ],
         "title": "CompatibilityClass",
         "type": "string"
+      },
+      "CompileScenarioRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/ScenarioCompileMode",
+            "default": "AUTO"
+          },
+          "structured": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StructuredScenarioInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "text": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "twin_snapshot_id": {
+            "format": "uuid",
+            "title": "Twin Snapshot Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "twin_snapshot_id"
+        ],
+        "title": "CompileScenarioRequest",
+        "type": "object"
+      },
+      "ConfirmScenarioRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "confirming_identity": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Confirming Identity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "confirming_identity"
+        ],
+        "title": "ConfirmScenarioRequest",
+        "type": "object"
+      },
+      "ConfirmedScenario": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_event": {
+            "$ref": "#/components/schemas/AuditEvent"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/ScenarioCandidate"
+          },
+          "confirmed_at": {
+            "format": "date-time",
+            "title": "Confirmed At",
+            "type": "string"
+          },
+          "confirmed_by": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Confirmed By",
+            "type": "string"
+          },
+          "lifecycle": {
+            "const": "CONFIRMED",
+            "default": "CONFIRMED",
+            "title": "Lifecycle",
+            "type": "string"
+          },
+          "scenario_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Scenario Fingerprint",
+            "type": "string"
+          },
+          "scenario_id": {
+            "format": "uuid",
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "twin_snapshot": {
+            "$ref": "#/components/schemas/TwinSnapshotReference"
+          },
+          "validation": {
+            "$ref": "#/components/schemas/ScenarioValidationResult"
+          }
+        },
+        "required": [
+          "scenario_id",
+          "scenario_fingerprint",
+          "twin_snapshot",
+          "candidate",
+          "validation",
+          "confirmed_by",
+          "confirmed_at",
+          "audit_event"
+        ],
+        "title": "ConfirmedScenario",
+        "type": "object"
       },
       "ConnectionState": {
         "enum": [
@@ -447,6 +586,159 @@
           "USER_SUPPLIED"
         ],
         "title": "DataMode",
+        "type": "string"
+      },
+      "DisruptedResult": {
+        "additionalProperties": false,
+        "properties": {
+          "cumulative_shortfall": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "refinery_throughput": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "shortfall": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "total_demand": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "total_supply": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "total_supply",
+          "total_demand",
+          "refinery_throughput",
+          "shortfall",
+          "cumulative_shortfall"
+        ],
+        "title": "DisruptedResult",
+        "type": "object"
+      },
+      "DisruptionEffect": {
+        "additionalProperties": false,
+        "properties": {
+          "capacity_reduction": {
+            "$ref": "#/components/schemas/PercentageQuantity"
+          },
+          "disruption_type": {
+            "$ref": "#/components/schemas/DisruptionType"
+          },
+          "target": {
+            "$ref": "#/components/schemas/DisruptionTarget"
+          }
+        },
+        "required": [
+          "disruption_type",
+          "target",
+          "capacity_reduction"
+        ],
+        "title": "DisruptionEffect",
+        "type": "object"
+      },
+      "DisruptionTarget": {
+        "additionalProperties": false,
+        "properties": {
+          "asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Asset Id"
+          },
+          "canonical_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Canonical Id"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "requested_identifier": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Requested Identifier",
+            "type": "string"
+          },
+          "target_type": {
+            "$ref": "#/components/schemas/DisruptionTargetType"
+          }
+        },
+        "required": [
+          "target_type",
+          "requested_identifier"
+        ],
+        "title": "DisruptionTarget",
+        "type": "object"
+      },
+      "DisruptionTargetType": {
+        "enum": [
+          "CHOKEPOINT",
+          "ROUTE",
+          "SUPPLIER",
+          "PORT",
+          "REFINERY"
+        ],
+        "title": "DisruptionTargetType",
+        "type": "string"
+      },
+      "DisruptionType": {
+        "enum": [
+          "CHOKEPOINT_CLOSURE",
+          "CHOKEPOINT_CAPACITY_REDUCTION",
+          "MARITIME_ROUTE_CAPACITY_REDUCTION",
+          "SUPPLIER_VOLUME_REDUCTION",
+          "PORT_DISRUPTION",
+          "REFINERY_THROUGHPUT_DISRUPTION"
+        ],
+        "title": "DisruptionType",
+        "type": "string"
+      },
+      "DurationQuantity": {
+        "additionalProperties": false,
+        "properties": {
+          "unit": {
+            "$ref": "#/components/schemas/DurationUnit"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value",
+          "unit"
+        ],
+        "title": "DurationQuantity",
+        "type": "object"
+      },
+      "DurationUnit": {
+        "enum": [
+          "hour",
+          "day"
+        ],
+        "title": "DurationUnit",
         "type": "string"
       },
       "EvidenceRecord": {
@@ -569,6 +861,55 @@
           "license"
         ],
         "title": "EvidenceRecord",
+        "type": "object"
+      },
+      "FlowResult": {
+        "additionalProperties": false,
+        "properties": {
+          "affected": {
+            "title": "Affected",
+            "type": "boolean"
+          },
+          "baseline_flow": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "disrupted_capacity": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "disrupted_flow": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "grade_id": {
+            "format": "uuid",
+            "title": "Grade Id",
+            "type": "string"
+          },
+          "route_canonical_id": {
+            "title": "Route Canonical Id",
+            "type": "string"
+          },
+          "route_id": {
+            "format": "uuid",
+            "title": "Route Id",
+            "type": "string"
+          },
+          "supplier_id": {
+            "format": "uuid",
+            "title": "Supplier Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route_id",
+          "route_canonical_id",
+          "supplier_id",
+          "grade_id",
+          "baseline_flow",
+          "disrupted_flow",
+          "disrupted_capacity",
+          "affected"
+        ],
+        "title": "FlowResult",
         "type": "object"
       },
       "FoundationContractSample": {
@@ -750,8 +1091,8 @@
             "type": "string"
           },
           "version": {
-            "const": "0.2.0",
-            "default": "0.2.0",
+            "const": "0.3.0",
+            "default": "0.3.0",
             "title": "Version",
             "type": "string"
           }
@@ -838,6 +1179,155 @@
           "explanation"
         ],
         "title": "InferenceContribution",
+        "type": "object"
+      },
+      "InterpretationResult": {
+        "additionalProperties": false,
+        "properties": {
+          "error_code": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "provider": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Provider",
+            "type": "string"
+          },
+          "source_mode": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ScenarioSourceMode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/InterpreterStatus"
+          },
+          "timeout_seconds": {
+            "exclusiveMinimum": 0.0,
+            "maximum": 60.0,
+            "title": "Timeout Seconds",
+            "type": "number"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "status",
+          "provider",
+          "timeout_seconds"
+        ],
+        "title": "InterpretationResult",
+        "type": "object"
+      },
+      "InterpreterStatus": {
+        "enum": [
+          "SUCCEEDED",
+          "FAILED",
+          "PROVIDER_UNAVAILABLE",
+          "TIMED_OUT"
+        ],
+        "title": "InterpreterStatus",
+        "type": "string"
+      },
+      "InventoryPoint": {
+        "additionalProperties": false,
+        "properties": {
+          "ending_inventory": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "starts_at": {
+            "format": "date-time",
+            "title": "Starts At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "starts_at",
+          "ending_inventory"
+        ],
+        "title": "InventoryPoint",
+        "type": "object"
+      },
+      "InventoryTrajectory": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_dependent": {
+            "const": true,
+            "default": true,
+            "title": "Assumption Dependent",
+            "type": "boolean"
+          },
+          "assumption_id": {
+            "format": "uuid",
+            "title": "Assumption Id",
+            "type": "string"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/InventoryPoint"
+            },
+            "title": "Points",
+            "type": "array"
+          },
+          "refinery_canonical_id": {
+            "title": "Refinery Canonical Id",
+            "type": "string"
+          },
+          "refinery_id": {
+            "format": "uuid",
+            "title": "Refinery Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "refinery_id",
+          "refinery_canonical_id",
+          "assumption_id",
+          "points"
+        ],
+        "title": "InventoryTrajectory",
         "type": "object"
       },
       "MassBalanceReport": {
@@ -1206,6 +1696,102 @@
         "title": "OperationsSnapshot",
         "type": "object"
       },
+      "PercentageQuantity": {
+        "additionalProperties": false,
+        "properties": {
+          "unit": {
+            "const": "percent",
+            "default": "percent",
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "title": "PercentageQuantity",
+        "type": "object"
+      },
+      "PhysicalInvariantReport": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline_unchanged": {
+            "title": "Baseline Unchanged",
+            "type": "boolean"
+          },
+          "closed_routes_zero": {
+            "title": "Closed Routes Zero",
+            "type": "boolean"
+          },
+          "cumulative_values_reconcile": {
+            "title": "Cumulative Values Reconcile",
+            "type": "boolean"
+          },
+          "grade_compatibility_respected": {
+            "title": "Grade Compatibility Respected",
+            "type": "boolean"
+          },
+          "mass_conserved": {
+            "title": "Mass Conserved",
+            "type": "boolean"
+          },
+          "max_mass_balance_residual": {
+            "minimum": 0.0,
+            "title": "Max Mass Balance Residual",
+            "type": "number"
+          },
+          "non_negative_flows": {
+            "title": "Non Negative Flows",
+            "type": "boolean"
+          },
+          "non_negative_inventories": {
+            "title": "Non Negative Inventories",
+            "type": "boolean"
+          },
+          "refinery_limits_respected": {
+            "title": "Refinery Limits Respected",
+            "type": "boolean"
+          },
+          "route_capacities_respected": {
+            "title": "Route Capacities Respected",
+            "type": "boolean"
+          },
+          "snapshot_unchanged": {
+            "title": "Snapshot Unchanged",
+            "type": "boolean"
+          },
+          "supplier_limits_respected": {
+            "title": "Supplier Limits Respected",
+            "type": "boolean"
+          },
+          "tolerance": {
+            "exclusiveMinimum": 0.0,
+            "title": "Tolerance",
+            "type": "number"
+          }
+        },
+        "required": [
+          "non_negative_flows",
+          "non_negative_inventories",
+          "route_capacities_respected",
+          "closed_routes_zero",
+          "supplier_limits_respected",
+          "refinery_limits_respected",
+          "grade_compatibility_respected",
+          "mass_conserved",
+          "cumulative_values_reconcile",
+          "baseline_unchanged",
+          "snapshot_unchanged",
+          "max_mass_balance_residual",
+          "tolerance"
+        ],
+        "title": "PhysicalInvariantReport",
+        "type": "object"
+      },
       "RefineryCompatibility": {
         "additionalProperties": false,
         "properties": {
@@ -1273,6 +1859,76 @@
         "title": "RefineryCompatibility",
         "type": "object"
       },
+      "RefineryThroughputResult": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline_throughput": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "disrupted_receipts": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "disrupted_throughput": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "refinery_canonical_id": {
+            "title": "Refinery Canonical Id",
+            "type": "string"
+          },
+          "refinery_id": {
+            "format": "uuid",
+            "title": "Refinery Id",
+            "type": "string"
+          },
+          "shortfall": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "refinery_id",
+          "refinery_canonical_id",
+          "baseline_throughput",
+          "disrupted_receipts",
+          "disrupted_throughput",
+          "shortfall"
+        ],
+        "title": "RefineryThroughputResult",
+        "type": "object"
+      },
+      "ResolvedDisruptionTarget": {
+        "additionalProperties": false,
+        "properties": {
+          "asset_id": {
+            "format": "uuid",
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "canonical_id": {
+            "title": "Canonical Id",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "requested_identifier": {
+            "title": "Requested Identifier",
+            "type": "string"
+          },
+          "target_type": {
+            "$ref": "#/components/schemas/DisruptionTargetType"
+          }
+        },
+        "required": [
+          "requested_identifier",
+          "target_type",
+          "asset_id",
+          "canonical_id",
+          "display_name"
+        ],
+        "title": "ResolvedDisruptionTarget",
+        "type": "object"
+      },
       "SanctionsAssessment": {
         "additionalProperties": false,
         "properties": {
@@ -1319,6 +1975,866 @@
           "EXACT_MATCH"
         ],
         "title": "SanctionsMatchStatus",
+        "type": "string"
+      },
+      "ScenarioCandidate": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "defaults": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioDefault"
+            },
+            "title": "Defaults",
+            "type": "array"
+          },
+          "interpreter_model": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interpreter Model"
+          },
+          "interpreter_provider": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Interpreter Provider",
+            "type": "string"
+          },
+          "lifecycle": {
+            "$ref": "#/components/schemas/ScenarioLifecycle",
+            "default": "DRAFT"
+          },
+          "original_text": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Text"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/ScenarioParameters"
+          },
+          "scenario_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Scenario Fingerprint",
+            "type": "string"
+          },
+          "scenario_id": {
+            "format": "uuid",
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "scenario_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Scenario Name",
+            "type": "string"
+          },
+          "source_mode": {
+            "$ref": "#/components/schemas/ScenarioSourceMode"
+          },
+          "twin_snapshot": {
+            "$ref": "#/components/schemas/TwinSnapshotReference"
+          }
+        },
+        "required": [
+          "scenario_id",
+          "scenario_name",
+          "source_mode",
+          "interpreter_provider",
+          "twin_snapshot",
+          "parameters",
+          "created_at",
+          "scenario_fingerprint"
+        ],
+        "title": "ScenarioCandidate",
+        "type": "object"
+      },
+      "ScenarioCompileMode": {
+        "enum": [
+          "AUTO",
+          "STRUCTURED_FORM",
+          "DETERMINISTIC_TEXT",
+          "OPTIONAL_PROVIDER"
+        ],
+        "title": "ScenarioCompileMode",
+        "type": "string"
+      },
+      "ScenarioCompileResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "candidate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ScenarioCandidate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fallback_available": {
+            "default": true,
+            "title": "Fallback Available",
+            "type": "boolean"
+          },
+          "interpretation": {
+            "$ref": "#/components/schemas/InterpretationResult"
+          },
+          "validation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ScenarioValidationResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "interpretation"
+        ],
+        "title": "ScenarioCompileResponse",
+        "type": "object"
+      },
+      "ScenarioDefault": {
+        "additionalProperties": false,
+        "properties": {
+          "field": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Field",
+            "type": "string"
+          },
+          "rationale": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Rationale",
+            "type": "string"
+          },
+          "requires_confirmation": {
+            "default": true,
+            "title": "Requires Confirmation",
+            "type": "boolean"
+          },
+          "unit": {
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value"
+          }
+        },
+        "required": [
+          "field",
+          "value",
+          "unit",
+          "rationale"
+        ],
+        "title": "ScenarioDefault",
+        "type": "object"
+      },
+      "ScenarioFormMetadata": {
+        "additionalProperties": false,
+        "properties": {
+          "duration_max_days": {
+            "title": "Duration Max Days",
+            "type": "number"
+          },
+          "duration_min_hours": {
+            "title": "Duration Min Hours",
+            "type": "number"
+          },
+          "duration_units": {
+            "items": {
+              "$ref": "#/components/schemas/DurationUnit"
+            },
+            "title": "Duration Units",
+            "type": "array"
+          },
+          "interpreter_label": {
+            "title": "Interpreter Label",
+            "type": "string"
+          },
+          "llm_provider_available": {
+            "title": "Llm Provider Available",
+            "type": "boolean"
+          },
+          "maximum_compound_effects": {
+            "title": "Maximum Compound Effects",
+            "type": "integer"
+          },
+          "reduction_unit": {
+            "const": "percent",
+            "default": "percent",
+            "title": "Reduction Unit",
+            "type": "string"
+          },
+          "supported_types": {
+            "items": {
+              "$ref": "#/components/schemas/SupportedScenarioType"
+            },
+            "title": "Supported Types",
+            "type": "array"
+          }
+        },
+        "required": [
+          "supported_types",
+          "duration_units",
+          "duration_min_hours",
+          "duration_max_days",
+          "maximum_compound_effects",
+          "interpreter_label",
+          "llm_provider_available"
+        ],
+        "title": "ScenarioFormMetadata",
+        "type": "object"
+      },
+      "ScenarioLifecycle": {
+        "enum": [
+          "DRAFT",
+          "VALIDATED",
+          "CONFIRMED",
+          "RUNNING",
+          "COMPLETED",
+          "FAILED",
+          "CANCELLED"
+        ],
+        "title": "ScenarioLifecycle",
+        "type": "string"
+      },
+      "ScenarioParameters": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "$ref": "#/components/schemas/Assumption"
+            },
+            "maxItems": 20,
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "commodity": {
+            "const": "CRUDE_OIL",
+            "default": "CRUDE_OIL",
+            "title": "Commodity",
+            "type": "string"
+          },
+          "disruption_duration": {
+            "$ref": "#/components/schemas/DurationQuantity"
+          },
+          "disruption_start": {
+            "format": "date-time",
+            "title": "Disruption Start",
+            "type": "string"
+          },
+          "disruptions": {
+            "items": {
+              "$ref": "#/components/schemas/DisruptionEffect"
+            },
+            "maxItems": 4,
+            "minItems": 1,
+            "title": "Disruptions",
+            "type": "array"
+          },
+          "simulation_horizon": {
+            "$ref": "#/components/schemas/DurationQuantity"
+          }
+        },
+        "required": [
+          "disruption_start",
+          "disruption_duration",
+          "simulation_horizon",
+          "disruptions"
+        ],
+        "title": "ScenarioParameters",
+        "type": "object"
+      },
+      "ScenarioSourceMode": {
+        "enum": [
+          "STRUCTURED_FORM",
+          "DETERMINISTIC_TEXT",
+          "LLM_PROVIDER"
+        ],
+        "title": "ScenarioSourceMode",
+        "type": "string"
+      },
+      "ScenarioValidationResult": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "$ref": "#/components/schemas/Assumption"
+            },
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "defaults": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioDefault"
+            },
+            "title": "Defaults",
+            "type": "array"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "resolved_targets": {
+            "items": {
+              "$ref": "#/components/schemas/ResolvedDisruptionTarget"
+            },
+            "title": "Resolved Targets",
+            "type": "array"
+          },
+          "scenario_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Scenario Fingerprint",
+            "type": "string"
+          },
+          "scenario_id": {
+            "format": "uuid",
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "twin_snapshot": {
+            "$ref": "#/components/schemas/TwinSnapshotReference"
+          },
+          "valid": {
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "validated_at": {
+            "format": "date-time",
+            "title": "Validated At",
+            "type": "string"
+          },
+          "validation_id": {
+            "format": "uuid",
+            "title": "Validation Id",
+            "type": "string"
+          },
+          "validator_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Validator Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "validation_id",
+          "scenario_id",
+          "scenario_fingerprint",
+          "twin_snapshot",
+          "valid",
+          "validated_at",
+          "validator_version"
+        ],
+        "title": "ScenarioValidationResult",
+        "type": "object"
+      },
+      "SimulationConfiguration": {
+        "additionalProperties": false,
+        "properties": {
+          "time_step": {
+            "default": 1,
+            "maximum": 1.0,
+            "minimum": 1.0,
+            "title": "Time Step",
+            "type": "integer"
+          },
+          "time_step_unit": {
+            "const": "day",
+            "default": "day",
+            "title": "Time Step Unit",
+            "type": "string"
+          },
+          "uncertainty_method": {
+            "const": "BOUNDED_SENSITIVITY",
+            "default": "BOUNDED_SENSITIVITY",
+            "title": "Uncertainty Method",
+            "type": "string"
+          },
+          "uncertainty_reduction_delta": {
+            "default": 10.0,
+            "maximum": 25.0,
+            "minimum": 0.0,
+            "title": "Uncertainty Reduction Delta",
+            "type": "number"
+          },
+          "uncertainty_reduction_unit": {
+            "const": "percentage_point",
+            "default": "percentage_point",
+            "title": "Uncertainty Reduction Unit",
+            "type": "string"
+          }
+        },
+        "title": "SimulationConfiguration",
+        "type": "object"
+      },
+      "SimulationFailureResult": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          },
+          "details": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "title": "Details",
+            "type": "object"
+          },
+          "message": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "retryable": {
+            "default": false,
+            "title": "Retryable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "SimulationFailureResult",
+        "type": "object"
+      },
+      "SimulationProgressEvent": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "phase": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Phase",
+            "type": "string"
+          },
+          "progress_percent": {
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Progress Percent",
+            "type": "number"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "sequence": {
+            "minimum": 1.0,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SimulationStatus"
+          }
+        },
+        "required": [
+          "run_id",
+          "sequence",
+          "status",
+          "progress_percent",
+          "phase",
+          "message",
+          "occurred_at"
+        ],
+        "title": "SimulationProgressEvent",
+        "type": "object"
+      },
+      "SimulationProvenance": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "computed_at": {
+            "format": "date-time",
+            "title": "Computed At",
+            "type": "string"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "freshness_status": {
+            "$ref": "#/components/schemas/FreshnessStatus"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "scenario_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Scenario Fingerprint",
+            "type": "string"
+          },
+          "scenario_id": {
+            "format": "uuid",
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "simulation_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Simulation Fingerprint",
+            "type": "string"
+          },
+          "transformation": {
+            "title": "Transformation",
+            "type": "string"
+          },
+          "truth_class": {
+            "const": "MODELED",
+            "default": "MODELED",
+            "title": "Truth Class",
+            "type": "string"
+          },
+          "twin_snapshot": {
+            "$ref": "#/components/schemas/TwinSnapshotReference"
+          }
+        },
+        "required": [
+          "scenario_id",
+          "twin_snapshot",
+          "scenario_fingerprint",
+          "simulation_fingerprint",
+          "model_version",
+          "evidence_ids",
+          "assumption_ids",
+          "confidence",
+          "freshness_status",
+          "effective_at",
+          "fetched_at",
+          "computed_at",
+          "transformation"
+        ],
+        "title": "SimulationProvenance",
+        "type": "object"
+      },
+      "SimulationResult": {
+        "additionalProperties": false,
+        "properties": {
+          "affected_asset_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Affected Asset Ids",
+            "type": "array"
+          },
+          "affected_route_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Affected Route Ids",
+            "type": "array"
+          },
+          "baseline": {
+            "$ref": "#/components/schemas/BaselineResult"
+          },
+          "disrupted": {
+            "$ref": "#/components/schemas/DisruptedResult"
+          },
+          "flows": {
+            "items": {
+              "$ref": "#/components/schemas/FlowResult"
+            },
+            "minItems": 1,
+            "title": "Flows",
+            "type": "array"
+          },
+          "invariants": {
+            "$ref": "#/components/schemas/PhysicalInvariantReport"
+          },
+          "inventory_status": {
+            "enum": [
+              "UNKNOWN",
+              "ASSUMPTION_DEPENDENT"
+            ],
+            "title": "Inventory Status",
+            "type": "string"
+          },
+          "inventory_trajectories": {
+            "items": {
+              "$ref": "#/components/schemas/InventoryTrajectory"
+            },
+            "title": "Inventory Trajectories",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/SimulationProvenance"
+          },
+          "refinery_throughput": {
+            "items": {
+              "$ref": "#/components/schemas/RefineryThroughputResult"
+            },
+            "minItems": 1,
+            "title": "Refinery Throughput",
+            "type": "array"
+          },
+          "result_id": {
+            "format": "uuid",
+            "title": "Result Id",
+            "type": "string"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "runtime_ms": {
+            "minimum": 0.0,
+            "title": "Runtime Ms",
+            "type": "number"
+          },
+          "timeline": {
+            "items": {
+              "$ref": "#/components/schemas/TimelinePoint"
+            },
+            "minItems": 1,
+            "title": "Timeline",
+            "type": "array"
+          },
+          "uncertainty": {
+            "$ref": "#/components/schemas/UncertaintyRange"
+          }
+        },
+        "required": [
+          "result_id",
+          "run_id",
+          "provenance",
+          "baseline",
+          "disrupted",
+          "timeline",
+          "flows",
+          "refinery_throughput",
+          "inventory_status",
+          "affected_asset_ids",
+          "affected_route_ids",
+          "uncertainty",
+          "invariants",
+          "runtime_ms"
+        ],
+        "title": "SimulationResult",
+        "type": "object"
+      },
+      "SimulationRun": {
+        "additionalProperties": false,
+        "properties": {
+          "cancellation_requested_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancellation Requested At"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "configuration": {
+            "$ref": "#/components/schemas/SimulationConfiguration"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "failure": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SimulationFailureResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SimulationResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reused_result": {
+            "default": false,
+            "title": "Reused Result",
+            "type": "boolean"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "runtime_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runtime Ms"
+          },
+          "scenario_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Scenario Fingerprint",
+            "type": "string"
+          },
+          "scenario_id": {
+            "format": "uuid",
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "simulation_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Simulation Fingerprint",
+            "type": "string"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SimulationStatus"
+          },
+          "twin_snapshot": {
+            "$ref": "#/components/schemas/TwinSnapshotReference"
+          }
+        },
+        "required": [
+          "run_id",
+          "scenario_id",
+          "scenario_fingerprint",
+          "twin_snapshot",
+          "simulation_fingerprint",
+          "model_version",
+          "configuration",
+          "status",
+          "created_at"
+        ],
+        "title": "SimulationRun",
+        "type": "object"
+      },
+      "SimulationStatus": {
+        "enum": [
+          "QUEUED",
+          "RUNNING",
+          "COMPLETED",
+          "FAILED",
+          "CANCELLED"
+        ],
+        "title": "SimulationStatus",
         "type": "string"
       },
       "SourceHealthRecord": {
@@ -1470,6 +2986,164 @@
         ],
         "title": "SourceState",
         "type": "string"
+      },
+      "StartSimulationRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "configuration": {
+            "$ref": "#/components/schemas/SimulationConfiguration"
+          },
+          "scenario_id": {
+            "format": "uuid",
+            "title": "Scenario Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenario_id"
+        ],
+        "title": "StartSimulationRequest",
+        "type": "object"
+      },
+      "StructuredScenarioInput": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "$ref": "#/components/schemas/Assumption"
+            },
+            "maxItems": 20,
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "disruption_duration": {
+            "$ref": "#/components/schemas/DurationQuantity"
+          },
+          "disruption_start": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disruption Start"
+          },
+          "disruptions": {
+            "items": {
+              "$ref": "#/components/schemas/DisruptionEffect"
+            },
+            "maxItems": 4,
+            "minItems": 1,
+            "title": "Disruptions",
+            "type": "array"
+          },
+          "scenario_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Scenario Name",
+            "type": "string"
+          },
+          "simulation_horizon": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DurationQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "twin_snapshot_id": {
+            "format": "uuid",
+            "title": "Twin Snapshot Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenario_name",
+          "twin_snapshot_id",
+          "disruption_duration",
+          "disruptions"
+        ],
+        "title": "StructuredScenarioInput",
+        "type": "object"
+      },
+      "SupportedScenarioType": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "disruption_type": {
+            "$ref": "#/components/schemas/DisruptionType"
+          },
+          "supports_full_closure": {
+            "title": "Supports Full Closure",
+            "type": "boolean"
+          },
+          "target_type": {
+            "$ref": "#/components/schemas/DisruptionTargetType"
+          }
+        },
+        "required": [
+          "disruption_type",
+          "target_type",
+          "supports_full_closure",
+          "description"
+        ],
+        "title": "SupportedScenarioType",
+        "type": "object"
+      },
+      "TimelinePoint": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline_supply": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "cumulative_shortfall": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "disrupted_supply": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "ends_at": {
+            "format": "date-time",
+            "title": "Ends At",
+            "type": "string"
+          },
+          "refinery_throughput": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "shortfall": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "starts_at": {
+            "format": "date-time",
+            "title": "Starts At",
+            "type": "string"
+          },
+          "step": {
+            "minimum": 0.0,
+            "title": "Step",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "step",
+          "starts_at",
+          "ends_at",
+          "baseline_supply",
+          "disrupted_supply",
+          "refinery_throughput",
+          "shortfall",
+          "cumulative_shortfall"
+        ],
+        "title": "TimelinePoint",
+        "type": "object"
       },
       "TruthClass": {
         "enum": [
@@ -1786,6 +3460,96 @@
         "title": "TwinSnapshot",
         "type": "object"
       },
+      "TwinSnapshotReference": {
+        "additionalProperties": false,
+        "properties": {
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "snapshot_id": {
+            "format": "uuid",
+            "title": "Snapshot Id",
+            "type": "string"
+          },
+          "version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "snapshot_id",
+          "fingerprint",
+          "version",
+          "effective_at"
+        ],
+        "title": "TwinSnapshotReference",
+        "type": "object"
+      },
+      "UncertaintyRange": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "central": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "lower_bound": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "parameters_varied": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Parameters Varied",
+            "type": "array"
+          },
+          "probability_claimed": {
+            "const": false,
+            "default": false,
+            "title": "Probability Claimed",
+            "type": "boolean"
+          },
+          "upper_bound": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "variation_method": {
+            "const": "BOUNDED_SENSITIVITY",
+            "default": "BOUNDED_SENSITIVITY",
+            "title": "Variation Method",
+            "type": "string"
+          }
+        },
+        "required": [
+          "central",
+          "lower_bound",
+          "upper_bound",
+          "parameters_varied",
+          "assumption_ids",
+          "model_version"
+        ],
+        "title": "UncertaintyRange",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "ctx": {
@@ -1825,6 +3589,50 @@
         ],
         "title": "ValidationError",
         "type": "object"
+      },
+      "ValidationIssue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Field",
+            "type": "string"
+          },
+          "message": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/ValidationSeverity"
+          }
+        },
+        "required": [
+          "severity",
+          "code",
+          "field",
+          "message"
+        ],
+        "title": "ValidationIssue",
+        "type": "object"
+      },
+      "ValidationSeverity": {
+        "enum": [
+          "ERROR",
+          "WARNING",
+          "DEFAULT_REQUIRES_CONFIRMATION",
+          "ASSUMPTION_REQUIRES_CONFIRMATION"
+        ],
+        "title": "ValidationSeverity",
+        "type": "string"
       },
       "VesselHistoryResponse": {
         "additionalProperties": false,
@@ -2184,7 +3992,7 @@
     "description": "Keep India's energy moving.",
     "summary": "India's Energy Resilience Command Center",
     "title": "Sanjiv API",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -2277,6 +4085,808 @@
         "summary": "Operations Snapshot",
         "tags": [
           "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/scenario-runs": {
+      "post": {
+        "operationId": "start_simulation_api_v1_scenario_runs_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Scenario-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Scenario-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartSimulationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationRun"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Start Simulation",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenario-runs/{run_id}": {
+      "get": {
+        "operationId": "simulation_status_api_v1_scenario_runs__run_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationRun"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Simulation Status",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenario-runs/{run_id}/cancel": {
+      "post": {
+        "operationId": "cancel_simulation_api_v1_scenario_runs__run_id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Scenario-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Scenario-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationRun"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Simulation",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenario-runs/{run_id}/progress": {
+      "get": {
+        "operationId": "simulation_progress_api_v1_scenario_runs__run_id__progress_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SimulationProgressEvent"
+                  },
+                  "title": "Response Simulation Progress Api V1 Scenario Runs  Run Id  Progress Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Simulation Progress",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenario-runs/{run_id}/results": {
+      "get": {
+        "operationId": "simulation_results_api_v1_scenario_runs__run_id__results_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Simulation Results",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenario-runs/{run_id}/timeline": {
+      "get": {
+        "operationId": "simulation_timeline_api_v1_scenario_runs__run_id__timeline_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TimelinePoint"
+                  },
+                  "title": "Response Simulation Timeline Api V1 Scenario Runs  Run Id  Timeline Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Simulation Timeline",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenario-types": {
+      "get": {
+        "operationId": "scenario_types_api_v1_scenario_types_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SupportedScenarioType"
+                  },
+                  "title": "Response Scenario Types Api V1 Scenario Types Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Scenario Types",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenarios/compile": {
+      "post": {
+        "operationId": "compile_candidate_api_v1_scenarios_compile_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Scenario-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Scenario-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompileScenarioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioCompileResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Compile Candidate",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenarios/form-metadata": {
+      "get": {
+        "operationId": "form_metadata_api_v1_scenarios_form_metadata_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioFormMetadata"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Form Metadata",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}": {
+      "get": {
+        "operationId": "confirmed_scenario_api_v1_scenarios__scenario_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfirmedScenario"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Confirmed Scenario",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}/assumptions": {
+      "get": {
+        "operationId": "scenario_assumptions_api_v1_scenarios__scenario_id__assumptions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Assumption"
+                  },
+                  "title": "Response Scenario Assumptions Api V1 Scenarios  Scenario Id  Assumptions Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Scenario Assumptions",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}/audit-events": {
+      "get": {
+        "operationId": "scenario_audit_events_api_v1_scenarios__scenario_id__audit_events_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AuditEvent"
+                  },
+                  "title": "Response Scenario Audit Events Api V1 Scenarios  Scenario Id  Audit Events Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Scenario Audit Events",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}/confirm": {
+      "post": {
+        "operationId": "confirm_candidate_api_v1_scenarios__scenario_id__confirm_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Scenario-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Scenario-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmScenarioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfirmedScenario"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Confirm Candidate",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}/evidence": {
+      "get": {
+        "operationId": "scenario_evidence_api_v1_scenarios__scenario_id__evidence_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EvidenceRecord"
+                  },
+                  "title": "Response Scenario Evidence Api V1 Scenarios  Scenario Id  Evidence Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Scenario Evidence",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}/validate": {
+      "post": {
+        "operationId": "validate_candidate_api_v1_scenarios__scenario_id__validate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Scenario-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Scenario-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioValidationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Validate Candidate",
+        "tags": [
+          "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenarios/{scenario_id}/validation": {
+      "get": {
+        "operationId": "validation_result_api_v1_scenarios__scenario_id__validation_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioValidationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Validation Result",
+        "tags": [
+          "scenario-lab"
         ]
       }
     },

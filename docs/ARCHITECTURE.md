@@ -57,12 +57,14 @@ Phase 2 implements this boundary in `sanjiv/twin`. PPAC-, ISPRL-, UN Comtrade-, 
 
 ### Scenario execution
 
-1. Provider-neutral interpreter returns typed candidate JSON, or the user completes the structured form.
-2. Deterministic validation resolves canonical asset IDs, ranges, defaults, and visible assumptions.
-3. User confirms the scenario; the API freezes scenario and twin fingerprints.
-4. Compute worker runs no-action baseline, disrupted case, and requested uncertainty samples.
-5. Progress events stream over the scenario WebSocket.
-6. Results are persisted as metric envelopes and pass the evidence auditor before display.
+1. The structured form, bounded deterministic parser, or optional provider produces the same typed scenario candidate. Optional provider output is untrusted.
+2. Deterministic validation resolves canonical asset IDs, units, ranges, defaults, visible assumptions, and the selected immutable snapshot.
+3. The user confirms the validated candidate; the API writes an audit event and freezes scenario and twin fingerprints.
+4. The Phase 3 application service executes the deterministic daily baseline/disrupted model. Its persisted job contract is worker-ready, while this checkpoint deliberately uses documented immediate in-process execution.
+5. Clients poll persisted progress events and results. Cancellation and typed failure use the same REST transport; no redundant event framework is introduced.
+6. Results are persisted as metric envelopes and preserve evidence, assumption, truth, freshness, transformation, unit, timestamp, and model provenance.
+
+PostgreSQL stores candidates, validation reports, immutable confirmations, runs, results, and progress payloads. Complete simulation fingerprints provide idempotent reuse and restart-safe result access. The engine only reads the content-addressed Phase 2 snapshot and never mutates it.
 
 ### Procurement optimisation
 

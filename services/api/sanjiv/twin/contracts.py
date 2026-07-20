@@ -218,8 +218,7 @@ class TwinSnapshot(BaseModel):
             if flow.supplier_id not in node_ids:
                 raise ValueError("baseline flow has an unknown supplier")
         links: list[tuple[list[UUID], list[UUID]]] = [
-            (item.evidence_ids, item.assumption_ids)
-            for item in self.nodes
+            (item.evidence_ids, item.assumption_ids) for item in self.nodes
         ]
         links.extend((item.evidence_ids, item.assumption_ids) for item in self.routes)
         links.extend((item.evidence_ids, item.assumption_ids) for item in self.grades)

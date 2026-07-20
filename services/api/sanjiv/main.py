@@ -3,8 +3,9 @@ from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from typing import Literal
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from sanjiv.contracts import (
@@ -21,14 +22,25 @@ from sanjiv.maritime.repository import InMemoryMaritimeRepository, PostgresMarit
 from sanjiv.maritime.routes import router as maritime_router
 from sanjiv.maritime.routes import websocket_router
 from sanjiv.maritime.service import MaritimeWatchService
+from sanjiv.scenarios.compiler import (
+    DisabledScenarioProvider,
+    OpenAIResponsesScenarioProvider,
+)
+from sanjiv.scenarios.repository import (
+    InMemoryScenarioRepository,
+    PostgresScenarioRepository,
+)
+from sanjiv.scenarios.routes import router as scenario_router
+from sanjiv.scenarios.service import ScenarioService
 from sanjiv.settings import Settings, get_settings
 from sanjiv.twin.routes import router as twin_router
+from sanjiv.twin.service import build_default_twin_service
 
 
 class HealthResponse(BaseModel):
     status: Literal["alive", "ready"]
     service: Literal["sanjiv-api"] = "sanjiv-api"
-    version: Literal["0.2.0"] = "0.2.0"
+    version: Literal["0.3.0"] = "0.3.0"
     checked_at: datetime
 
 
@@ -82,16 +94,37 @@ def create_app(
 ) -> FastAPI:
     resolved_settings = settings or get_settings()
     service = maritime_service or build_maritime_service(resolved_settings)
+    provider = (
+        OpenAIResponsesScenarioProvider(
+            api_key=resolved_settings.openai_api_key,
+            model=resolved_settings.sanjiv_llm_model,
+        )
+        if resolved_settings.sanjiv_llm_provider.casefold() == "openai"
+        else DisabledScenarioProvider()
+    )
+    twin_service = build_default_twin_service()
+    scenario_repository = (
+        PostgresScenarioRepository(resolved_settings.database_url, twin_service.current())
+        if resolved_settings.sanjiv_scenario_storage == "postgres"
+        else InMemoryScenarioRepository()
+    )
+    scenario_service = ScenarioService(
+        twin_service=twin_service,
+        repository=scenario_repository,
+        provider=provider,
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         geofences = load_geofences(resolved_settings.sanjiv_geofence_fixture)
         await service.repository.initialize(geofences)
+        await scenario_service.initialize()
         await service.initialize()
         if resolved_settings.sanjiv_maritime_autostart:
             service.start()
         yield
         await service.stop()
+        await scenario_service.close()
         close = getattr(service.repository, "close", None)
         if close is not None:
             await close()
@@ -100,21 +133,34 @@ def create_app(
         title="Sanjiv API",
         summary="India's Energy Resilience Command Center",
         description="Keep India's energy moving.",
-        version="0.2.0",
+        version="0.3.0",
         lifespan=lifespan,
     )
     application.state.settings = resolved_settings
     application.state.maritime_service = service
+    application.state.scenario_service = scenario_service
     application.add_middleware(
         CORSMiddleware,
         allow_origins=resolved_settings.allowed_origins,
         allow_credentials=False,
-        allow_methods=["GET"],
-        allow_headers=["Accept", "Content-Type"],
+        allow_methods=["GET", "POST"],
+        allow_headers=[
+            "Accept",
+            "Content-Type",
+            "Idempotency-Key",
+            "X-Sanjiv-Scenario-Key",
+        ],
     )
     application.include_router(maritime_router)
     application.include_router(websocket_router)
     application.include_router(twin_router)
+    application.include_router(scenario_router)
+
+    @application.exception_handler(HTTPException)
+    async def typed_http_error(_: Request, error: HTTPException) -> JSONResponse:
+        if isinstance(error.detail, dict) and "code" in error.detail:
+            return JSONResponse(status_code=error.status_code, content=error.detail)
+        return JSONResponse(status_code=error.status_code, content={"detail": error.detail})
 
     @application.get("/health/live", response_model=HealthResponse, tags=["health"])
     async def liveness() -> HealthResponse:

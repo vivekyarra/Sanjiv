@@ -47,10 +47,23 @@
 6. Select a crude grade and compare its deterministic refinery-compatibility classes and component explanation. State that the committed grade properties and refinery operating limits are fixture assumptions.
 7. Open `/api/v1/twin/snapshots/current` and verify the UI version/fingerprint exactly match the API response.
 
+## Phase 3 Scenario Lab path
+
+1. Start the credential-free stack, open `http://localhost:3000/scenario-lab`, and show that the active interpreter is `deterministic` while the optional LLM is unavailable.
+2. Select the immutable Phase 2 snapshot. Enter `Close the Strait of Hormuz for 14 days.` or use the equivalent structured chokepoint-closure form.
+3. Compile and show the typed candidate, resolved Hormuz asset, explicit UTC start and day unit, visible defaults/assumptions, validation warnings, input fingerprint, and frozen snapshot fingerprint. Explain that the bounded parser does not understand arbitrary language.
+4. Confirm as the local demo identity. Show that confirmation is a separate server-side action with an audit timestamp and scenario fingerprint; compilation alone cannot execute.
+5. Start the no-action run and show persisted polling progress. Cancellation may be demonstrated before starting a fresh run.
+6. On completion, show measured runtime, unchanged baseline versus disrupted result, zero affected Hormuz route flow, refinery-throughput impact, daily and cumulative shortfall, affected assets/routes, and invariant status.
+7. Show the deterministic lower/central/upper sensitivity range and state that it is bounded sensitivity, not probability.
+8. Show evidence and assumption references. Inventory must say `UNKNOWN` unless an explicit, expiring starting-inventory assumption was entered; an assumption-dependent trajectory is not observed stock.
+9. Re-run the exact confirmed scenario to show fingerprint result reuse. Change any scenario field to show that a new fingerprint and confirmation are required.
+10. End Phase 3 without generating procurement, rerouting, or reserve recommendations; those are future-response planning outside this phase.
+
 ## Failure branches
 
 - AIS fails: show interruption and age, then show the automatic audited replay transition, dataset classification, original interval, and persistent non-live banner.
-- LLM fails: open the pre-populated structured form, validate it, and continue.
+- LLM fails or is not configured: show the typed provider state, open the structured form or bounded deterministic parser, validate it, and continue without a credential.
 - Market/source data is stale: show stale inputs and their effect; use an explicit assumption only with operator confirmation.
 - Solver is infeasible: show diagnostics, adjust a visible policy assumption, create a new run, and preserve the failed run.
 - Solver times out: show no plan unless an exact-fingerprint cached plan exists; label that plan cached and stale.

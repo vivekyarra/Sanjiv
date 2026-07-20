@@ -11,6 +11,10 @@
 | Solver infeasibility | Medium | High | Pre-solve validation and named slack diagnostics | Return infeasibility report and safe manual review | Modelling lead |
 | Solver timeout | Medium | High | Time limits, warm starts, model-size budgets | Reuse only exact-fingerprint result; otherwise no plan | Modelling lead |
 | LLM parsing failure | Medium | Medium | Strict schema, bounded repair, deterministic validation | Editable structured scenario form | Platform lead |
+| Prompt injection or provider self-approval | Medium | High | Defensive system boundary, constrained schema, injection refusal, deterministic validation, server confirmation | Discard provider output and use structured form | Security lead |
+| Local demo mutation exposure | Medium | High | Credential-free only in development/test; production mutations fail closed without configured operator API key and server-owned identity | Place behind authenticated operator gateway before multi-user deployment | Security lead |
+| Scenario job lost on API restart | Medium | Medium | Persist every lifecycle/result/progress transition and support exact-fingerprint reuse | Retrieve terminal result or start a newly audited run | Platform lead |
+| In-process simulation saturation | Low at fixture scale | Medium | Bounded horizons/effects and measured runtime; persisted worker-ready job contract | Move execution to the existing worker boundary after measured need | Modelling lead |
 | Map performance | Medium | Medium | Bounded MapLibre sources, recent tracks, browser profiling | Add viewport queries/aggregation or deck.gl only at measured threshold | Frontend lead |
 | Unsupported assumptions | High | High | Assumption registry, expiry, owner, approval, claim blocker | Block dependent metric or require operator input | Evidence lead |
 | Data licensing | Medium | High | Record terms, redistribution, retention, attribution | Disable redistribution and use licensed fixtures | Product lead |

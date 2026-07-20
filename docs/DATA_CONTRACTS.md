@@ -78,6 +78,14 @@ Canonical contracts are Pydantic v2 models exposed through OpenAPI and generated
 - A derived/inferred/modeled metric references all material parent evidence or assumptions.
 - Evidence and audit records cannot be updated; corrections append superseding records.
 - Scenario and plan hashes use canonical JSON. A changed assumption creates a new run.
+
+## Phase 3 frozen contracts
+
+`ScenarioCandidate` contains the stable scenario ID, source/compile modes, typed parameters, disruption effects, explicit quantity units, visible defaults and assumptions, interpreter result, selected `TwinSnapshotReference`, evidence IDs, lifecycle, and canonical input fingerprint. `ScenarioValidationResult` separates blocking errors, warnings, defaults requiring confirmation, assumptions requiring confirmation, and resolved assets. `ConfirmedScenario` preserves the exact validation and twin fingerprints, confirming identity, UTC confirmation timestamp, and scenario fingerprint; any candidate edit produces a different fingerprint and requires confirmation again.
+
+`SimulationRun` contains scenario/snapshot/input/simulation fingerprints, model version, configuration, lifecycle status, UTC timestamps, measured runtime, typed failure, cancellation, and result reference. `SimulationResult` contains paired `BaselineResult` and `DisruptedResult`, daily timeline points, route-flow and refinery results, shortfall and cumulative shortfall metric envelopes, optional assumption-dependent inventory trajectories, deterministic uncertainty bounds, invariant results, evidence and assumption references, and complete provenance. All timestamps on the wire are UTC RFC 3339 and all quantities carry explicit units.
+
+Phase 3 reuses `MetricEnvelope`, `EvidenceRef`, `Assumption`, `AuditEvent`, freshness, confidence, and truth-class contracts. Baseline facts retain their existing classification; simulator outputs are `MODELED`. Missing private inventory is not converted into a number.
 - A plan cannot become `APPROVED` when audit status is failed, evidence is missing, solver status is not feasible/optimal, or the plan hash differs from the reviewed hash.
 
 ## Phase 2 digital-twin contracts

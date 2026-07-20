@@ -61,11 +61,29 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 
 ## Phase 3 - Scenario compiler and impact simulator
 
-- Status: not started; blocked on the Phase 2 green gate.
+### Micro-plan
+
+1. Freeze canonical scenario, interpretation, validation, confirmation, simulation, progress, uncertainty, cancellation, and failure contracts without duplicating the truth/evidence/assumption/audit foundation.
+2. Implement structured and bounded deterministic-text compilation, the optional provider-neutral/OpenAI interpretation boundary, prompt-injection defenses, snapshot-aware resolution, and deterministic validation.
+3. Persist candidates, validations, confirmations, runs, results, progress, and audit linkage through one reversible migration after `20260720_0003`.
+4. Implement the deterministic daily no-action simulator, exact-fingerprint reuse, cancellation/failure handling, uncertainty sensitivity bounds, and physical-invariant reports against the frozen Phase 2 twin.
+5. Add thin REST/polling endpoints, regenerate OpenAPI and TypeScript contracts, and build the operational Scenario Lab with explicit interpreter, truth, assumption, confirmation, progress, and failure states.
+6. Add domain, compiler, injection, lifecycle, API, migration, invariant, persistence-contract, and frontend tests; update affected documentation and environment guidance.
+7. Run the complete Phase 3 repository and migration gate, inspect truth/provenance/security/scope/dependencies, commit the verified checkpoint, push the existing branch, and keep pull request #2 draft.
+
+### Status
+
+- Complete and green. Pre-flight started clean at `316ef9261e1f0b8b9a153217e304784f1537edaa`; Phase 2 remained intact.
+- Contract/result: canonical scenario, validation, confirmation, simulation, progress, uncertainty, cancellation, and failure contracts are generated from OpenAPI. Structured entry and bounded deterministic text work without an LLM; optional OpenAI Responses output is untrusted and was not live-credential tested.
+- Persistence: reversible `20260721_0004_scenario_simulation.py` stores candidates, validation, immutable confirmation, runs, progress, and immutable terminal results. The `0004 -> 0003 -> 0004` cycle passed.
+- Simulation: frozen snapshot `b7bb06b4-52f1-5eb0-a086-3a1a4fd4b842` drives the daily no-action model. A 20-run local Hormuz-closure measurement recorded 22.201 ms minimum, 28.494 ms median, and 184.396 ms maximum; this is a local fixture measurement, not a production SLA.
+- Verification: Ruff, strict mypy, 93 Python tests, contract drift, npm lint/type checks, 9 web tests, 1 contract test, production build, and `git diff --check` passed. CI remains offline and credential-free.
+- Security review: non-finite inputs, stale confirmation validation, unbounded assumption/idempotency state, caller-forged audit identity, production mutation access, confirmation concurrency, and terminal-run mutability were hardened before the final green gate. Production mutations fail closed without a configured operator key; development/test retains the credential-free local demo.
+- Scope: no procurement, rerouting, reserve recommendation, optimisation, or other Phase 4 code was added. Screenshots were not captured.
 
 ## Phase 4 - Procurement optimiser
 
-- Status: not started; blocked on the Phase 3 green gate.
+- Status: not started. First incomplete task is freezing the Phase 4 procurement-plan and solver contracts; no Phase 4 implementation has begun.
 
 ## Phase 5 - Strategic reserve optimiser
 

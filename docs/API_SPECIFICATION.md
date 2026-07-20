@@ -33,15 +33,29 @@ These read-only endpoints expose the same immutable `TwinSnapshot` contract. The
 ## Scenarios and computation
 
 ```text
+GET  /api/v1/scenario-types
+GET  /api/v1/scenarios/form-metadata
 POST /api/v1/scenarios/compile
+POST /api/v1/scenarios/{scenario_id}/validate
+GET  /api/v1/scenarios/{scenario_id}/validation
 POST /api/v1/scenarios/{scenario_id}/confirm
+GET  /api/v1/scenarios/{scenario_id}/confirmed
 POST /api/v1/scenario-runs
 GET  /api/v1/scenario-runs/{run_id}
+GET  /api/v1/scenario-runs/{run_id}/progress
 POST /api/v1/scenario-runs/{run_id}/cancel
-WS   /ws/v1/scenario-runs/{run_id}
+GET  /api/v1/scenario-runs/{run_id}/results
+GET  /api/v1/scenario-runs/{run_id}/timeline
+GET  /api/v1/scenarios/{scenario_id}/evidence
+GET  /api/v1/scenarios/{scenario_id}/assumptions
+GET  /api/v1/scenarios/{scenario_id}/audit-events
 ```
 
-Compile returns a candidate `Scenario`, visible defaults, unresolved entities, warnings, interpreter provider/model, and validation state; it never starts a run. Confirmation freezes the canonical scenario hash. Run creation requires a confirmed scenario and twin snapshot and returns state `QUEUED`. States are `QUEUED | RUNNING | SUCCEEDED | FAILED | CANCELLED`.
+Compile returns a candidate `Scenario`, visible defaults, unresolved entities, warnings, interpreter provider/model, and validation state; it never starts a run. Confirmation freezes the canonical scenario and twin hashes. Run creation requires a confirmed scenario and returns `QUEUED`; immediate in-process execution persists `RUNNING` progress and a terminal `COMPLETED | FAILED | CANCELLED` state. Progress is documented REST polling so reload/restart can retrieve persisted state. A complete matching simulation fingerprint may reuse a prior result.
+
+All mutation endpoints require `Idempotency-Key`. Compile, validate, confirm, start, and cancel write audit events or persistent lifecycle records. Errors use the canonical top-level `{code, message, request_id, details}` envelope. Stale/missing snapshots, unsupported scenarios, validation failures, provider unavailability, cancellation, and simulation failures remain typed and distinguishable.
+
+Local development/test mode uses the configured `SANJIV_SCENARIO_OPERATOR_IDENTITY` and needs no secret. Outside those modes, every scenario mutation requires `SANJIV_SCENARIO_API_KEY` in `X-Sanjiv-Scenario-Key`; startup remains credential-free, but mutation attempts fail closed until an operator credential is configured. Caller-supplied confirmation identity is ignored at the HTTP boundary so audit attribution is server-owned. A production identity-provider integration remains deployment work.
 
 ## Plans, evidence, and approval
 

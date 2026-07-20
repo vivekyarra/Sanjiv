@@ -41,6 +41,7 @@ Phases are dependency ordered. Complexity is relative: S/M/L/XL. A phase closes 
 
 ## Phase 3 — Scenario compiler and impact simulator (XL)
 
+- **Status:** complete on the Phase 3 integration checkpoint; Phase 4 has not started.
 - **Goal:** turn natural language into confirmed scenarios and simulate the paired no-action consequence.
 - **Deliverables/modules:** `scenarios/{interpreter,validator,resolver}`, provider-neutral LLM adapter, structured-form fallback, `simulation/{timeline,mass_balance,uncertainty}`, progress events, Scenario Lab UI.
 - **Dependencies/order:** twin snapshot → deterministic scenario form/validator → optional LLM interpreter → baseline/disruption engine → uncertainty → audited outputs.
@@ -49,6 +50,8 @@ Phases are dependency ordered. Complexity is relative: S/M/L/XL. A phase closes 
 - **Demo result:** validated Hormuz object, animated disruption, no-action shortfall/inventory/refinery metrics.
 - **Risks:** hidden defaults, dimensional errors, latency. Freeze snapshots and expose all defaults/units.
 - **Parallel:** form/UI and simulator internals after Scenario schema freezes.
+- **Implemented result:** canonical generated contracts; structured and bounded-text compilers; optional provider-neutral/OpenAI boundary; snapshot-aware deterministic validation; audited confirmation; persistent jobs with polling progress, cancellation, typed failure, and fingerprint reuse; a daily mass-conserving no-action engine; deterministic bounded sensitivity; and the operational Scenario Lab.
+- **Demo result:** a confirmed 14-day Hormuz closure uses the immutable Phase 2 snapshot and shows unchanged baseline, zero disrupted flow on affected route segments, refinery throughput loss, daily/cumulative shortfall, deterministic bounds, measured runtime, and provenance without procurement or reserve recommendations.
 
 ## Phase 4 — Procurement optimiser (XL)
 

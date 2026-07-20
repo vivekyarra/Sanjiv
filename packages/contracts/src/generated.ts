@@ -72,6 +72,278 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/scenario-runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Simulation */
+        post: operations["start_simulation_api_v1_scenario_runs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenario-runs/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Simulation Status */
+        get: operations["simulation_status_api_v1_scenario_runs__run_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenario-runs/{run_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Simulation */
+        post: operations["cancel_simulation_api_v1_scenario_runs__run_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenario-runs/{run_id}/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Simulation Progress */
+        get: operations["simulation_progress_api_v1_scenario_runs__run_id__progress_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenario-runs/{run_id}/results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Simulation Results */
+        get: operations["simulation_results_api_v1_scenario_runs__run_id__results_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenario-runs/{run_id}/timeline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Simulation Timeline */
+        get: operations["simulation_timeline_api_v1_scenario_runs__run_id__timeline_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenario-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Scenario Types */
+        get: operations["scenario_types_api_v1_scenario_types_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenarios/compile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Compile Candidate */
+        post: operations["compile_candidate_api_v1_scenarios_compile_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenarios/form-metadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Form Metadata */
+        get: operations["form_metadata_api_v1_scenarios_form_metadata_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenarios/{scenario_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Confirmed Scenario */
+        get: operations["confirmed_scenario_api_v1_scenarios__scenario_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenarios/{scenario_id}/assumptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Scenario Assumptions */
+        get: operations["scenario_assumptions_api_v1_scenarios__scenario_id__assumptions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenarios/{scenario_id}/audit-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Scenario Audit Events */
+        get: operations["scenario_audit_events_api_v1_scenarios__scenario_id__audit_events_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenarios/{scenario_id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm Candidate */
+        post: operations["confirm_candidate_api_v1_scenarios__scenario_id__confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenarios/{scenario_id}/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Scenario Evidence */
+        get: operations["scenario_evidence_api_v1_scenarios__scenario_id__evidence_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenarios/{scenario_id}/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validate Candidate */
+        post: operations["validate_candidate_api_v1_scenarios__scenario_id__validate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenarios/{scenario_id}/validation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Validation Result */
+        get: operations["validation_result_api_v1_scenarios__scenario_id__validation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/sources/health": {
         parameters: {
             query?: never;
@@ -336,6 +608,13 @@ export interface components {
             supplier_id: string;
             volume: components["schemas"]["MetricEnvelope_float_"];
         };
+        /** BaselineResult */
+        BaselineResult: {
+            refinery_throughput: components["schemas"]["MetricEnvelope_float_"];
+            shortfall: components["schemas"]["MetricEnvelope_float_"];
+            total_demand: components["schemas"]["MetricEnvelope_float_"];
+            total_supply: components["schemas"]["MetricEnvelope_float_"];
+        };
         /**
          * Commodity
          * @enum {string}
@@ -346,6 +625,51 @@ export interface components {
          * @enum {string}
          */
         CompatibilityClass: "PREFERRED" | "ACCEPTABLE" | "DIFFICULT" | "DISALLOWED";
+        /** CompileScenarioRequest */
+        CompileScenarioRequest: {
+            /** @default AUTO */
+            mode: components["schemas"]["ScenarioCompileMode"];
+            structured?: components["schemas"]["StructuredScenarioInput"] | null;
+            /** Text */
+            text?: string | null;
+            /**
+             * Twin Snapshot Id
+             * Format: uuid
+             */
+            twin_snapshot_id: string;
+        };
+        /** ConfirmScenarioRequest */
+        ConfirmScenarioRequest: {
+            /** Confirming Identity */
+            confirming_identity: string;
+        };
+        /** ConfirmedScenario */
+        ConfirmedScenario: {
+            audit_event: components["schemas"]["AuditEvent"];
+            candidate: components["schemas"]["ScenarioCandidate"];
+            /**
+             * Confirmed At
+             * Format: date-time
+             */
+            confirmed_at: string;
+            /** Confirmed By */
+            confirmed_by: string;
+            /**
+             * Lifecycle
+             * @default CONFIRMED
+             * @constant
+             */
+            lifecycle: "CONFIRMED";
+            /** Scenario Fingerprint */
+            scenario_fingerprint: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            twin_snapshot: components["schemas"]["TwinSnapshotReference"];
+            validation: components["schemas"]["ScenarioValidationResult"];
+        };
         /**
          * ConnectionState
          * @enum {string}
@@ -380,6 +704,53 @@ export interface components {
          * @enum {string}
          */
         DataMode: "LIVE" | "CACHED" | "REPLAY" | "FIXTURE" | "USER_SUPPLIED";
+        /** DisruptedResult */
+        DisruptedResult: {
+            cumulative_shortfall: components["schemas"]["MetricEnvelope_float_"];
+            refinery_throughput: components["schemas"]["MetricEnvelope_float_"];
+            shortfall: components["schemas"]["MetricEnvelope_float_"];
+            total_demand: components["schemas"]["MetricEnvelope_float_"];
+            total_supply: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** DisruptionEffect */
+        DisruptionEffect: {
+            capacity_reduction: components["schemas"]["PercentageQuantity"];
+            disruption_type: components["schemas"]["DisruptionType"];
+            target: components["schemas"]["DisruptionTarget"];
+        };
+        /** DisruptionTarget */
+        DisruptionTarget: {
+            /** Asset Id */
+            asset_id?: string | null;
+            /** Canonical Id */
+            canonical_id?: string | null;
+            /** Display Name */
+            display_name?: string | null;
+            /** Requested Identifier */
+            requested_identifier: string;
+            target_type: components["schemas"]["DisruptionTargetType"];
+        };
+        /**
+         * DisruptionTargetType
+         * @enum {string}
+         */
+        DisruptionTargetType: "CHOKEPOINT" | "ROUTE" | "SUPPLIER" | "PORT" | "REFINERY";
+        /**
+         * DisruptionType
+         * @enum {string}
+         */
+        DisruptionType: "CHOKEPOINT_CLOSURE" | "CHOKEPOINT_CAPACITY_REDUCTION" | "MARITIME_ROUTE_CAPACITY_REDUCTION" | "SUPPLIER_VOLUME_REDUCTION" | "PORT_DISRUPTION" | "REFINERY_THROUGHPUT_DISRUPTION";
+        /** DurationQuantity */
+        DurationQuantity: {
+            unit: components["schemas"]["DurationUnit"];
+            /** Value */
+            value: number;
+        };
+        /**
+         * DurationUnit
+         * @enum {string}
+         */
+        DurationUnit: "hour" | "day";
         /** EvidenceRecord */
         EvidenceRecord: {
             /** Confidence */
@@ -421,6 +792,31 @@ export interface components {
             /** Transformation */
             transformation: string;
             truth_class: components["schemas"]["TruthClass"];
+        };
+        /** FlowResult */
+        FlowResult: {
+            /** Affected */
+            affected: boolean;
+            baseline_flow: components["schemas"]["MetricEnvelope_float_"];
+            disrupted_capacity: components["schemas"]["MetricEnvelope_float_"];
+            disrupted_flow: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Grade Id
+             * Format: uuid
+             */
+            grade_id: string;
+            /** Route Canonical Id */
+            route_canonical_id: string;
+            /**
+             * Route Id
+             * Format: uuid
+             */
+            route_id: string;
+            /**
+             * Supplier Id
+             * Format: uuid
+             */
+            supplier_id: string;
         };
         /** FoundationContractSample */
         FoundationContractSample: {
@@ -506,10 +902,10 @@ export interface components {
             status: "alive" | "ready";
             /**
              * Version
-             * @default 0.2.0
+             * @default 0.3.0
              * @constant
              */
-            version: "0.2.0";
+            version: "0.3.0";
         };
         /** IndiaBoundAssessment */
         IndiaBoundAssessment: {
@@ -533,6 +929,60 @@ export interface components {
             score?: number | null;
             /** Weight */
             weight: number;
+        };
+        /** InterpretationResult */
+        InterpretationResult: {
+            /** Error Code */
+            error_code?: string | null;
+            /** Error Message */
+            error_message?: string | null;
+            /** Model */
+            model?: string | null;
+            /** Provider */
+            provider: string;
+            source_mode?: components["schemas"]["ScenarioSourceMode"] | null;
+            status: components["schemas"]["InterpreterStatus"];
+            /** Timeout Seconds */
+            timeout_seconds: number;
+            /** Warnings */
+            warnings?: string[];
+        };
+        /**
+         * InterpreterStatus
+         * @enum {string}
+         */
+        InterpreterStatus: "SUCCEEDED" | "FAILED" | "PROVIDER_UNAVAILABLE" | "TIMED_OUT";
+        /** InventoryPoint */
+        InventoryPoint: {
+            ending_inventory: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Starts At
+             * Format: date-time
+             */
+            starts_at: string;
+        };
+        /** InventoryTrajectory */
+        InventoryTrajectory: {
+            /**
+             * Assumption Dependent
+             * @default true
+             * @constant
+             */
+            assumption_dependent: true;
+            /**
+             * Assumption Id
+             * Format: uuid
+             */
+            assumption_id: string;
+            /** Points */
+            points: components["schemas"]["InventoryPoint"][];
+            /** Refinery Canonical Id */
+            refinery_canonical_id: string;
+            /**
+             * Refinery Id
+             * Format: uuid
+             */
+            refinery_id: string;
         };
         /** MassBalanceReport */
         MassBalanceReport: {
@@ -676,6 +1126,46 @@ export interface components {
             /** Vessels */
             vessels: components["schemas"]["VesselOperationalView"][];
         };
+        /** PercentageQuantity */
+        PercentageQuantity: {
+            /**
+             * Unit
+             * @default percent
+             * @constant
+             */
+            unit: "percent";
+            /** Value */
+            value: number;
+        };
+        /** PhysicalInvariantReport */
+        PhysicalInvariantReport: {
+            /** Baseline Unchanged */
+            baseline_unchanged: boolean;
+            /** Closed Routes Zero */
+            closed_routes_zero: boolean;
+            /** Cumulative Values Reconcile */
+            cumulative_values_reconcile: boolean;
+            /** Grade Compatibility Respected */
+            grade_compatibility_respected: boolean;
+            /** Mass Conserved */
+            mass_conserved: boolean;
+            /** Max Mass Balance Residual */
+            max_mass_balance_residual: number;
+            /** Non Negative Flows */
+            non_negative_flows: boolean;
+            /** Non Negative Inventories */
+            non_negative_inventories: boolean;
+            /** Refinery Limits Respected */
+            refinery_limits_respected: boolean;
+            /** Route Capacities Respected */
+            route_capacities_respected: boolean;
+            /** Snapshot Unchanged */
+            snapshot_unchanged: boolean;
+            /** Supplier Limits Respected */
+            supplier_limits_respected: boolean;
+            /** Tolerance */
+            tolerance: number;
+        };
         /** RefineryCompatibility */
         RefineryCompatibility: {
             /** Allowed */
@@ -703,6 +1193,35 @@ export interface components {
             refinery_id: string;
             score: components["schemas"]["MetricEnvelope_float_"];
         };
+        /** RefineryThroughputResult */
+        RefineryThroughputResult: {
+            baseline_throughput: components["schemas"]["MetricEnvelope_float_"];
+            disrupted_receipts: components["schemas"]["MetricEnvelope_float_"];
+            disrupted_throughput: components["schemas"]["MetricEnvelope_float_"];
+            /** Refinery Canonical Id */
+            refinery_canonical_id: string;
+            /**
+             * Refinery Id
+             * Format: uuid
+             */
+            refinery_id: string;
+            shortfall: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** ResolvedDisruptionTarget */
+        ResolvedDisruptionTarget: {
+            /**
+             * Asset Id
+             * Format: uuid
+             */
+            asset_id: string;
+            /** Canonical Id */
+            canonical_id: string;
+            /** Display Name */
+            display_name: string;
+            /** Requested Identifier */
+            requested_identifier: string;
+            target_type: components["schemas"]["DisruptionTargetType"];
+        };
         /** SanctionsAssessment */
         SanctionsAssessment: {
             /** Confidence */
@@ -719,6 +1238,352 @@ export interface components {
          * @enum {string}
          */
         SanctionsMatchStatus: "NOT_SCREENED" | "NO_MATCH" | "POTENTIAL_MATCH" | "EXACT_MATCH";
+        /** ScenarioCandidate */
+        ScenarioCandidate: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Defaults */
+            defaults?: components["schemas"]["ScenarioDefault"][];
+            /** Interpreter Model */
+            interpreter_model?: string | null;
+            /** Interpreter Provider */
+            interpreter_provider: string;
+            /** @default DRAFT */
+            lifecycle: components["schemas"]["ScenarioLifecycle"];
+            /** Original Text */
+            original_text?: string | null;
+            parameters: components["schemas"]["ScenarioParameters"];
+            /** Scenario Fingerprint */
+            scenario_fingerprint: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            /** Scenario Name */
+            scenario_name: string;
+            source_mode: components["schemas"]["ScenarioSourceMode"];
+            twin_snapshot: components["schemas"]["TwinSnapshotReference"];
+        };
+        /**
+         * ScenarioCompileMode
+         * @enum {string}
+         */
+        ScenarioCompileMode: "AUTO" | "STRUCTURED_FORM" | "DETERMINISTIC_TEXT" | "OPTIONAL_PROVIDER";
+        /** ScenarioCompileResponse */
+        ScenarioCompileResponse: {
+            candidate?: components["schemas"]["ScenarioCandidate"] | null;
+            /**
+             * Fallback Available
+             * @default true
+             */
+            fallback_available: boolean;
+            interpretation: components["schemas"]["InterpretationResult"];
+            validation?: components["schemas"]["ScenarioValidationResult"] | null;
+        };
+        /** ScenarioDefault */
+        ScenarioDefault: {
+            /** Field */
+            field: string;
+            /** Rationale */
+            rationale: string;
+            /**
+             * Requires Confirmation
+             * @default true
+             */
+            requires_confirmation: boolean;
+            /** Unit */
+            unit: string;
+            /** Value */
+            value: unknown;
+        };
+        /** ScenarioFormMetadata */
+        ScenarioFormMetadata: {
+            /** Duration Max Days */
+            duration_max_days: number;
+            /** Duration Min Hours */
+            duration_min_hours: number;
+            /** Duration Units */
+            duration_units: components["schemas"]["DurationUnit"][];
+            /** Interpreter Label */
+            interpreter_label: string;
+            /** Llm Provider Available */
+            llm_provider_available: boolean;
+            /** Maximum Compound Effects */
+            maximum_compound_effects: number;
+            /**
+             * Reduction Unit
+             * @default percent
+             * @constant
+             */
+            reduction_unit: "percent";
+            /** Supported Types */
+            supported_types: components["schemas"]["SupportedScenarioType"][];
+        };
+        /**
+         * ScenarioLifecycle
+         * @enum {string}
+         */
+        ScenarioLifecycle: "DRAFT" | "VALIDATED" | "CONFIRMED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELLED";
+        /** ScenarioParameters */
+        ScenarioParameters: {
+            /** Assumptions */
+            assumptions?: components["schemas"]["Assumption"][];
+            /**
+             * Commodity
+             * @default CRUDE_OIL
+             * @constant
+             */
+            commodity: "CRUDE_OIL";
+            disruption_duration: components["schemas"]["DurationQuantity"];
+            /**
+             * Disruption Start
+             * Format: date-time
+             */
+            disruption_start: string;
+            /** Disruptions */
+            disruptions: components["schemas"]["DisruptionEffect"][];
+            simulation_horizon: components["schemas"]["DurationQuantity"];
+        };
+        /**
+         * ScenarioSourceMode
+         * @enum {string}
+         */
+        ScenarioSourceMode: "STRUCTURED_FORM" | "DETERMINISTIC_TEXT" | "LLM_PROVIDER";
+        /** ScenarioValidationResult */
+        ScenarioValidationResult: {
+            /** Assumptions */
+            assumptions?: components["schemas"]["Assumption"][];
+            /** Defaults */
+            defaults?: components["schemas"]["ScenarioDefault"][];
+            /** Issues */
+            issues?: components["schemas"]["ValidationIssue"][];
+            /** Resolved Targets */
+            resolved_targets?: components["schemas"]["ResolvedDisruptionTarget"][];
+            /** Scenario Fingerprint */
+            scenario_fingerprint: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            twin_snapshot: components["schemas"]["TwinSnapshotReference"];
+            /** Valid */
+            valid: boolean;
+            /**
+             * Validated At
+             * Format: date-time
+             */
+            validated_at: string;
+            /**
+             * Validation Id
+             * Format: uuid
+             */
+            validation_id: string;
+            /** Validator Version */
+            validator_version: string;
+        };
+        /** SimulationConfiguration */
+        SimulationConfiguration: {
+            /**
+             * Time Step
+             * @default 1
+             */
+            time_step: number;
+            /**
+             * Time Step Unit
+             * @default day
+             * @constant
+             */
+            time_step_unit: "day";
+            /**
+             * Uncertainty Method
+             * @default BOUNDED_SENSITIVITY
+             * @constant
+             */
+            uncertainty_method: "BOUNDED_SENSITIVITY";
+            /**
+             * Uncertainty Reduction Delta
+             * @default 10
+             */
+            uncertainty_reduction_delta: number;
+            /**
+             * Uncertainty Reduction Unit
+             * @default percentage_point
+             * @constant
+             */
+            uncertainty_reduction_unit: "percentage_point";
+        };
+        /** SimulationFailureResult */
+        SimulationFailureResult: {
+            /** Code */
+            code: string;
+            /** Details */
+            details?: {
+                [key: string]: string | number | boolean;
+            };
+            /** Message */
+            message: string;
+            /**
+             * Retryable
+             * @default false
+             */
+            retryable: boolean;
+        };
+        /** SimulationProgressEvent */
+        SimulationProgressEvent: {
+            /** Message */
+            message: string;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Phase */
+            phase: string;
+            /** Progress Percent */
+            progress_percent: number;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /** Sequence */
+            sequence: number;
+            status: components["schemas"]["SimulationStatus"];
+        };
+        /** SimulationProvenance */
+        SimulationProvenance: {
+            /** Assumption Ids */
+            assumption_ids: string[];
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Confidence */
+            confidence: number;
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Fetched At
+             * Format: date-time
+             */
+            fetched_at: string;
+            freshness_status: components["schemas"]["FreshnessStatus"];
+            /** Model Version */
+            model_version: string;
+            /** Scenario Fingerprint */
+            scenario_fingerprint: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            /** Simulation Fingerprint */
+            simulation_fingerprint: string;
+            /** Transformation */
+            transformation: string;
+            /**
+             * Truth Class
+             * @default MODELED
+             * @constant
+             */
+            truth_class: "MODELED";
+            twin_snapshot: components["schemas"]["TwinSnapshotReference"];
+        };
+        /** SimulationResult */
+        SimulationResult: {
+            /** Affected Asset Ids */
+            affected_asset_ids: string[];
+            /** Affected Route Ids */
+            affected_route_ids: string[];
+            baseline: components["schemas"]["BaselineResult"];
+            disrupted: components["schemas"]["DisruptedResult"];
+            /** Flows */
+            flows: components["schemas"]["FlowResult"][];
+            invariants: components["schemas"]["PhysicalInvariantReport"];
+            /**
+             * Inventory Status
+             * @enum {string}
+             */
+            inventory_status: "UNKNOWN" | "ASSUMPTION_DEPENDENT";
+            /** Inventory Trajectories */
+            inventory_trajectories?: components["schemas"]["InventoryTrajectory"][];
+            provenance: components["schemas"]["SimulationProvenance"];
+            /** Refinery Throughput */
+            refinery_throughput: components["schemas"]["RefineryThroughputResult"][];
+            /**
+             * Result Id
+             * Format: uuid
+             */
+            result_id: string;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /** Runtime Ms */
+            runtime_ms: number;
+            /** Timeline */
+            timeline: components["schemas"]["TimelinePoint"][];
+            uncertainty: components["schemas"]["UncertaintyRange"];
+        };
+        /** SimulationRun */
+        SimulationRun: {
+            /** Cancellation Requested At */
+            cancellation_requested_at?: string | null;
+            /** Completed At */
+            completed_at?: string | null;
+            configuration: components["schemas"]["SimulationConfiguration"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            failure?: components["schemas"]["SimulationFailureResult"] | null;
+            /** Model Version */
+            model_version: string;
+            result?: components["schemas"]["SimulationResult"] | null;
+            /**
+             * Reused Result
+             * @default false
+             */
+            reused_result: boolean;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /** Runtime Ms */
+            runtime_ms?: number | null;
+            /** Scenario Fingerprint */
+            scenario_fingerprint: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            /** Simulation Fingerprint */
+            simulation_fingerprint: string;
+            /** Started At */
+            started_at?: string | null;
+            status: components["schemas"]["SimulationStatus"];
+            twin_snapshot: components["schemas"]["TwinSnapshotReference"];
+        };
+        /**
+         * SimulationStatus
+         * @enum {string}
+         */
+        SimulationStatus: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELLED";
         /** SourceHealthRecord */
         SourceHealthRecord: {
             /**
@@ -774,6 +1639,62 @@ export interface components {
          * @enum {string}
          */
         SourceState: "READY" | "DEGRADED" | "UNAVAILABLE" | "RATE_LIMITED" | "DISABLED";
+        /** StartSimulationRequest */
+        StartSimulationRequest: {
+            configuration?: components["schemas"]["SimulationConfiguration"];
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+        };
+        /** StructuredScenarioInput */
+        StructuredScenarioInput: {
+            /** Assumptions */
+            assumptions?: components["schemas"]["Assumption"][];
+            disruption_duration: components["schemas"]["DurationQuantity"];
+            /** Disruption Start */
+            disruption_start?: string | null;
+            /** Disruptions */
+            disruptions: components["schemas"]["DisruptionEffect"][];
+            /** Scenario Name */
+            scenario_name: string;
+            simulation_horizon?: components["schemas"]["DurationQuantity"] | null;
+            /**
+             * Twin Snapshot Id
+             * Format: uuid
+             */
+            twin_snapshot_id: string;
+        };
+        /** SupportedScenarioType */
+        SupportedScenarioType: {
+            /** Description */
+            description: string;
+            disruption_type: components["schemas"]["DisruptionType"];
+            /** Supports Full Closure */
+            supports_full_closure: boolean;
+            target_type: components["schemas"]["DisruptionTargetType"];
+        };
+        /** TimelinePoint */
+        TimelinePoint: {
+            baseline_supply: components["schemas"]["MetricEnvelope_float_"];
+            cumulative_shortfall: components["schemas"]["MetricEnvelope_float_"];
+            disrupted_supply: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Ends At
+             * Format: date-time
+             */
+            ends_at: string;
+            refinery_throughput: components["schemas"]["MetricEnvelope_float_"];
+            shortfall: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Starts At
+             * Format: date-time
+             */
+            starts_at: string;
+            /** Step */
+            step: number;
+        };
         /**
          * TruthClass
          * @enum {string}
@@ -882,6 +1803,47 @@ export interface components {
             /** Version */
             version: string;
         };
+        /** TwinSnapshotReference */
+        TwinSnapshotReference: {
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /** Fingerprint */
+            fingerprint: string;
+            /**
+             * Snapshot Id
+             * Format: uuid
+             */
+            snapshot_id: string;
+            /** Version */
+            version: string;
+        };
+        /** UncertaintyRange */
+        UncertaintyRange: {
+            /** Assumption Ids */
+            assumption_ids: string[];
+            central: components["schemas"]["MetricEnvelope_float_"];
+            lower_bound: components["schemas"]["MetricEnvelope_float_"];
+            /** Model Version */
+            model_version: string;
+            /** Parameters Varied */
+            parameters_varied: string[];
+            /**
+             * Probability Claimed
+             * @default false
+             * @constant
+             */
+            probability_claimed: false;
+            upper_bound: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Variation Method
+             * @default BOUNDED_SENSITIVITY
+             * @constant
+             */
+            variation_method: "BOUNDED_SENSITIVITY";
+        };
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -895,6 +1857,21 @@ export interface components {
             /** Error Type */
             type: string;
         };
+        /** ValidationIssue */
+        ValidationIssue: {
+            /** Code */
+            code: string;
+            /** Field */
+            field: string;
+            /** Message */
+            message: string;
+            severity: components["schemas"]["ValidationSeverity"];
+        };
+        /**
+         * ValidationSeverity
+         * @enum {string}
+         */
+        ValidationSeverity: "ERROR" | "WARNING" | "DEFAULT_REQUIRES_CONFIRMATION" | "ASSUMPTION_REQUIRES_CONFIRMATION";
         /** VesselHistoryResponse */
         VesselHistoryResponse: {
             /** Positions */
@@ -1107,6 +2084,502 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OperationsSnapshot"];
+                };
+            };
+        };
+    };
+    start_simulation_api_v1_scenario_runs_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Scenario-Key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StartSimulationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimulationRun"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    simulation_status_api_v1_scenario_runs__run_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimulationRun"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_simulation_api_v1_scenario_runs__run_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Scenario-Key"?: string | null;
+            };
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimulationRun"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    simulation_progress_api_v1_scenario_runs__run_id__progress_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimulationProgressEvent"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    simulation_results_api_v1_scenario_runs__run_id__results_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimulationResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    simulation_timeline_api_v1_scenario_runs__run_id__timeline_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TimelinePoint"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scenario_types_api_v1_scenario_types_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupportedScenarioType"][];
+                };
+            };
+        };
+    };
+    compile_candidate_api_v1_scenarios_compile_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Scenario-Key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompileScenarioRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioCompileResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    form_metadata_api_v1_scenarios_form_metadata_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioFormMetadata"];
+                };
+            };
+        };
+    };
+    confirmed_scenario_api_v1_scenarios__scenario_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfirmedScenario"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scenario_assumptions_api_v1_scenarios__scenario_id__assumptions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Assumption"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scenario_audit_events_api_v1_scenarios__scenario_id__audit_events_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditEvent"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    confirm_candidate_api_v1_scenarios__scenario_id__confirm_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Scenario-Key"?: string | null;
+            };
+            path: {
+                scenario_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmScenarioRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfirmedScenario"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scenario_evidence_api_v1_scenarios__scenario_id__evidence_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvidenceRecord"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validate_candidate_api_v1_scenarios__scenario_id__validate_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Sanjiv-Scenario-Key"?: string | null;
+            };
+            path: {
+                scenario_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioValidationResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validation_result_api_v1_scenarios__scenario_id__validation_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scenario_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioValidationResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

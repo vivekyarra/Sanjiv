@@ -8,6 +8,14 @@ Tests must prove truth handling and physical/solver invariants, not only endpoin
 - Contract tests: source payload fixtures, OpenAPI snapshots, generated TypeScript drift, error shapes, and WebSocket schemas.
 - Integration tests: PostgreSQL/PostGIS/TimescaleDB, Redis, MinIO, migrations, worker outbox, replay, API, and HiGHS.
 - End-to-end tests: browser workflow from map mode through scenario confirmation, plans, evidence, and approval.
+
+## Phase 3 coverage
+
+Offline tests cover contract/unit validation, supported and refused compiler patterns, provider-neutral adapter behavior, no-provider/timeout/invalid-output fallback, prompt-injection attempts, snapshot/asset resolution, duplicate/conflicting effects, expired assumptions, fingerprint stability/invalidation, server-side confirmation/audit/idempotency, and the complete API lifecycle.
+
+Golden/invariant tests cover baseline and per-step mass conservation; non-negative flow/inventory; closed/reduced routes; supplier/refinery constraints; crude compatibility; cumulative aggregation; baseline/snapshot immutability; deterministic replay, uncertainty, and reuse; cancellation/failure/runtime; persistent PostgreSQL readback; and reversible migration cycles. Frontend tests assert the structured fallback, provider state, validation/default/assumption review, explicit confirmation, progress/terminal states, inventory truth label, and absence of procurement recommendations.
+
+CI needs no LLM or source credential. Provider tests use deterministic fakes; live OpenAI operation is not part of the Phase 3 gate.
 - Non-functional tests: latency, vessel/map load, source failures, security, recovery, and reproducibility.
 
 ## Required cases

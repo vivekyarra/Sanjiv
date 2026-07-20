@@ -85,6 +85,27 @@ minimise shortage + α*reserve_depletion
 
 Release variables are bounded by site inventory, draw rate, connection capacity, transit delay, receiving capacity, and policy minimum floor. Remaining stock is conserved by site and interval. Phase 4 holds reserve policy fixed; Phase 5 solves procurement and reserve actions from one shared input snapshot. **Calibration:** α, β, γ, policy floors, replenishment outlook, and extension-risk assumptions.
 
+## Phase 3 deterministic no-action model
+
+The Phase 3 time step is one UTC day. For baseline path `p` with flow `B_p`, full closure has surviving fraction `0`, and a reduction of `q percent` has surviving fraction `1 - q/100`. Supplier, port, route/chokepoint, and refinery effects apply only to resolved targets. The path flow is:
+
+```text
+F[p,t] = min(B[p], supplier_available[p,t], min(disrupted_capacity[r,t]))
+```
+
+Every segment on a path receives the same `F[p,t]`, preventing intermediate creation or loss. Refinery receipt is the sum of compatible inbound paths, and throughput is:
+
+```text
+T[j,t] = min(baseline_throughput[j], compatible_receipts[j,t], disrupted_refinery_capacity[j,t])
+shortfall[j,t] = max(0, baseline_throughput[j] - T[j,t])
+```
+
+Cumulative shortfall is the exact timeline sum. The engine enforces non-negative quantities; closed-route zero flow; route, supplier, and refinery caps; crude compatibility; per-step path mass conservation; unchanged baseline; immutable snapshot input; and deterministic fingerprints. Unsafe inputs return a typed failure.
+
+Inventory is calculated only when an explicit, unexpired starting-inventory assumption exists: `I[j,t+1] = max(0, I[j,t] + receipts[j,t] - T[j,t])`. Such trajectories are assumption-dependent and never observed inventory.
+
+Phase 3 uncertainty is bounded deterministic sensitivity, not probability. It varies each active disruption reduction by minus and plus 10 percentage points within `[0,100]`, re-runs the same equations, and reports central/lower/upper cumulative shortfall, parameters varied, method, assumption dependencies, and model version.
+
 ## Uncertainty and stability
 
 Fast mode uses a fixed, recorded sample design of 30–50 draws; deep mode uses at least 500. The run stores seed, sampling method, distributions, correlations, and input evidence. Report median, P10/P90, best/worst sampled cases, and ranked sensitivity drivers; do not label these confidence intervals unless statistically justified.

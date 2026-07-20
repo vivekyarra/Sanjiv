@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     sanjiv_geofence_fixture: Path = Path("data/fixtures/maritime/geofences.geojson")
     sanjiv_stale_after_seconds: int = Field(default=300, ge=60, le=86400)
     sanjiv_websocket_heartbeat_seconds: float = Field(default=10.0, gt=0, le=60)
+    sanjiv_scenario_storage: str = "postgres"
+    sanjiv_scenario_operator_identity: str = "local-demo-operator"
+    sanjiv_scenario_api_key: str | None = None
+    sanjiv_llm_provider: str = "disabled"
+    sanjiv_llm_model: str | None = None
+    sanjiv_llm_timeout_seconds: float = Field(default=10.0, gt=0, le=60)
+    openai_api_key: str | None = None
 
     @property
     def allowed_origins(self) -> list[str]:

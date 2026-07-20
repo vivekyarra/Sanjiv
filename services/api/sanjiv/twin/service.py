@@ -260,9 +260,7 @@ def _compatibility(
     records: list[ReferenceRecord],
     assumptions_by_record: dict[str, Assumption],
 ) -> list[RefineryCompatibility]:
-    node_record_by_evidence = {
-        evidence_by_record[item.record_id].id: item for item in records
-    }
+    node_record_by_evidence = {evidence_by_record[item.record_id].id: item for item in records}
     output: list[RefineryCompatibility] = []
     for refinery in (item for item in nodes if item.kind is AssetKind.REFINERY):
         refinery_record = node_record_by_evidence[refinery.evidence_ids[0]]

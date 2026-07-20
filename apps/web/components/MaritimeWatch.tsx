@@ -204,6 +204,7 @@ export function MaritimeWatch() {
         </div>
         <div className="status-cluster">
           <Link className="module-link" href="/digital-twin">Digital Twin</Link>
+          <Link className="module-link" href="/scenario-lab">Scenario Lab</Link>
           <span className={`mode-chip ${mode.tone}`}>{mode.label}</span>
           <span className={`connection-chip ${socketState.toLowerCase()}`}><i />{connectionLabel(socketState)}</span>
           <time>{snapshot ? formatTime(snapshot.as_of) : "Waiting for source"}</time>
