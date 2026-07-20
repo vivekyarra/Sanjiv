@@ -16,4 +16,5 @@ build/
 .idea/
 .vscode/
 minio-data/
+data/runtime/
 postgres-data/

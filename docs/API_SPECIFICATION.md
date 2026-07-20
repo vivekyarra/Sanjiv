@@ -7,15 +7,18 @@ Base path is `/api/v1`; JSON uses snake_case and UTC RFC 3339 timestamps. OpenAP
 ```text
 GET  /health/live
 GET  /health/ready
-GET  /api/v1/operations/snapshot?bbox=&cursor=
+GET  /api/v1/operations/snapshot
 GET  /api/v1/vessels/{vessel_id}
-GET  /api/v1/chokepoints
-GET  /api/v1/risks
+GET  /api/v1/vessels/{vessel_id}/history?limit=100
+GET  /api/v1/geofences
 GET  /api/v1/sources/health
+GET  /api/v1/operations/mode-transitions
 WS   /ws/v1/operations?after={cursor}
 ```
 
-Snapshots return `mode`, `as_of`, `cursor`, source health, features, and provenance references. WebSocket messages use `{schema_version, sequence, event_type, occurred_at, mode, payload}` with `snapshot_required` for gaps.
+Phase 1 snapshots return `operating_mode`, `mode_explanation`, `connection_state`, `as_of`, `cursor`, source health, geofences, vessel views, and fully enveloped aggregate metrics. Each vessel position contains source/effective/fetch/compute times, truth/freshness, evidence IDs, transformation, and adapter version. History limits are `1..1000`.
+
+WebSocket messages use `{schema_version, sequence, event_type, occurred_at, operating_mode, payload}`. Event types are `VESSEL_POSITION | GEOFENCE_EVENT | MODE_TRANSITION | HEARTBEAT | RESYNC_REQUIRED | ERROR`. Sequence is monotonic within an API process. On reconnect the client sends its last cursor; retained events are delivered in order. A cursor outside retention or a bounded-queue overflow yields `RESYNC_REQUIRED` with the snapshot URL. An invalid cursor closes with policy code `1008`. Idle connections receive heartbeats at `SANJIV_WEBSOCKET_HEARTBEAT_SECONDS`.
 
 ## Scenarios and computation
 
@@ -49,14 +52,7 @@ Plan generation requests explicit profiles; the standard request is all of `LOWE
 
 ## Replay
 
-```text
-GET  /api/v1/replay-datasets
-POST /api/v1/replay-sessions
-POST /api/v1/replay-sessions/{session_id}/stop
-POST /api/v1/operations/mode-transitions/{transition_id}/acknowledge
-```
-
-Replay creation names a dataset, start position, speed, and operator reason. It returns a new mode session and audit ID. Automatic source-failure proposals require acknowledgement before replay is presented as the active operational feed.
+Phase 1 replay selection is startup configuration, not an unauthenticated mutation API. `SANJIV_REPLAY_DATASET`, `SANJIV_REPLAY_SPEED`, and `SANJIV_REPLAY_LOOP` select a validated manifest. Missing live credentials or exhausted live retries cause an automatic, audited, visibly explained fallback. Authenticated replay-session mutation endpoints are planned but are not part of the Phase 1 attack surface.
 
 ## Validation and failures
 

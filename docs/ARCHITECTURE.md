@@ -43,7 +43,11 @@ Official/public sources + user inputs
 
 ### Live WebSocket
 
-The browser obtains an authenticated snapshot cursor over REST and opens `/ws/v1/operations?after=<cursor>`. The gateway emits versioned envelopes with monotonically increasing sequence IDs. The client applies deltas idempotently, detects gaps, and refetches a snapshot. Heartbeats carry server time, mode, and source health; reconnect uses bounded backoff. Replay and live events cannot share a mode session.
+The Phase 1 browser obtains a snapshot cursor over read-only REST and opens `/ws/v1/operations?after=<cursor>`. The in-process broker emits versioned envelopes with monotonically increasing sequence IDs and bounded per-subscriber queues. Retained deltas are replayed on reconnect. An expired cursor or queue overflow emits `RESYNC_REQUIRED`, causing a snapshot refetch. Heartbeats carry cursor, mode, connection state, and freshness; the client reconnects with exponential backoff capped at 30 seconds. Redis fan-out and authenticated multi-user operations remain later deployment work.
+
+### Live Maritime Watch vertical slice
+
+`AISSourceAdapter` isolates providers from normalization. `AISStreamAdapter` connects only from the backend, applies bounded retries/timeouts and a bounded WebSocket queue, and never exists when its feature flag or credential is absent. `ReplayAISAdapter` verifies a manifest checksum and emits the identical `RawAISMessage` contract. The normalizer validates coordinates, identifiers, and ordered UTC timestamps; creates immutable evidence; and either persists canonical positions or writes only a reason code and payload hash to quarantine. PostgreSQL stores vessel identity, Timescale position history, PostGIS tracks/geofences/events, replay metadata, and audited mode transitions. Current map state is cached in-process for presentation latency; PostgreSQL remains authoritative.
 
 ### Digital twin
 
@@ -72,7 +76,7 @@ The evidence auditor verifies schema completeness, allowed truth transitions, ev
 
 ### Replay and fallback
 
-Recorded segments have signed/checksummed manifests, source attribution, capture times, and license/redaction metadata. Starting replay requires an explicit API command or acknowledged source-failure transition and creates a new mode session. The UI permanently shows `LIVE`, `REPLAY`, `FIXTURE`, or `CACHED`; timestamps do not advance to mimic live data. Returning to live requires a healthy-source check and another audited transition.
+Phase 1 replay datasets have checksummed manifests, classification, source attribution, original source interval, transformation, and license/redistribution metadata. If the live adapter is absent or exhausts bounded retries, the service automatically records an audit-linked `DEGRADED→REPLAY` transition so the demonstration remains available. This is never silent: REST, WebSocket, source-health UI, and the persistent banner identify replay and explain the reason. Original source timestamps are preserved and fixture positions are `ASSUMPTION` with `REPLAY` freshness. A future authenticated operator-control phase may add manual replay sessions; Phase 1 exposes no administrative mutation endpoint.
 
 ## Security boundaries
 

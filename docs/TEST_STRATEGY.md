@@ -28,7 +28,7 @@ Tests must prove truth handling and physical/solver invariants, not only endpoin
 | Reproducibility | Same canonical inputs, versions, and seed yield the same allocations/objective within tolerance. |
 | Grade exclusion | Hard-incompatible or sanctioned grades have zero allocation despite lower cost. |
 | Claim blocking | Cargo ownership, charter availability, private inventory/contract/fill, and exact price claims are blocked without supplied evidence. |
-| Replay fallback | Mode switch is visible, acknowledged, audited, and uses original timestamps; replay is never `LIVE`. |
+| Replay fallback | Mode switch is visible, explained, audited, and uses original timestamps; automatic failure fallback and replay are never `LIVE`. |
 | API failure | Timeouts, 429, malformed payloads, unavailable stores, duplicate idempotency keys, and partial commit rollback. |
 | LLM fallback | Invalid JSON, unknown asset, timeout, prompt injection, and no credential produce the structured form without running. |
 | Performance | Measure ingest-to-map p95, compile, simulation, optimisation, end-to-end latency, WebSocket loss, and map FPS under declared load. |

@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "sanjiv-maritime-watch-synthetic-v1",
+  "classification": "SYNTHETIC_FIXTURE",
+  "description": "Small deterministic synthetic vessel movement fixture for local development and CI. It is not recorded AIS data.",
+  "source_id": "SANJIV_SYNTHETIC_REPLAY",
+  "data_file": "messages.ndjson",
+  "checksum_sha256": "8b4d156dac3abe18ea958f8d65de2cbf4d2c7e7882e6020e24e88b26a1bbf710",
+  "starts_at": "2026-07-20T10:00:00Z",
+  "ends_at": "2026-07-20T10:01:10Z",
+  "record_count": 8,
+  "license": "CC0-1.0; generated synthetic fixture with no real vessel or restricted AIS data",
+  "redistribution": "Permitted with fixture classification preserved",
+  "transformation": "synthetic-maritime-fixture-generator-1.0.0",
+  "adapter_version": "replay-adapter-1.0.0"
+}
