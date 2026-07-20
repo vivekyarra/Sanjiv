@@ -57,6 +57,7 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 - Assumptions: demo refinery capacities/limits, supplier volumes, route capacities/transit/distance, grade properties, and topology are visible, expiring fixture assumptions. Compatibility configuration component is a visible versioned calibration.
 - Incomplete items and risks: no live PPAC/Comtrade acquisition is claimed; official endpoint/licensing verification remains required before observed imports. Browser screenshots are deferred to the Phase 9 Playwright gate. npm continues to report two pre-existing moderate advisories; no forced/breaking fix was applied.
 - Phase commit: `94a51f8991c8cb2d4fcaaa0e8dd690c57bd44fcc` (`feat(phase-2): add India energy network digital twin`), pushed to origin.
+- Phase 2 CI correction: `6918294` updates the workflow's expected Alembic head from `0002` to `0003`; the exact `0003 -> 0001 -> 0003` path passed locally and remotely.
 
 ## Phase 3 - Scenario compiler and impact simulator
 
@@ -89,5 +90,5 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 ## Final pull request and CI
 
 - Pull request: draft [#2](https://github.com/vivekyarra/Sanjiv/pull/2) against `main`.
-- CI status after Phase 2 push: the first remote run exposed a stale hard-coded `20260720_0002` head assertion. The migration itself succeeded; CI configuration was corrected to assert `20260720_0003` while preserving the full downgrade to `0001`. Replacement runs are pending.
+- CI status after Phase 2 correction: green. GitHub Actions `verify` passed for both branch-push and pull-request events (runs `29768472931` and `29768476263`).
 - Ready for review: no.
