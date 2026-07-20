@@ -1,0 +1,32 @@
+{
+  "name": "sanjiv",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "npm run dev --workspace @sanjiv/web",
+    "dev:web": "npm run dev --workspace @sanjiv/web",
+    "dev:api": "uv run uvicorn --app-dir services/api sanjiv.main:app --reload",
+    "lint": "npm run lint --workspaces --if-present && uv run ruff check .",
+    "typecheck": "npm run typecheck --workspaces --if-present && uv run mypy services/api",
+    "test": "npm run test --workspaces --if-present && uv run pytest",
+    "build": "npm run build --workspaces --if-present",
+    "contracts:generate": "node scripts/contracts.mjs --write",
+    "contracts:check": "node scripts/contracts.mjs --check",
+    "db:upgrade": "uv run alembic upgrade head",
+    "db:downgrade": "uv run alembic downgrade -1"
+  },
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=11.0.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.9.1"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.20"
+    },
+    "postcss": "8.5.20"
+  }
+}
