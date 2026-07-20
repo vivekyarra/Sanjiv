@@ -10,7 +10,7 @@ Sanjiv is India’s Energy Resilience Command Center. Its tagline is “Keep Ind
 - `packages/contracts`: generated TypeScript contracts. Do not hand-edit generated files.
 - `infra`: deployment and service configuration.
 - `data/fixtures`: explicitly synthetic test/demo fixtures.
-- `data/replay`: recorded-real-data replay manifests and immutable payloads.
+- `data/replay`: versioned replay manifests and immutable payloads; every dataset must declare `RECORDED_REAL_DATA` or `SYNTHETIC_FIXTURE` and its redistribution rights.
 - `tests`: cross-module and contract tests.
 - `docs`: architecture, model, API, source, test, risk, and demo decisions.
 

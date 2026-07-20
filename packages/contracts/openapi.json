@@ -266,6 +266,16 @@
         "title": "AuditOutcome",
         "type": "string"
       },
+      "ConnectionState": {
+        "enum": [
+          "CONNECTING",
+          "CONNECTED",
+          "DISCONNECTED",
+          "DEGRADED"
+        ],
+        "title": "ConnectionState",
+        "type": "string"
+      },
       "DataMode": {
         "enum": [
           "LIVE",
@@ -439,6 +449,123 @@
         "title": "FreshnessStatus",
         "type": "string"
       },
+      "Geofence": {
+        "additionalProperties": false,
+        "properties": {
+          "authoritative": {
+            "default": false,
+            "title": "Authoritative",
+            "type": "boolean"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "coordinates": {
+            "items": {
+              "items": {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "title": "Coordinates",
+            "type": "array"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "evidence_id": {
+            "format": "uuid",
+            "title": "Evidence Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "CHOKEPOINT",
+              "PORT"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "slug": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          },
+          "source_ref": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Source Ref",
+            "type": "string"
+          },
+          "transformation": {
+            "title": "Transformation",
+            "type": "string"
+          },
+          "truth_class": {
+            "$ref": "#/components/schemas/TruthClass"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "kind",
+          "coordinates",
+          "source_ref",
+          "effective_at",
+          "truth_class",
+          "confidence",
+          "evidence_id",
+          "transformation",
+          "version"
+        ],
+        "title": "Geofence",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
       "HealthResponse": {
         "properties": {
           "checked_at": {
@@ -461,8 +588,8 @@
             "type": "string"
           },
           "version": {
-            "const": "0.1.0",
-            "default": "0.1.0",
+            "const": "0.2.0",
+            "default": "0.2.0",
             "title": "Version",
             "type": "string"
           }
@@ -472,6 +599,83 @@
           "checked_at"
         ],
         "title": "HealthResponse",
+        "type": "object"
+      },
+      "IndiaBoundAssessment": {
+        "additionalProperties": false,
+        "properties": {
+          "completeness": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Completeness",
+            "type": "number"
+          },
+          "contributions": {
+            "items": {
+              "$ref": "#/components/schemas/InferenceContribution"
+            },
+            "title": "Contributions",
+            "type": "array"
+          },
+          "disclaimer": {
+            "title": "Disclaimer",
+            "type": "string"
+          },
+          "likelihood": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "likelihood",
+          "completeness",
+          "contributions",
+          "disclaimer"
+        ],
+        "title": "IndiaBoundAssessment",
+        "type": "object"
+      },
+      "InferenceContribution": {
+        "additionalProperties": false,
+        "properties": {
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          },
+          "weight": {
+            "exclusiveMinimum": 0.0,
+            "maximum": 1.0,
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "weight",
+          "explanation"
+        ],
+        "title": "InferenceContribution",
         "type": "object"
       },
       "MetricEnvelope_float_": {
@@ -560,6 +764,290 @@
         ],
         "title": "MetricEnvelope[float]",
         "type": "object"
+      },
+      "MetricEnvelope_int_": {
+        "additionalProperties": false,
+        "properties": {
+          "computed_at": {
+            "format": "date-time",
+            "title": "Computed At",
+            "type": "string"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "freshness_status": {
+            "$ref": "#/components/schemas/FreshnessStatus"
+          },
+          "model_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Model Version",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "$ref": "#/components/schemas/SourceRef"
+            },
+            "minItems": 1,
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "transformation": {
+            "maxLength": 250,
+            "minLength": 1,
+            "title": "Transformation",
+            "type": "string"
+          },
+          "truth_class": {
+            "$ref": "#/components/schemas/TruthClass"
+          },
+          "unit": {
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "value",
+          "unit",
+          "truth_class",
+          "confidence",
+          "evidence_ids",
+          "source_refs",
+          "effective_at",
+          "fetched_at",
+          "computed_at",
+          "freshness_status",
+          "transformation",
+          "model_version"
+        ],
+        "title": "MetricEnvelope[int]",
+        "type": "object"
+      },
+      "OperatingMode": {
+        "enum": [
+          "LIVE",
+          "DEGRADED",
+          "REPLAY"
+        ],
+        "title": "OperatingMode",
+        "type": "string"
+      },
+      "OperatingModeTransition": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_event_id": {
+            "format": "uuid",
+            "title": "Audit Event Id",
+            "type": "string"
+          },
+          "automatic": {
+            "title": "Automatic",
+            "type": "boolean"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "from_mode": {
+            "$ref": "#/components/schemas/OperatingMode"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "reason_code": {
+            "title": "Reason Code",
+            "type": "string"
+          },
+          "to_mode": {
+            "$ref": "#/components/schemas/OperatingMode"
+          }
+        },
+        "required": [
+          "id",
+          "from_mode",
+          "to_mode",
+          "occurred_at",
+          "reason_code",
+          "explanation",
+          "automatic",
+          "audit_event_id"
+        ],
+        "title": "OperatingModeTransition",
+        "type": "object"
+      },
+      "OperationsSnapshot": {
+        "additionalProperties": false,
+        "properties": {
+          "as_of": {
+            "format": "date-time",
+            "title": "As Of",
+            "type": "string"
+          },
+          "connection_state": {
+            "$ref": "#/components/schemas/ConnectionState"
+          },
+          "cursor": {
+            "minimum": 0.0,
+            "title": "Cursor",
+            "type": "integer"
+          },
+          "geofences": {
+            "items": {
+              "$ref": "#/components/schemas/Geofence"
+            },
+            "title": "Geofences",
+            "type": "array"
+          },
+          "latest_transition": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OperatingModeTransition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "messages_per_minute": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mode_explanation": {
+            "title": "Mode Explanation",
+            "type": "string"
+          },
+          "operating_mode": {
+            "$ref": "#/components/schemas/OperatingMode"
+          },
+          "schema_version": {
+            "const": "1.0",
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "source_health": {
+            "$ref": "#/components/schemas/SourceHealthRecord"
+          },
+          "vessel_count": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_int_"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "vessels": {
+            "items": {
+              "$ref": "#/components/schemas/VesselOperationalView"
+            },
+            "title": "Vessels",
+            "type": "array"
+          }
+        },
+        "required": [
+          "cursor",
+          "as_of",
+          "operating_mode",
+          "mode_explanation",
+          "connection_state",
+          "source_health",
+          "vessels",
+          "geofences"
+        ],
+        "title": "OperationsSnapshot",
+        "type": "object"
+      },
+      "SanctionsAssessment": {
+        "additionalProperties": false,
+        "properties": {
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SanctionsMatchStatus"
+          },
+          "truth_class": {
+            "$ref": "#/components/schemas/TruthClass"
+          }
+        },
+        "required": [
+          "status",
+          "truth_class",
+          "confidence",
+          "evidence_ids",
+          "explanation"
+        ],
+        "title": "SanctionsAssessment",
+        "type": "object"
+      },
+      "SanctionsMatchStatus": {
+        "enum": [
+          "NOT_SCREENED",
+          "NO_MATCH",
+          "POTENTIAL_MATCH",
+          "EXACT_MATCH"
+        ],
+        "title": "SanctionsMatchStatus",
+        "type": "string"
       },
       "SourceHealthRecord": {
         "additionalProperties": false,
@@ -721,6 +1209,398 @@
         ],
         "title": "TruthClass",
         "type": "string"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VesselHistoryResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "positions": {
+            "items": {
+              "$ref": "#/components/schemas/VesselPosition"
+            },
+            "title": "Positions",
+            "type": "array"
+          },
+          "segments": {
+            "items": {
+              "$ref": "#/components/schemas/VesselTrackSegment"
+            },
+            "title": "Segments",
+            "type": "array"
+          },
+          "vessel_id": {
+            "format": "uuid",
+            "title": "Vessel Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "vessel_id",
+          "positions",
+          "segments"
+        ],
+        "title": "VesselHistoryResponse",
+        "type": "object"
+      },
+      "VesselOperationalView": {
+        "additionalProperties": false,
+        "properties": {
+          "india_bound": {
+            "$ref": "#/components/schemas/IndiaBoundAssessment"
+          },
+          "position": {
+            "$ref": "#/components/schemas/VesselPosition"
+          },
+          "recent_track": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Recent Track",
+            "type": "array"
+          },
+          "sanctions": {
+            "$ref": "#/components/schemas/SanctionsAssessment"
+          }
+        },
+        "required": [
+          "position",
+          "recent_track",
+          "india_bound",
+          "sanctions"
+        ],
+        "title": "VesselOperationalView",
+        "type": "object"
+      },
+      "VesselPosition": {
+        "additionalProperties": false,
+        "properties": {
+          "adapter_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Adapter Version",
+            "type": "string"
+          },
+          "computed_at": {
+            "format": "date-time",
+            "title": "Computed At",
+            "type": "string"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "course_degrees": {
+            "anyOf": [
+              {
+                "exclusiveMaximum": 360.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Course Degrees"
+          },
+          "destination_raw": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Destination Raw"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "freshness_status": {
+            "$ref": "#/components/schemas/FreshnessStatus"
+          },
+          "heading_degrees": {
+            "anyOf": [
+              {
+                "maximum": 359.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heading Degrees"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "imo": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{7}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Imo"
+          },
+          "latitude": {
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Latitude",
+            "type": "number"
+          },
+          "longitude": {
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Longitude",
+            "type": "number"
+          },
+          "mmsi": {
+            "pattern": "^\\d{9}$",
+            "title": "Mmsi",
+            "type": "string"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/DataMode"
+          },
+          "navigation_status": {
+            "anyOf": [
+              {
+                "maximum": 15.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Navigation Status"
+          },
+          "ship_type": {
+            "anyOf": [
+              {
+                "maximum": 99.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ship Type"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "source_record_id": {
+            "title": "Source Record Id",
+            "type": "string"
+          },
+          "source_timestamp": {
+            "format": "date-time",
+            "title": "Source Timestamp",
+            "type": "string"
+          },
+          "speed_knots": {
+            "anyOf": [
+              {
+                "maximum": 102.3,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed Knots"
+          },
+          "transformation": {
+            "maxLength": 250,
+            "minLength": 1,
+            "title": "Transformation",
+            "type": "string"
+          },
+          "truth_class": {
+            "$ref": "#/components/schemas/TruthClass"
+          },
+          "vessel_id": {
+            "format": "uuid",
+            "title": "Vessel Id",
+            "type": "string"
+          },
+          "vessel_name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vessel Name"
+          }
+        },
+        "required": [
+          "id",
+          "vessel_id",
+          "mmsi",
+          "latitude",
+          "longitude",
+          "source_timestamp",
+          "fetched_at",
+          "computed_at",
+          "source_id",
+          "source_record_id",
+          "mode",
+          "truth_class",
+          "freshness_status",
+          "confidence",
+          "evidence_ids",
+          "transformation",
+          "adapter_version"
+        ],
+        "title": "VesselPosition",
+        "type": "object"
+      },
+      "VesselTrackSegment": {
+        "additionalProperties": false,
+        "properties": {
+          "coordinates": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Coordinates",
+            "type": "array"
+          },
+          "distance_nm": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "end_at": {
+            "format": "date-time",
+            "title": "End At",
+            "type": "string"
+          },
+          "end_position_id": {
+            "format": "uuid",
+            "title": "End Position Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "start_at": {
+            "format": "date-time",
+            "title": "Start At",
+            "type": "string"
+          },
+          "start_position_id": {
+            "format": "uuid",
+            "title": "Start Position Id",
+            "type": "string"
+          },
+          "vessel_id": {
+            "format": "uuid",
+            "title": "Vessel Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "vessel_id",
+          "start_position_id",
+          "end_position_id",
+          "start_at",
+          "end_at",
+          "coordinates",
+          "distance_nm"
+        ],
+        "title": "VesselTrackSegment",
+        "type": "object"
       }
     }
   },
@@ -728,13 +1608,12 @@
     "description": "Keep India's energy moving.",
     "summary": "India's Energy Resilience Command Center",
     "title": "Sanjiv API",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "openapi": "3.1.0",
   "paths": {
     "/api/v1/contracts/sample": {
       "get": {
-        "description": "Expose the typed Phase 0 sample; no operational feature or live claim.",
         "operationId": "contract_sample_api_v1_contracts_sample_get",
         "responses": {
           "200": {
@@ -751,6 +1630,200 @@
         "summary": "Contract Sample",
         "tags": [
           "foundation"
+        ]
+      }
+    },
+    "/api/v1/geofences": {
+      "get": {
+        "operationId": "geofences_api_v1_geofences_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Geofence"
+                  },
+                  "title": "Response Geofences Api V1 Geofences Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Geofences",
+        "tags": [
+          "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/operations/mode-transitions": {
+      "get": {
+        "operationId": "mode_transitions_api_v1_operations_mode_transitions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OperatingModeTransition"
+                  },
+                  "title": "Response Mode Transitions Api V1 Operations Mode Transitions Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Mode Transitions",
+        "tags": [
+          "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/operations/snapshot": {
+      "get": {
+        "operationId": "operations_snapshot_api_v1_operations_snapshot_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationsSnapshot"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Operations Snapshot",
+        "tags": [
+          "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/sources/health": {
+      "get": {
+        "operationId": "source_health_api_v1_sources_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SourceHealthRecord"
+                  },
+                  "title": "Response Source Health Api V1 Sources Health Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Source Health",
+        "tags": [
+          "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/vessels/{vessel_id}": {
+      "get": {
+        "operationId": "vessel_detail_api_v1_vessels__vessel_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vessel_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Vessel Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VesselOperationalView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Vessel Detail",
+        "tags": [
+          "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/vessels/{vessel_id}/history": {
+      "get": {
+        "operationId": "vessel_history_api_v1_vessels__vessel_id__history_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vessel_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Vessel Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VesselHistoryResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Vessel History",
+        "tags": [
+          "maritime-watch"
         ]
       }
     },

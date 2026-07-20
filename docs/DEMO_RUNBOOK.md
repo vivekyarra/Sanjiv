@@ -4,9 +4,22 @@
 
 1. Run the full verification suite and record the commit, model versions, hardware, and benchmark report.
 2. Confirm source credentials without displaying them; inspect every source’s health, cadence, and latest evidence time.
-3. Validate the recorded-real replay manifest and checksum. Keep fixtures clearly separate.
+3. Validate the selected replay manifest and checksum. State whether it is `RECORDED_REAL_DATA` or `SYNTHETIC_FIXTURE`; keep the classifications separate.
 4. Confirm the main Hormuz scenario and two alternate supported scenarios are feasible with current data/assumptions.
 5. Open the command center with no stale approval or scenario state. Never prewrite a latency result.
+
+## Phase 1 demonstration path
+
+1. Set `SANJIV_REPLAY_SPEED=1`, start PostgreSQL, upgrade migrations, then start the web and API commands from `docs/PHASE_1_LIVE_MARITIME_WATCH.md` close together so the 70-second fixture movement is visible.
+2. Open `http://localhost:3000` on Live Maritime Watch.
+3. Point to connection state, source health, last update, and freshness before interpreting a marker.
+4. With no AISStream key, show the persistent `REPLAY — NOT LIVE DATA` banner and explain `AISSTREAM_NOT_CONFIGURED`. State that the dataset is a synthetic fixture with fictional vessels.
+5. Select each vessel and show its recent track, reported destination, position truth class, evidence UUID, source/fetch times, transformation, adapter version, and confidence.
+6. Contrast the source position with the `INFERRED` India-bound likelihood and its disclaimer. State that Sanjiv does not know cargo ownership or charter availability.
+7. Show the dashed chokepoint and port areas and state that these Phase 1 polygons are non-authoritative `ASSUMPTION` fixtures.
+8. Open `/api/v1/operations/mode-transitions` and `/api/v1/sources/health` to show the recorded fallback reason and `REPLAY` freshness.
+9. Stop the API, restart it, and confirm the latest vessels and `/history` remain available from PostgreSQL with the same evidence IDs.
+10. If an operator supplies an AISStream key, restart and wait for a validated message before showing `LIVE`. Do not claim live operation when no validated live record exists.
 
 ## Exact demonstration path
 
@@ -26,7 +39,7 @@
 
 ## Failure branches
 
-- AIS fails: show interruption and age, request/confirm replay, show recorded capture interval, then continue.
+- AIS fails: show interruption and age, then show the automatic audited replay transition, dataset classification, original interval, and persistent non-live banner.
 - LLM fails: open the pre-populated structured form, validate it, and continue.
 - Market/source data is stale: show stale inputs and their effect; use an explicit assumption only with operator confirmation.
 - Solver is infeasible: show diagnostics, adjust a visible policy assumption, create a new run, and preserve the failed run.

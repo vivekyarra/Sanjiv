@@ -5,7 +5,7 @@
 
 Sanjiv is a decision-intelligence system for observing threats to India’s energy-supply corridors, compiling validated disruption scenarios, simulating no-action consequences, and producing deterministic, evidence-backed procurement and strategic-reserve response plans.
 
-The repository is currently at **Phase 0**: repository foundation and canonical truth/data contracts. Maritime ingestion, maps, simulation, and optimisation are intentionally not implemented yet.
+The repository includes **Phase 0** and the **Phase 1 Live Maritime Watch** vertical slice. It runs from a deterministic, explicitly synthetic replay fixture without credentials and can use AISStream when a key is supplied. Energy-network modelling, scenarios, simulation, and optimisation remain intentionally unimplemented.
 
 ## Principles
 
@@ -41,7 +41,9 @@ In a second terminal:
 npm run dev:web
 ```
 
-The web shell runs at `http://localhost:3000`; API documentation is at `http://localhost:8000/docs`.
+The Live Maritime Watch runs at `http://localhost:3000`; API documentation is at `http://localhost:8000/docs`. With no `AISSTREAM_API_KEY`, the service automatically records an audited transition to `REPLAY`, and the UI displays a persistent `REPLAY — NOT LIVE DATA` banner.
+
+For optional live operation, create an AISStream account, set `AISSTREAM_API_KEY` only in `.env`, and leave `SANJIV_AIS_ENABLED=true`. Never place the key in browser variables or committed files. See [the Phase 1 operator guide](docs/PHASE_1_LIVE_MARITIME_WATCH.md) for replay controls, database validation, troubleshooting, and data-use limits.
 
 ## Verification
 

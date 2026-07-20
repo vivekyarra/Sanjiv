@@ -41,3 +41,15 @@
 **Decision:** npm workspaces manage TypeScript, uv manages Python, and Pydantic/OpenAPI generates TypeScript contracts. PostgreSQL/PostGIS/TimescaleDB is authoritative; Redis handles ephemeral state; MinIO stores raw/replay objects.
 
 **Why:** This matches the selected stack while keeping contract ownership singular. **Rejected:** duplicated hand-written schemas and event-stream infrastructure before load measurements.
+
+## ADR-008: Automatic, explicit Phase 1 replay fallback
+
+**Decision:** Missing AIS credentials or exhausted bounded provider retries automatically move Live Maritime Watch to replay. The transition and reason are audit-linked, source health reports `REPLAY`, original timestamps remain unchanged, and the UI shows a persistent `REPLAY — NOT LIVE DATA` banner.
+
+**Why:** The Phase 1 completion gate requires the product to remain demonstrable when live AIS fails. Requiring an acknowledgement before the read-only map can recover conflicts with that gate. **Rejected:** silent fallback, rewriting replay timestamps to look current, and unauthenticated mode-control endpoints.
+
+## ADR-009: MapLibre-native Phase 1 layers
+
+**Decision:** Phase 1 renders its bounded vessel, track, and polygon fixture set with MapLibre-native GeoJSON layers. deck.gl is reserved for a measured scale threshold.
+
+**Why:** Native layers meet the current operational slice with fewer runtime dependencies. **Rejected:** paid map SDKs and adding a second renderer before browser profiling shows a need.

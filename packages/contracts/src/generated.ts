@@ -11,11 +11,110 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Contract Sample
-         * @description Expose the typed Phase 0 sample; no operational feature or live claim.
-         */
+        /** Contract Sample */
         get: operations["contract_sample_api_v1_contracts_sample_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/geofences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Geofences */
+        get: operations["geofences_api_v1_geofences_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/operations/mode-transitions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Mode Transitions */
+        get: operations["mode_transitions_api_v1_operations_mode_transitions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/operations/snapshot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Operations Snapshot */
+        get: operations["operations_snapshot_api_v1_operations_snapshot_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sources/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Source Health */
+        get: operations["source_health_api_v1_sources_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vessels/{vessel_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Vessel Detail */
+        get: operations["vessel_detail_api_v1_vessels__vessel_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vessels/{vessel_id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Vessel History */
+        get: operations["vessel_history_api_v1_vessels__vessel_id__history_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -154,6 +253,11 @@ export interface components {
          */
         AuditOutcome: "SUCCEEDED" | "FAILED" | "BLOCKED";
         /**
+         * ConnectionState
+         * @enum {string}
+         */
+        ConnectionState: "CONNECTING" | "CONNECTED" | "DISCONNECTED" | "DEGRADED";
+        /**
          * DataMode
          * @enum {string}
          */
@@ -213,6 +317,57 @@ export interface components {
          * @enum {string}
          */
         FreshnessStatus: "LIVE" | "RECENT" | "CURRENT" | "STALE" | "REPLAY" | "UNAVAILABLE";
+        /** Geofence */
+        Geofence: {
+            /**
+             * Authoritative
+             * @default false
+             */
+            authoritative: boolean;
+            /** Confidence */
+            confidence: number;
+            /** Coordinates */
+            coordinates: [
+                number,
+                number
+            ][][];
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /**
+             * Evidence Id
+             * Format: uuid
+             */
+            evidence_id: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "CHOKEPOINT" | "PORT";
+            /** Name */
+            name: string;
+            /** Slug */
+            slug: string;
+            /** Source Ref */
+            source_ref: string;
+            /** Transformation */
+            transformation: string;
+            truth_class: components["schemas"]["TruthClass"];
+            /** Version */
+            version: string;
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /** HealthResponse */
         HealthResponse: {
             /**
@@ -233,10 +388,33 @@ export interface components {
             status: "alive" | "ready";
             /**
              * Version
-             * @default 0.1.0
+             * @default 0.2.0
              * @constant
              */
-            version: "0.1.0";
+            version: "0.2.0";
+        };
+        /** IndiaBoundAssessment */
+        IndiaBoundAssessment: {
+            /** Completeness */
+            completeness: number;
+            /** Contributions */
+            contributions: components["schemas"]["InferenceContribution"][];
+            /** Disclaimer */
+            disclaimer: string;
+            likelihood: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** InferenceContribution */
+        InferenceContribution: {
+            /** Explanation */
+            explanation: string;
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Score */
+            score?: number | null;
+            /** Weight */
+            weight: number;
         };
         /** MetricEnvelope[float] */
         MetricEnvelope_float_: {
@@ -272,6 +450,115 @@ export interface components {
             /** Value */
             value: number;
         };
+        /** MetricEnvelope[int] */
+        MetricEnvelope_int_: {
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Confidence */
+            confidence: number;
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Fetched At
+             * Format: date-time
+             */
+            fetched_at: string;
+            freshness_status: components["schemas"]["FreshnessStatus"];
+            /** Model Version */
+            model_version: string;
+            /** Source Refs */
+            source_refs: components["schemas"]["SourceRef"][];
+            /** Transformation */
+            transformation: string;
+            truth_class: components["schemas"]["TruthClass"];
+            /** Unit */
+            unit: string;
+            /** Value */
+            value: number;
+        };
+        /**
+         * OperatingMode
+         * @enum {string}
+         */
+        OperatingMode: "LIVE" | "DEGRADED" | "REPLAY";
+        /** OperatingModeTransition */
+        OperatingModeTransition: {
+            /**
+             * Audit Event Id
+             * Format: uuid
+             */
+            audit_event_id: string;
+            /** Automatic */
+            automatic: boolean;
+            /** Explanation */
+            explanation: string;
+            from_mode: components["schemas"]["OperatingMode"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Reason Code */
+            reason_code: string;
+            to_mode: components["schemas"]["OperatingMode"];
+        };
+        /** OperationsSnapshot */
+        OperationsSnapshot: {
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            connection_state: components["schemas"]["ConnectionState"];
+            /** Cursor */
+            cursor: number;
+            /** Geofences */
+            geofences: components["schemas"]["Geofence"][];
+            latest_transition?: components["schemas"]["OperatingModeTransition"] | null;
+            messages_per_minute?: components["schemas"]["MetricEnvelope_float_"] | null;
+            /** Mode Explanation */
+            mode_explanation: string;
+            operating_mode: components["schemas"]["OperatingMode"];
+            /**
+             * Schema Version
+             * @default 1.0
+             * @constant
+             */
+            schema_version: "1.0";
+            source_health: components["schemas"]["SourceHealthRecord"];
+            vessel_count?: components["schemas"]["MetricEnvelope_int_"] | null;
+            /** Vessels */
+            vessels: components["schemas"]["VesselOperationalView"][];
+        };
+        /** SanctionsAssessment */
+        SanctionsAssessment: {
+            /** Confidence */
+            confidence: number;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /** Explanation */
+            explanation: string;
+            status: components["schemas"]["SanctionsMatchStatus"];
+            truth_class: components["schemas"]["TruthClass"];
+        };
+        /**
+         * SanctionsMatchStatus
+         * @enum {string}
+         */
+        SanctionsMatchStatus: "NOT_SCREENED" | "NO_MATCH" | "POTENTIAL_MATCH" | "EXACT_MATCH";
         /** SourceHealthRecord */
         SourceHealthRecord: {
             /**
@@ -332,6 +619,146 @@ export interface components {
          * @enum {string}
          */
         TruthClass: "OBSERVED" | "DERIVED" | "INFERRED" | "MODELED" | "ASSUMPTION";
+        /** ValidationError */
+        ValidationError: {
+            /** Context */
+            ctx?: Record<string, never>;
+            /** Input */
+            input?: unknown;
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+        };
+        /** VesselHistoryResponse */
+        VesselHistoryResponse: {
+            /** Positions */
+            positions: components["schemas"]["VesselPosition"][];
+            /** Segments */
+            segments: components["schemas"]["VesselTrackSegment"][];
+            /**
+             * Vessel Id
+             * Format: uuid
+             */
+            vessel_id: string;
+        };
+        /** VesselOperationalView */
+        VesselOperationalView: {
+            india_bound: components["schemas"]["IndiaBoundAssessment"];
+            position: components["schemas"]["VesselPosition"];
+            /** Recent Track */
+            recent_track: [
+                number,
+                number
+            ][];
+            sanctions: components["schemas"]["SanctionsAssessment"];
+        };
+        /** VesselPosition */
+        VesselPosition: {
+            /** Adapter Version */
+            adapter_version: string;
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Confidence */
+            confidence: number;
+            /** Course Degrees */
+            course_degrees?: number | null;
+            /** Destination Raw */
+            destination_raw?: string | null;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Fetched At
+             * Format: date-time
+             */
+            fetched_at: string;
+            freshness_status: components["schemas"]["FreshnessStatus"];
+            /** Heading Degrees */
+            heading_degrees?: number | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Imo */
+            imo?: string | null;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
+            /** Mmsi */
+            mmsi: string;
+            mode: components["schemas"]["DataMode"];
+            /** Navigation Status */
+            navigation_status?: number | null;
+            /** Ship Type */
+            ship_type?: number | null;
+            /** Source Id */
+            source_id: string;
+            /** Source Record Id */
+            source_record_id: string;
+            /**
+             * Source Timestamp
+             * Format: date-time
+             */
+            source_timestamp: string;
+            /** Speed Knots */
+            speed_knots?: number | null;
+            /** Transformation */
+            transformation: string;
+            truth_class: components["schemas"]["TruthClass"];
+            /**
+             * Vessel Id
+             * Format: uuid
+             */
+            vessel_id: string;
+            /** Vessel Name */
+            vessel_name?: string | null;
+        };
+        /** VesselTrackSegment */
+        VesselTrackSegment: {
+            /** Coordinates */
+            coordinates: [
+                number,
+                number
+            ][];
+            distance_nm: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * End At
+             * Format: date-time
+             */
+            end_at: string;
+            /**
+             * End Position Id
+             * Format: uuid
+             */
+            end_position_id: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Start At
+             * Format: date-time
+             */
+            start_at: string;
+            /**
+             * Start Position Id
+             * Format: uuid
+             */
+            start_position_id: string;
+            /**
+             * Vessel Id
+             * Format: uuid
+             */
+            vessel_id: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -357,6 +784,150 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FoundationContractSample"];
+                };
+            };
+        };
+    };
+    geofences_api_v1_geofences_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Geofence"][];
+                };
+            };
+        };
+    };
+    mode_transitions_api_v1_operations_mode_transitions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperatingModeTransition"][];
+                };
+            };
+        };
+    };
+    operations_snapshot_api_v1_operations_snapshot_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperationsSnapshot"];
+                };
+            };
+        };
+    };
+    source_health_api_v1_sources_health_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SourceHealthRecord"][];
+                };
+            };
+        };
+    };
+    vessel_detail_api_v1_vessels__vessel_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vessel_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VesselOperationalView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    vessel_history_api_v1_vessels__vessel_id__history_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                vessel_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VesselHistoryResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

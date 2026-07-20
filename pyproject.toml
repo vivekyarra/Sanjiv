@@ -5,21 +5,27 @@ description = "India's Energy Resilience Command Center"
 requires-python = ">=3.11,<3.14"
 dependencies = [
   "alembic>=1.16,<2",
+  "asyncpg>=0.30,<1",
   "fastapi>=0.116,<1",
+  "geoalchemy2>=0.18,<1",
   "pydantic>=2.11,<3",
   "pydantic-settings>=2.10,<3",
   "psycopg[binary]>=3.2,<4",
   "sqlalchemy>=2.0,<3",
+  "shapely>=2.1,<3",
   "uvicorn[standard]>=0.35,<1",
+  "websockets>=16,<17",
 ]
 
 [dependency-groups]
 dev = [
   "httpx>=0.28,<1",
+  "httpx2>=2.7,<3",
   "mypy>=1.17,<2",
   "pytest>=8.4,<9",
   "pytest-asyncio>=1.1,<2",
   "ruff>=0.12,<1",
+  "types-shapely>=2.1,<3",
 ]
 
 [tool.uv]

@@ -62,6 +62,16 @@ Canonical contracts are Pydantic v2 models exposed through OpenAPI and generated
 | `SourceHealthRecord` | `id`, source ID, capability state, checked/last-success times, expected cadence, stale-after, lag, message/error counts, circuit state, mode, redacted error code. |
 | `AuditEvent` | `id`, timestamp, actor/service, action, resource type/ID, before/after hashes, reason, correlation/causation IDs, IP/session metadata policy, outcome. Append-only. |
 
+## Phase 1 maritime transport contracts
+
+- `RawAISMessage` is the provider-neutral boundary: source and record IDs, source timestamp, fetch timestamp, data mode, dataset/version/license/source URL, and an opaque payload. Extra fields and unordered or naive timestamps are rejected.
+- `VesselPosition` stores normalized MMSI/IMO/name/type, WGS84 point, SOG/COG/heading/navigation status, reported destination, separate source/fetch/compute timestamps, source and mode, truth/freshness/confidence, evidence IDs, transformation, and adapter version.
+- `VesselTrackSegment.distance_nm` uses the canonical `MetricEnvelope[float]`; geofence entry/exit is `DERIVED` from position evidence plus the geofence fixture evidence.
+- `Geofence` includes polygon, kind, source reference, effective time, truth, confidence, evidence ID, transformation/version, and `authoritative`. Phase 1 committed polygons are development approximations: `ASSUMPTION`, low confidence, and `authoritative=false`.
+- `ReplayManifest` declares `SYNTHETIC_FIXTURE` or `RECORDED_REAL_DATA`, source, checksum, source-time interval, count, license, redistribution rule, transformation, and adapter version. Its NDJSON records contain source record ID, source timestamp, and provider payload.
+- `OperationsEvent` uses schema `1.0`, sequence, event type, event time, operating mode, and typed-by-event payload. `OperationsSnapshot` is the resynchronization authority.
+- `OperatingModeTransition` records `from_mode`, `to_mode`, time, reason/explanation, whether automatic, and the associated append-only audit event ID.
+
 ## Contract rules
 
 - Preserve raw source values separately from normalized values.

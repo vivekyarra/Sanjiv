@@ -16,11 +16,13 @@ SourceAdapter[TSource, TNormalized]
 
 `ObservationBatch` carries source ID, mode, records, cursor, effective/fetch interval, license metadata, raw-object checksum, and warnings. Adapters implement timeouts, bounded exponential backoff with jitter, rate-limit handling, a circuit breaker, schema validation, raw capture, and deterministic normalization. Fixture and replay readers implement the same output contract but distinct modes.
 
+Phase 1 streaming AIS uses the narrower asynchronous interface `source_id`, `mode`, `health() -> AdapterHealth`, and `stream() -> AsyncIterator[RawAISMessage]`. Both AISStream and replay implement it; normalization, evidence creation, persistence, and transport do not import provider-specific payload types.
+
 ## Integrations
 
 | Source | Primary class | Use | Credential placeholder | Setup and truth treatment |
 |---|---|---|---|---|
-| AISStream | live | AIS positions/messages | `AISSTREAM_API_KEY` | Backend WebSocket only. Register with provider; verify current subscription schema. Raw message is observed; route/destination conclusions are inferred. |
+| AISStream | live | AIS positions/messages | `AISSTREAM_API_KEY` | Implemented behind `SANJIV_AIS_ENABLED`. Backend WebSocket only at the documented `/v0/stream` endpoint; key is sent in the initial subscription and never logged. Raw validated live position is `OBSERVED`; reported destination remains observed text, while India-bound conclusions are `INFERRED`. Provider is beta/no-SLA, so bounded retry falls back visibly to replay. |
 | IMF PortWatch | periodic | Daily/historical port and passage baselines | none documented in repo | Verify official IMF download/API access and terms before adapter code. Treat published estimates as observed source estimates, not live AIS. |
 | GDELT | near-real-time | News/event signals | none documented in repo | Use documented GDELT datasets only. An event record is an observed media signal, not proof that a physical disruption occurred. |
 | OFAC | periodic | Sanctions lists | none | Consume the official Sanctions List Service files with publication metadata. Source entry is observed; exact match is derived; fuzzy match is inferred and reviewable. |
@@ -31,7 +33,7 @@ SourceAdapter[TSource, TNormalized]
 | UN Comtrade | periodic | Historical supplier trade flows | `UN_COMTRADE_API_KEY` | Use current official API terms and quota. Historical trade is a baseline, not live cargo tracking. |
 | NASA FIRMS | near-real-time | Thermal anomalies near infrastructure | `FIRMS_MAP_KEY` | Obtain a MAP_KEY through official FIRMS setup. A hotspot is a supporting observed signal, not proof of cause or damage. |
 | Operator upload | user-supplied | Inventory, contracts, quotes, verified private values | none | Validate schema, record uploader and timestamp, encrypt private objects, classify direct values as observed user-supplied or explicit assumptions. |
-| Recorded replay | replay | Resilient demo and historical validation | none | Manifest must include original source, capture window, checksum, license, redaction, and evidence IDs. Never label live. |
+| Replay dataset | replay | Resilient demo and historical validation | none | Manifest declares recorded-real or synthetic-fixture classification, source/generator, interval, checksum, license, redistribution, and transformation. Never label live. |
 
 ## Freshness policy
 
@@ -39,4 +41,4 @@ Each dataset defines its expected update interval and stale-after threshold in c
 
 ## Environment placeholders
 
-The authoritative non-secret list is `.env.example`. Absence of a credential disables only that adapter. `OPENAI_API_KEY` configures the optional first scenario-interpreter provider; no LLM credential is required for structured-form operation.
+The authoritative non-secret list is `.env.example`. Phase 1 uses `AISSTREAM_API_KEY`, `SANJIV_AIS_ENABLED`, `SANJIV_AISSTREAM_URL`, `SANJIV_AIS_BOUNDING_BOXES`, bounded timeout/retry/backoff/queue settings, `SANJIV_REPLAY_DATASET`, `SANJIV_REPLAY_SPEED`, `SANJIV_REPLAY_LOOP`, and storage/geofence/freshness/heartbeat settings. Absence of a credential disables only that adapter and activates visibly labeled replay. `OPENAI_API_KEY` configures the optional later scenario-interpreter provider; no LLM credential is used by Live Maritime Watch.

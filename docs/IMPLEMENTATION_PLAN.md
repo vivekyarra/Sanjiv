@@ -15,14 +15,17 @@ Phases are dependency ordered. Complexity is relative: S/M/L/XL. A phase closes 
 
 ## Phase 1 — Live maritime twin and replay system (XL)
 
+- **Status (2026-07-20):** Phase 1 vertical slice implemented. Optional AISStream live operation remains credential-dependent and was contract-tested with mocks; the committed demo dataset is explicitly synthetic, not recorded-real AIS.
 - **Goal:** honest live/replayed tanker operations with chokepoint detection.
-- **Deliverables/modules:** `ingestion/aisstream`, vessel normalization/dedup, Timescale positions, PostGIS chokepoints, exact/fuzzy OFAC matching, India-bound inference, raw recording/manifests, replay sessions, operational WebSocket, `web/map` deck.gl layers and source/mode UI.
+- **Completed deliverables/modules:** provider-neutral `maritime/adapters`; configured AISStream WebSocket adapter; deterministic replay adapter and checksummed manifest; validation/quarantine; vessel normalization/dedup; Timescale positions; PostGIS tracks/geofences/events; exact-identifier and fuzzy-name sanctions matcher with `DERIVED`/`INFERRED` separation; India-bound inference; secret-free raw recording spool; audited operating-mode transitions; snapshot/history/source-health REST; cursor-based operational WebSocket; MapLibre map, tracks, selected-vessel provenance, connection/freshness states, and persistent replay banner.
+- **Deliberately incomplete/optional:** no OFAC download is bundled, so default status is `NOT_SCREENED`; no live AIS claim is made without a configured credential; the committed dataset is a CC0 synthetic fixture because restricted AIS data must not be redistributed. MapLibre native layers are used at current fixture volume; deck.gl remains an evidence-based scale-up option.
 - **Dependencies/order:** source/evidence contracts → adapter/recording → normalization/storage → geofences/inference/sanctions → snapshot/WebSocket → map → replay transition.
-- **Acceptance/gate:** a recorded and a live-if-credentialed vessel crossing are detected and visible; gaps/staleness/mode are correct; no cargo/charter claim.
-- **Tests:** unit—coordinates, ordering, dedup, destination normalization, confidence contributions, sanctions; integration—adapter→DB→outbox→WS→map and replay checksum; failure—disconnect, malformed AIS, rate/backpressure, Redis/MinIO interruption, missing key.
-- **Demo result:** moving tankers, observed/inferred separation, tracks, chokepoints, freshness, live/replay banner.
-- **Risks:** coverage, licensing, message volume, browser FPS. Use viewport queries, retention/aggregation, and recorded-real fallback.
-- **Parallel:** map rendering, OFAC adapter, and replay UI after normalized event schema freezes.
+- **Acceptance/gate:** deterministic replay crossings are detected and visible; the mocked live-provider path uses the same canonical schema; gaps/staleness/mode are explicit; no cargo/charter claim; migration upgrades, downgrades, and re-upgrades. A real live crossing is not claimed or required in CI.
+- **Tests:** unit—coordinates, timestamp ordering, dedup, normalization, freshness, inference, exact/fuzzy sanctions labels, geofence entry/exit; integration—replay→normalization→repository→WebSocket/map contracts and migration cycle; failure—disconnect/fallback, malformed AIS quarantine, bounded subscriber backpressure/resync, missing key, replay checksum tamper.
+- **Demo result:** moving vessels, observed/inferred separation, tracks, chokepoints, freshness, live/replay banner.
+- **Measurable completion gate:** backend and frontend tests pass; OpenAPI generation is clean; production build passes; replay emits eight messages in deterministic order; seven non-authoritative geofences load; CI uses no credentials or network data; actual `0001→0002→0001→0002` migration cycle passes.
+- **Risks:** AISStream is beta with no SLA; coverage and licensing vary; browser basemap tiles need connectivity; the in-process broker is single-instance. Use viewport queries/aggregation and Redis fan-out only after measured need.
+- **Parallel:** map rendering, OFAC source acquisition, and replay UI after normalized event schema freezes.
 
 ## Phase 2 — India energy network digital twin (L)
 
