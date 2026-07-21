@@ -95,6 +95,15 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 
 - Complete for this checkpoint: procurement optimiser contracts are frozen and the full repository gate passed with healthy PostgreSQL/PostGIS/TimescaleDB, Redis, and MinIO services. The first local attempt was environment-blocked by an unavailable Docker Desktop Linux engine and connection-refused PostgreSQL; the later healthy-service run passed.
 - This is not Phase 4 completion. No optimisation equations, Pyomo/HiGHS execution, persistence, working procurement endpoint, plan generation, Response Planner UI, recommendation, rerouting action, reserve release, or approval workflow is included.
+
+### Phase 4 deterministic input and landed-cost checkpoint (2026-07-21)
+
+- Implemented immutable simulation/scenario/twin-bound input construction with deterministic option ordering, structured exclusions, shortfall demand linkage, and fixed reserve policy.
+- Landed cost uses the frozen structural components, canonical `USD_per_tonne`, explicit provenance, conversion validation, and configured reconciliation tolerance.
+- Focused procurement/input tests: 26 passed; full Python suite: 119 passed; web tests: 9 passed.
+- Compose services were healthy; migration round-trip completed with final Alembic revision `20260721_0004 (head)`.
+- Ruff, strict mypy, generated-contract/OpenAPI drift, ESLint, TypeScript, production build, diff check, secret scan, and dependency review passed.
+- No optimisation solve, persistence, API endpoint, recommendation, reserve decision, or approval workflow was added. Remaining Phase 4 work is solver/input integration and later operational surfaces.
 - Remaining Phase 4 work begins with the optimiser input builder and landed-cost service, followed by shared hard constraints, the lowest-cost solve, independent checker implementation, balanced/resilience solves, persistence/API exposure, explanations, Response Planner UI, scenario-library validation, and the full Phase 4 hard gate.
 
 ### Procurement contract checkpoint gate evidence (2026-07-21)

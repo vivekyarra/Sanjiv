@@ -2568,6 +2568,15 @@
             "title": "Assumption Ids",
             "type": "array"
           },
+          "chokepoint_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Chokepoint Ids",
+            "type": "array"
+          },
           "commercially_available_volume": {
             "$ref": "#/components/schemas/MetricEnvelope_float_"
           },
@@ -2606,6 +2615,17 @@
             "title": "Grade Id",
             "type": "string"
           },
+          "landed_cost": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LandedCostBreakdown"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
           "option_id": {
             "format": "uuid",
             "title": "Option Id",
@@ -2621,6 +2641,17 @@
           },
           "route_capacity": {
             "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "route_distance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
           },
           "route_id": {
             "format": "uuid",
@@ -2638,6 +2669,17 @@
             "format": "uuid",
             "title": "Supplier Id",
             "type": "string"
+          },
+          "transit_time": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
           },
           "transport_availability": {
             "$ref": "#/components/schemas/TransportAvailability"

@@ -108,3 +108,6 @@ The future POST and GET procurement API request/response schemas are present in 
 - `RefineryCompatibility` stores the deterministic component scores, enveloped weighted score, classification, hard `allowed` result, explanation, and complete dependencies.
 - `BaselineFlow` links supplier, grade, and route with `ktonne_per_day` volume and full provenance. The Phase 2 fixture conserves 250.0 ktonne/day of supply and demand with zero residual at the configured `1e-6 ktonne_per_day` tolerance.
 - `TwinSnapshot` contains the complete ordered graph, catalogue, compatibility matrix, flows, evidence, assumptions, and mass-balance report. Its SHA-256 fingerprint and UUIDv5 snapshot ID are recalculated on validation. A changed input produces a new identity; mutation is rejected in storage.
+Phase 4 input construction preserves exact simulation/twin identities,
+evidence-backed commercial values, visible approved assumptions, and stable
+option fingerprints. Missing or stale commercial provenance blocks an input.

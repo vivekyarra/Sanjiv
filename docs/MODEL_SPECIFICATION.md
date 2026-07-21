@@ -125,3 +125,10 @@ Similarity is one minus normalized L1 distance over supplier-route allocation sh
 ## Validation
 
 Every solution is independently checked for mass-balance residual, bound/constraint violation, objective reconstruction, sanctions/compatibility exclusion, and deterministic reproduction tolerance. Failed checks block the plan. Model cards record final equations, calibrated values, training/backtest period where relevant, limitations, and version history.
+### Phase 4 deterministic input boundary
+
+The procurement input builder now consumes only an exact completed simulation,
+confirmed scenario, and immutable twin snapshot. It emits deterministically
+ordered eligible options and structured exclusions; no volume allocation or
+solver execution occurs. Landed cost is reconciled in `USD_per_tonne` with a
+configured numerical tolerance and the frozen structural component list.

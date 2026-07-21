@@ -1462,6 +1462,8 @@ export interface components {
         ProcurementOption: {
             /** Assumption Ids */
             assumption_ids?: string[];
+            /** Chokepoint Ids */
+            chokepoint_ids?: string[];
             commercially_available_volume: components["schemas"]["MetricEnvelope_float_"];
             commodity_price: components["schemas"]["MetricEnvelope_float_"];
             /** Compatibility Permitted */
@@ -1484,6 +1486,8 @@ export interface components {
              * Format: uuid
              */
             grade_id: string;
+            /** @default null */
+            landed_cost: components["schemas"]["LandedCostBreakdown"] | null;
             /**
              * Option Id
              * Format: uuid
@@ -1496,6 +1500,8 @@ export interface components {
             refinery_id: string;
             refinery_receiving_capacity: components["schemas"]["MetricEnvelope_float_"];
             route_capacity: components["schemas"]["MetricEnvelope_float_"];
+            /** @default null */
+            route_distance: components["schemas"]["MetricEnvelope_float_"] | null;
             /**
              * Route Id
              * Format: uuid
@@ -1509,6 +1515,8 @@ export interface components {
              * Format: uuid
              */
             supplier_id: string;
+            /** @default null */
+            transit_time: components["schemas"]["MetricEnvelope_float_"] | null;
             transport_availability: components["schemas"]["TransportAvailability"];
         };
         /** ProcurementPlan */

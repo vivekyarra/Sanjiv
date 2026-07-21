@@ -243,12 +243,8 @@ class HardConstraintConfiguration(BaseModel):
     @model_validator(mode="after")
     def validate_metrics(self) -> Self:
         _validate_non_negative_metric(self.budget_limit, {"USD"}, "budget_limit")
-        _validate_fraction_metric(
-            self.supplier_concentration_limit, "supplier_concentration_limit"
-        )
-        _validate_fraction_metric(
-            self.corridor_concentration_limit, "corridor_concentration_limit"
-        )
+        _validate_fraction_metric(self.supplier_concentration_limit, "supplier_concentration_limit")
+        _validate_fraction_metric(self.corridor_concentration_limit, "corridor_concentration_limit")
         return self
 
 
@@ -300,6 +296,10 @@ class ProcurementOption(BaseModel):
     transport_availability: TransportAvailability
     evidence_ids: list[UUID] = Field(min_length=1, max_length=MAX_REFERENCES)
     assumption_ids: list[UUID] = Field(default_factory=list, max_length=MAX_REFERENCES)
+    landed_cost: LandedCostBreakdown | None = None
+    route_distance: MetricEnvelope[float] | None = None
+    transit_time: MetricEnvelope[float] | None = None
+    chokepoint_ids: list[UUID] = Field(default_factory=list, max_length=100)
 
     @model_validator(mode="after")
     def validate_option(self) -> Self:
@@ -337,9 +337,7 @@ class ProcurementProvenance(BaseModel):
     simulation_result: SimulationResultReference
     confirmed_scenario: ConfirmedScenarioReference
     twin_snapshot: TwinSnapshotReference
-    evidence: list[EvidenceFingerprintReference] = Field(
-        min_length=1, max_length=MAX_REFERENCES
-    )
+    evidence: list[EvidenceFingerprintReference] = Field(min_length=1, max_length=MAX_REFERENCES)
     assumptions: list[AssumptionFingerprintReference] = Field(
         default_factory=list, max_length=MAX_REFERENCES
     )
@@ -355,17 +353,11 @@ class ProcurementProvenance(BaseModel):
             raise ValueError("simulation result fingerprint must match the scenario run")
         if self.simulation_result.scenario_id != self.simulation_run.scenario_id:
             raise ValueError("simulation result scenario must match the scenario run")
-        if (
-            self.simulation_result.scenario_fingerprint
-            != self.simulation_run.scenario_fingerprint
-        ):
+        if self.simulation_result.scenario_fingerprint != self.simulation_run.scenario_fingerprint:
             raise ValueError("simulation result scenario fingerprint must match the run")
         if self.confirmed_scenario.scenario_id != self.simulation_run.scenario_id:
             raise ValueError("confirmed scenario must match the scenario run")
-        if (
-            self.confirmed_scenario.scenario_fingerprint
-            != self.simulation_run.scenario_fingerprint
-        ):
+        if self.confirmed_scenario.scenario_fingerprint != self.simulation_run.scenario_fingerprint:
             raise ValueError("confirmed scenario fingerprint must match the scenario run")
         twin_identities = {
             (
@@ -428,9 +420,10 @@ class ProcurementOptimisationInput(BaseModel):
                 "procurement input assumption fingerprints must exactly match "
                 "referenced assumptions"
             )
-        if any(
-            metric.truth_class is TruthClass.ASSUMPTION for metric in hard_constraint_metrics
-        ) and not assumption_ids:
+        if (
+            any(metric.truth_class is TruthClass.ASSUMPTION for metric in hard_constraint_metrics)
+            and not assumption_ids
+        ):
             raise ValueError("assumption-backed hard constraints require visible assumptions")
         if any(
             reference.status is not AssumptionStatus.APPROVED
@@ -471,9 +464,7 @@ class SupplierAllocation(BaseModel):
 
     @model_validator(mode="after")
     def validate_volume(self) -> Self:
-        _validate_modeled_non_negative_metric(
-            self.volume, {"ktonne"}, "supplier allocation volume"
-        )
+        _validate_modeled_non_negative_metric(self.volume, {"ktonne"}, "supplier allocation volume")
         return self
 
 
@@ -485,9 +476,7 @@ class RouteAllocation(BaseModel):
 
     @model_validator(mode="after")
     def validate_volume(self) -> Self:
-        _validate_modeled_non_negative_metric(
-            self.volume, {"ktonne"}, "route allocation volume"
-        )
+        _validate_modeled_non_negative_metric(self.volume, {"ktonne"}, "route allocation volume")
         return self
 
 
@@ -500,9 +489,7 @@ class RefineryAllocation(BaseModel):
 
     @model_validator(mode="after")
     def validate_volume(self) -> Self:
-        _validate_modeled_non_negative_metric(
-            self.volume, {"ktonne"}, "refinery allocation volume"
-        )
+        _validate_modeled_non_negative_metric(self.volume, {"ktonne"}, "refinery allocation volume")
         return self
 
 
@@ -697,9 +684,7 @@ class IndependentCheckResult(BaseModel):
             {"objective_point"},
             "reconstructed_objective",
         )
-        _validate_modeled_non_negative_metric(
-            self.tolerance, {"objective_point"}, "tolerance"
-        )
+        _validate_modeled_non_negative_metric(self.tolerance, {"objective_point"}, "tolerance")
         checks = (
             self.mass_balance_passed,
             self.bounds_passed,
@@ -714,9 +699,7 @@ class IndependentCheckResult(BaseModel):
             <= self.tolerance.value
         )
         if self.objective_reconstruction_passed != objective_within_tolerance:
-            raise ValueError(
-                "objective reconstruction status does not match values and tolerance"
-            )
+            raise ValueError("objective reconstruction status does not match values and tolerance")
         if self.passed != expected_passed:
             raise ValueError("independent check status does not match its check results")
         if not self.passed and not self.failure_codes:
@@ -735,15 +718,12 @@ class ProcurementFailure(BaseModel):
     details: dict[
         BoundedDetailKey,
         BoundedDetailText | BoundedDetailFloat | BoundedDetailInt | bool,
-    ] = Field(
-        default_factory=dict, max_length=50
-    )
+    ] = Field(default_factory=dict, max_length=50)
 
     @model_validator(mode="after")
     def reject_non_finite_details(self) -> Self:
         if any(
-            isinstance(value, float) and not math.isfinite(value)
-            for value in self.details.values()
+            isinstance(value, float) and not math.isfinite(value) for value in self.details.values()
         ):
             raise ValueError("failure details cannot contain non-finite values")
         return self
@@ -840,9 +820,7 @@ class ProcurementPlanFingerprintInputs(BaseModel):
     twin_snapshot: TwinSnapshotReference
     hard_constraint_version: str = Field(min_length=1, max_length=100)
     reserve_policy_fingerprint: str = Field(pattern=SHA256_PATTERN)
-    evidence: list[EvidenceFingerprintReference] = Field(
-        min_length=1, max_length=MAX_REFERENCES
-    )
+    evidence: list[EvidenceFingerprintReference] = Field(min_length=1, max_length=MAX_REFERENCES)
     assumptions: list[AssumptionFingerprintReference] = Field(
         default_factory=list, max_length=MAX_REFERENCES
     )
@@ -1084,6 +1062,9 @@ def _validate_fraction_metric(metric: MetricEnvelope[float], field: str) -> None
         raise ValueError(f"{field} must be at most 1 fraction")
 
 
+ProcurementOption.model_rebuild()
+
+
 def _validate_modeled_non_negative_metric(
     metric: MetricEnvelope[float], allowed_units: set[str], field: str
 ) -> None:
@@ -1124,3 +1105,5 @@ PROCUREMENT_OPENAPI_MODELS: tuple[type[BaseModel], ...] = (
     ProcurementFailure,
     ProcurementPlanFingerprintInputs,
 )
+
+ProcurementOption.model_rebuild()

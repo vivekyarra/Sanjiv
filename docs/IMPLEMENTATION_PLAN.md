@@ -122,3 +122,9 @@ Phases are dependency ordered. Complexity is relative: S/M/L/XL. A phase closes 
 ## Current implementation program
 
 Phase 0 and Phase 1 are merged. The active program implements Phases 2-9 in dependency order with a hard full-repository gate and pushed checkpoint after every phase. No later phase may start while the preceding gate is failing.
+### Phase 4 checkpoint: deterministic procurement inputs
+
+Status: implemented checkpoint. Deterministic candidate construction,
+structured exclusion, demand shortfall linkage, and landed-cost reconciliation
+are available as reusable domain services. Optimisation and persistence remain
+out of scope.
