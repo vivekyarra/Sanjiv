@@ -1,0 +1,99 @@
+{
+  "document_date": "2026-07-22",
+  "current_commit_sha": "14a7e5deb639aeb6de4e683ec62cd22abbea0838",
+  "repository_url": "https://github.com/vivekyarra/Sanjiv",
+  "demo_url": "https://drive.google.com/drive/folders/1JDFeLyQOd4g74BhE63Yuh6OCGmCoaf6K?usp=sharing",
+  "contact_name": "Yarra Vivek",
+  "contact_email": "vivekyarra567@gmail.com",
+  "current_test_run": {
+    "command": "npm test",
+    "exit_code": 0,
+    "elapsed_seconds": 146.6,
+    "python_passed": 188,
+    "web_passed": 23,
+    "contracts_passed": 1,
+    "total_passed": 212,
+    "failed": 0,
+    "skipped": 0,
+    "python_elapsed_seconds": 141.38
+  },
+  "current_e2e": {
+    "status": "passed",
+    "spec_tests": 2,
+    "elapsed_seconds": 15.6,
+    "screenshots": 8,
+    "viewport": "1920x1080"
+  },
+  "portwatch_observation": {
+    "source_id": "IMF_PORTWATCH",
+    "mode": "LIVE",
+    "truth_class": "OBSERVED",
+    "freshness_status": "CURRENT",
+    "corridor_name": "Strait of Hormuz",
+    "effective_date": "2026-07-19",
+    "fetched_at": "2026-07-21T19:59:54.957173Z",
+    "tanker_transits": 4,
+    "total_transits": 15,
+    "estimated_tanker_tonnage": 39216,
+    "estimated_total_tonnage": 182620,
+    "evidence_id": "d298bf7affc162fc20509fcdb0d1d858ff02ee41777ee255700fbbb6e651aa59",
+    "source_url": "https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Chokepoints_Data/FeatureServer/0",
+    "documentation_url": "https://portwatch.imf.org/pages/data-and-methodology/"
+  },
+  "performance_report": {
+    "classification": "MEASURED_LOCAL_SYNTHETIC_FIXTURE",
+    "commit_sha": "14a7e5deb639aeb6de4e683ec62cd22abbea0838",
+    "source_state": "CLEAN_COMMITTED",
+    "run_id": "54f808c9-c228-41cc-9662-8af1479295a6",
+    "timestamp": "2026-07-21T20:06:46.912821Z",
+    "samples": 5,
+    "hardware": "Windows 10 build 26200; 12 logical CPUs; Intel64 Family 6 Model 186; Python 3.11.6",
+    "dataset": "19 twin nodes; 18 routes; 23 flows; 21 replay cases",
+    "metrics_ms": {
+      "AIS ingest to map": {"median": 25.214, "p95": 25.214, "samples": 1},
+      "Risk scoring": {"median": 36.928, "p95": 48.208, "samples": 5},
+      "Scenario compilation": {"median": 9.541, "p95": 14.313, "samples": 5},
+      "Simulation": {"median": 63.616, "p95": 83.267, "samples": 5},
+      "Procurement optimisation": {"median": 260.506, "p95": 541.371, "samples": 5},
+      "Reserve optimisation": {"median": 180.672, "p95": 220.694, "samples": 5},
+      "Evidence audit": {"median": 53.661, "p95": 61.946, "samples": 5},
+      "Briefing export": {"median": 129.634, "p95": 296.531, "samples": 5},
+      "Signal to recommendation": {"median": 712.521, "p95": 1062.676, "samples": 5}
+    },
+    "load": {"requests": 64, "concurrency": 8, "successful": 64, "p95_ms": 428.578},
+    "websocket_resync": {"published": 100, "queue_items_after_overflow": 10, "resync_observed": true, "p95_ms": 1.133}
+  },
+  "browser_report": {
+    "classification": "MEASURED_LOCAL_BROWSER_REPLAY",
+    "timestamp": "2026-07-21T20:07:41.898Z",
+    "sample_frames": 120,
+    "map_fps": 42.853,
+    "interaction_latency_ms": 800.482,
+    "frame_time_p95_ms": 57.2
+  },
+  "security_report": {
+    "status": "PASS",
+    "checks": 8,
+    "failure_names": 0,
+    "generated_at": "2026-07-21T18:13:24.499302Z"
+  },
+  "reliability_report": {
+    "result": "PASS",
+    "commit_sha": "43d5837b30d2460a714f58cf9b7e697f803005bd",
+    "checks": {
+      "Redis": {"detection_ms": 1030.028, "recovery_ms": 30.933},
+      "MinIO": {"detection_ms": 1028.974, "recovery_ms": 1487.670},
+      "PostgreSQL": {"detection_ms": 1028.329, "recovery_ms": 1035.884},
+      "Compute worker": {"detection_ms": 22427.376, "recovery_ms": 1045.361},
+      "API": {"detection_ms": null, "recovery_ms": 4754.407}
+    }
+  },
+  "backup_restore_report": {
+    "status": "PASS",
+    "backup_bytes": 2673646,
+    "backup_sha256": "87617ca34b86b12c35edbe5333dc7dc71f4ceab4605dee53db3169e29250bc1e",
+    "restored_migration": "20260721_0009",
+    "corrupt_artifact_rejected": true,
+    "restore_exit_code": 0
+  }
+}
