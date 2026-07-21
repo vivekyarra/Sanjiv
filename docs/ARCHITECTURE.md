@@ -74,6 +74,12 @@ The simulator produces time-indexed demand, arrivals, inventory, and affected ca
 
 Phase 5 implements site/refinery dispatch, transit, receipt, remaining-inventory, and residual-shortage decisions in `sanjiv/reserve`. The input builder binds one exact independently checked Phase 4 plan and the same scenario/result/twin identities. Public storage capacity stays `OBSERVED`; opening fill is accepted only as verified input or an unexpired visible `ASSUMPTION`, and unknown sites are blocked. Procurement and reserve models coordinate through exact committed receipts and shared refinery capacity. Policy modes alter calibrated objective weights and floors, never physical conservation or capacity constraints. Replenishment is absent unless supplied by verified input.
 
+### Risk intelligence
+
+Phase 6 remains a domain module in the FastAPI modular monolith. Provider-neutral adapters emit normalized raw risk signals and typed failures; the deterministic feature engine owns baselines, missingness, contributions, corroboration, severity, confidence, and completeness. The alert evaluator consumes only a complete fingerprinted result and produces analyst-only append-only alerts. PostgreSQL stores baselines, features, contributions, calculations, failures, alerts, timelines, lifecycle transitions, and replay backtests. The Next.js `/risk-intelligence` route reads only the typed risk APIs and holds no provider credential.
+
+The primary demo and CI select a checksummed offline replay adapter. Optional GDELT, PortWatch, EIA/FRED, FIRMS, sanctions-boundary, and Phase 1 AIS fetchers are injected server-side behind bounded timeout/retry/rate-limit policies; they cannot silently switch a record from live to fixture mode.
+
 ### Audit and explanation
 
 The evidence auditor verifies schema completeness, allowed truth transitions, evidence existence, freshness policy, assumption visibility, model versions, claim policy, and metric recomputation hashes. Failed metrics are blocked, not silently omitted. Narrative generation receives only audited structured results and evidence summaries. Every run, mode transition, edit, approval, export, and failure creates an append-only audit event.

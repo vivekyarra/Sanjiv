@@ -233,6 +233,7 @@ export function ScenarioLab() {
           <Link className="active" href="/scenario-lab">Scenario Lab</Link>
           <Link href="/response-planner">Response Planner</Link>
           <Link href="/strategic-reserve">Strategic Reserve</Link>
+          <Link href="/risk-intelligence">Risk Intelligence</Link>
         </nav>
       </header>
 

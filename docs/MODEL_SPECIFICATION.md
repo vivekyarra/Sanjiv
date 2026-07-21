@@ -36,12 +36,14 @@ The baseline graph validator aggregates each supplier-grade allocation over ever
 
 ```text
 C_india = 0.30 D + 0.25 R + 0.20 H + 0.15 P + 0.10 V
-RiskSeverity = 0.30 T + 0.25 G + 0.15 A + 0.15 M + 0.10 S + 0.05 I
+RiskSeverity = (0.25 T + 0.20 G + 0.15 A + 0.15 M + 0.10 S + 0.15 I) / present_weight
 ```
 
 These initial weights are **calibration**, not final scientific constants. Components are normalized to `[0,1]`, missing components are not silently zeroed, and output includes contributions and completeness. India-bound is `INFERRED`. Corridor risk is a severity score scaled to 0–100, not disruption probability.
 
 Evidence confidence combines source reliability, freshness, completeness, agreement, and transformation confidence using a documented versioned function. **Calibration:** component weights and source reliability priors. It cannot upgrade stale or assumption-only evidence to observed fact.
+
+Phase 6 implements this as `corridor-risk-structural-v1` with `risk-baseline-effective-window-v1` and `risk-feature-normalizer-v1`. Each feature is standardized against an effective-dated deterministic baseline, mapped to 0-100, clipped at its physical score bounds, and reported with its raw value, source state, freshness, evidence, transformation, and weighted contribution. The denominator contains only present feature weights, while completeness independently records missing/stale coverage; missing values therefore cannot masquerade as zero severity. Critical alerting requires at least two independent elevated fresh sources including an operational signal. Media-only, thermal-only, AIS-only, stale, incomplete, and disagreeing evidence is suppressed or downgraded.
 
 ## No-action baseline
 

@@ -129,3 +129,6 @@ Phase 0 and Phase 1 are merged. The active program implements Phases 2-9 in depe
 ### Phase 4 completion: deterministic procurement optimiser
 
 Status: complete. The deterministic input and landed-cost boundary now feeds a bounded Pyomo/HiGHS model for all three profiles, an independent constraint/objective/fingerprint checker, immutable PostgreSQL persistence and exact-fingerprint reuse, documented POST/GET APIs, and the Response Planner. Commercial values remain expiring assumptions from a credential-free `SYNTHETIC_FIXTURE`; no order, tanker, commercial availability, or reserve action is claimed.
+# Phase 6 completion note
+
+Phase 6 implements provider-neutral risk adapters, deterministic effective-dated baselines, six-component structural scoring, separate severity/confidence/completeness, corroborated analyst-only alerts, immutable PostgreSQL persistence, read-only risk APIs, a checksummed ten-case synthetic replay/backtest library, and `/risk-intelligence`. It deliberately does not implement Phase 7 audit/approval behavior.

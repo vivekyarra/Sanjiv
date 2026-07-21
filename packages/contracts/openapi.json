@@ -1,6 +1,252 @@
 {
   "components": {
     "schemas": {
+      "AlertResult": {
+        "additionalProperties": false,
+        "properties": {
+          "alert_id": {
+            "format": "uuid",
+            "title": "Alert Id",
+            "type": "string"
+          },
+          "autonomous_action": {
+            "const": false,
+            "default": false,
+            "title": "Autonomous Action",
+            "type": "boolean"
+          },
+          "completeness": {
+            "$ref": "#/components/schemas/DataCompleteness"
+          },
+          "confidence": {
+            "$ref": "#/components/schemas/EvidenceConfidence"
+          },
+          "contributions": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureContribution"
+            },
+            "title": "Contributions",
+            "type": "array"
+          },
+          "corridor_id": {
+            "format": "uuid",
+            "title": "Corridor Id",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "explanation": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Explanation",
+            "type": "string"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "recommended_analyst_action": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Recommended Analyst Action",
+            "type": "string"
+          },
+          "risk_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Risk Fingerprint",
+            "type": "string"
+          },
+          "risk_id": {
+            "format": "uuid",
+            "title": "Risk Id",
+            "type": "string"
+          },
+          "rule_version": {
+            "title": "Rule Version",
+            "type": "string"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/RiskSeverity"
+          },
+          "severity_band": {
+            "$ref": "#/components/schemas/AlertSeverity"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AlertStatus"
+          }
+        },
+        "required": [
+          "alert_id",
+          "risk_id",
+          "corridor_id",
+          "severity_band",
+          "status",
+          "severity",
+          "confidence",
+          "completeness",
+          "contributions",
+          "evidence_ids",
+          "effective_at",
+          "created_at",
+          "model_version",
+          "rule_version",
+          "explanation",
+          "recommended_analyst_action",
+          "risk_fingerprint"
+        ],
+        "title": "AlertResult",
+        "type": "object"
+      },
+      "AlertRule": {
+        "additionalProperties": false,
+        "properties": {
+          "critical_requires_corroboration": {
+            "const": true,
+            "default": true,
+            "title": "Critical Requires Corroboration",
+            "type": "boolean"
+          },
+          "critical_threshold": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Critical Threshold",
+            "type": "number"
+          },
+          "high_threshold": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "High Threshold",
+            "type": "number"
+          },
+          "minimum_completeness": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Minimum Completeness",
+            "type": "number"
+          },
+          "minimum_confidence": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Minimum Confidence",
+            "type": "number"
+          },
+          "rule_id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Rule Id",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "rule_id",
+          "version",
+          "high_threshold",
+          "critical_threshold",
+          "minimum_confidence",
+          "minimum_completeness"
+        ],
+        "title": "AlertRule",
+        "type": "object"
+      },
+      "AlertSeverity": {
+        "enum": [
+          "INFO",
+          "WATCH",
+          "HIGH",
+          "CRITICAL"
+        ],
+        "title": "AlertSeverity",
+        "type": "string"
+      },
+      "AlertStatus": {
+        "enum": [
+          "OPEN",
+          "SUPPRESSED",
+          "EXPIRED",
+          "RESOLVED"
+        ],
+        "title": "AlertStatus",
+        "type": "string"
+      },
+      "AnomalyBaseline": {
+        "additionalProperties": false,
+        "properties": {
+          "feature_type": {
+            "$ref": "#/components/schemas/RiskFeatureType"
+          },
+          "fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "mean": {
+            "title": "Mean",
+            "type": "number"
+          },
+          "observations": {
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 10000,
+            "minItems": 3,
+            "title": "Observations",
+            "type": "array"
+          },
+          "standard_deviation": {
+            "exclusiveMinimum": 0,
+            "title": "Standard Deviation",
+            "type": "number"
+          },
+          "version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version",
+            "type": "string"
+          },
+          "window_ends_at": {
+            "format": "date-time",
+            "title": "Window Ends At",
+            "type": "string"
+          },
+          "window_starts_at": {
+            "format": "date-time",
+            "title": "Window Starts At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "feature_type",
+          "window_starts_at",
+          "window_ends_at",
+          "observations",
+          "mean",
+          "standard_deviation",
+          "version",
+          "fingerprint"
+        ],
+        "title": "AnomalyBaseline",
+        "type": "object"
+      },
       "AssetKind": {
         "enum": [
           "SUPPLIER",
@@ -302,6 +548,170 @@
         ],
         "title": "AuditOutcome",
         "type": "string"
+      },
+      "BacktestCaseResult": {
+        "additionalProperties": false,
+        "properties": {
+          "actual_alert": {
+            "title": "Actual Alert",
+            "type": "boolean"
+          },
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "completeness": {
+            "$ref": "#/components/schemas/DataCompleteness"
+          },
+          "confidence": {
+            "$ref": "#/components/schemas/EvidenceConfidence"
+          },
+          "expected_alert": {
+            "title": "Expected Alert",
+            "type": "boolean"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "lead_time_hours": {
+            "minimum": 0,
+            "title": "Lead Time Hours",
+            "type": "number"
+          },
+          "runtime_ms": {
+            "minimum": 0,
+            "title": "Runtime Ms",
+            "type": "number"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/RiskSeverity"
+          },
+          "stable": {
+            "title": "Stable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "case_id",
+          "label",
+          "expected_alert",
+          "actual_alert",
+          "severity",
+          "confidence",
+          "completeness",
+          "lead_time_hours",
+          "runtime_ms",
+          "stable"
+        ],
+        "title": "BacktestCaseResult",
+        "type": "object"
+      },
+      "BacktestResult": {
+        "additionalProperties": false,
+        "properties": {
+          "alert_stability": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Alert Stability",
+            "type": "number"
+          },
+          "backtest_id": {
+            "format": "uuid",
+            "title": "Backtest Id",
+            "type": "string"
+          },
+          "cases": {
+            "items": {
+              "$ref": "#/components/schemas/BacktestCaseResult"
+            },
+            "minItems": 1,
+            "title": "Cases",
+            "type": "array"
+          },
+          "checksum_sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Checksum Sha256",
+            "type": "string"
+          },
+          "classification": {
+            "enum": [
+              "SYNTHETIC_FIXTURE",
+              "RECORDED_REAL_DATA"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "detection_lead_time_hours": {
+            "minimum": 0,
+            "title": "Detection Lead Time Hours",
+            "type": "number"
+          },
+          "false_positives": {
+            "minimum": 0,
+            "title": "False Positives",
+            "type": "integer"
+          },
+          "fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "fixture_evidence_only": {
+            "const": true,
+            "default": true,
+            "title": "Fixture Evidence Only",
+            "type": "boolean"
+          },
+          "library_id": {
+            "title": "Library Id",
+            "type": "string"
+          },
+          "mean_completeness": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Mean Completeness",
+            "type": "number"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "precision": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Precision",
+            "type": "number"
+          },
+          "runtime_ms": {
+            "minimum": 0,
+            "title": "Runtime Ms",
+            "type": "number"
+          },
+          "source_failure_case_count": {
+            "minimum": 0,
+            "title": "Source Failure Case Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "backtest_id",
+          "library_id",
+          "classification",
+          "checksum_sha256",
+          "model_version",
+          "cases",
+          "detection_lead_time_hours",
+          "precision",
+          "false_positives",
+          "mean_completeness",
+          "source_failure_case_count",
+          "alert_stability",
+          "runtime_ms",
+          "fingerprint"
+        ],
+        "title": "BacktestResult",
+        "type": "object"
       },
       "BaselineFlow": {
         "additionalProperties": false,
@@ -671,6 +1081,168 @@
         "title": "ConstraintViolation",
         "type": "object"
       },
+      "CorridorRiskResult": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Baseline Version",
+            "type": "string"
+          },
+          "calculated_at": {
+            "format": "date-time",
+            "title": "Calculated At",
+            "type": "string"
+          },
+          "completeness": {
+            "$ref": "#/components/schemas/DataCompleteness"
+          },
+          "confidence": {
+            "$ref": "#/components/schemas/EvidenceConfidence"
+          },
+          "contributions": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureContribution"
+            },
+            "title": "Contributions",
+            "type": "array"
+          },
+          "corridor_id": {
+            "format": "uuid",
+            "title": "Corridor Id",
+            "type": "string"
+          },
+          "corridor_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Corridor Name",
+            "type": "string"
+          },
+          "corroboration": {
+            "$ref": "#/components/schemas/CorroborationResult"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "explanation": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Explanation",
+            "type": "string"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/NormalizedRiskFeature"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "lifecycle": {
+            "$ref": "#/components/schemas/RiskLifecycle"
+          },
+          "model_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Model Version",
+            "type": "string"
+          },
+          "risk_id": {
+            "format": "uuid",
+            "title": "Risk Id",
+            "type": "string"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/RiskSeverity"
+          },
+          "source_failures": {
+            "items": {
+              "$ref": "#/components/schemas/RiskSourceFailure"
+            },
+            "title": "Source Failures",
+            "type": "array"
+          }
+        },
+        "required": [
+          "risk_id",
+          "corridor_id",
+          "corridor_name",
+          "severity",
+          "confidence",
+          "completeness",
+          "features",
+          "contributions",
+          "corroboration",
+          "source_failures",
+          "effective_at",
+          "calculated_at",
+          "lifecycle",
+          "model_version",
+          "baseline_version",
+          "fingerprint",
+          "explanation"
+        ],
+        "title": "CorridorRiskResult",
+        "type": "object"
+      },
+      "CorroborationResult": {
+        "additionalProperties": false,
+        "properties": {
+          "corroborating_features": {
+            "items": {
+              "$ref": "#/components/schemas/RiskFeatureType"
+            },
+            "title": "Corroborating Features",
+            "type": "array"
+          },
+          "disagreeing_features": {
+            "items": {
+              "$ref": "#/components/schemas/RiskFeatureType"
+            },
+            "title": "Disagreeing Features",
+            "type": "array"
+          },
+          "explanation": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Explanation",
+            "type": "string"
+          },
+          "independent_source_count": {
+            "minimum": 0,
+            "title": "Independent Source Count",
+            "type": "integer"
+          },
+          "passed": {
+            "title": "Passed",
+            "type": "boolean"
+          },
+          "stale_or_missing_features": {
+            "items": {
+              "$ref": "#/components/schemas/RiskFeatureType"
+            },
+            "title": "Stale Or Missing Features",
+            "type": "array"
+          }
+        },
+        "required": [
+          "passed",
+          "independent_source_count",
+          "corroborating_features",
+          "disagreeing_features",
+          "stale_or_missing_features",
+          "explanation"
+        ],
+        "title": "CorroborationResult",
+        "type": "object"
+      },
       "CrudeGrade": {
         "additionalProperties": false,
         "properties": {
@@ -747,6 +1319,28 @@
           "evidence_ids"
         ],
         "title": "CrudeGrade",
+        "type": "object"
+      },
+      "DataCompleteness": {
+        "additionalProperties": false,
+        "properties": {
+          "unit": {
+            "const": "fraction",
+            "default": "fraction",
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "title": "DataCompleteness",
         "type": "object"
       },
       "DataMode": {
@@ -913,6 +1507,28 @@
         "title": "DurationUnit",
         "type": "string"
       },
+      "EvidenceConfidence": {
+        "additionalProperties": false,
+        "properties": {
+          "unit": {
+            "const": "fraction",
+            "default": "fraction",
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "title": "EvidenceConfidence",
+        "type": "object"
+      },
       "EvidenceFingerprintReference": {
         "additionalProperties": false,
         "properties": {
@@ -1054,6 +1670,45 @@
           "license"
         ],
         "title": "EvidenceRecord",
+        "type": "object"
+      },
+      "FeatureContribution": {
+        "additionalProperties": false,
+        "properties": {
+          "feature_type": {
+            "$ref": "#/components/schemas/RiskFeatureType"
+          },
+          "normalized_value": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Normalized Value",
+            "type": "number"
+          },
+          "present": {
+            "title": "Present",
+            "type": "boolean"
+          },
+          "weight": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Weight",
+            "type": "number"
+          },
+          "weighted_contribution": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Weighted Contribution",
+            "type": "number"
+          }
+        },
+        "required": [
+          "feature_type",
+          "normalized_value",
+          "weight",
+          "weighted_contribution",
+          "present"
+        ],
+        "title": "FeatureContribution",
         "type": "object"
       },
       "FixedReservePolicyInput": {
@@ -2017,6 +2672,126 @@
           "model_version"
         ],
         "title": "MetricEnvelope[int]",
+        "type": "object"
+      },
+      "NormalizedRiskFeature": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Baseline Fingerprint",
+            "type": "string"
+          },
+          "confidence": {
+            "$ref": "#/components/schemas/EvidenceConfidence"
+          },
+          "corridor_id": {
+            "format": "uuid",
+            "title": "Corridor Id",
+            "type": "string"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "feature_id": {
+            "format": "uuid",
+            "title": "Feature Id",
+            "type": "string"
+          },
+          "feature_type": {
+            "$ref": "#/components/schemas/RiskFeatureType"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "freshness": {
+            "$ref": "#/components/schemas/FreshnessStatus"
+          },
+          "missing": {
+            "title": "Missing",
+            "type": "boolean"
+          },
+          "normalized_value": {
+            "anyOf": [
+              {
+                "maximum": 100,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Normalized Value"
+          },
+          "raw_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Raw Value"
+          },
+          "source_id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "source_state": {
+            "$ref": "#/components/schemas/SourceState"
+          },
+          "transformation": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Transformation",
+            "type": "string"
+          },
+          "truth_class": {
+            "$ref": "#/components/schemas/TruthClass"
+          },
+          "unit": {
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "feature_id",
+          "corridor_id",
+          "feature_type",
+          "unit",
+          "missing",
+          "truth_class",
+          "confidence",
+          "source_id",
+          "source_state",
+          "freshness",
+          "effective_at",
+          "fetched_at",
+          "evidence_ids",
+          "baseline_fingerprint",
+          "transformation"
+        ],
+        "title": "NormalizedRiskFeature",
         "type": "object"
       },
       "ObjectiveBreakdown": {
@@ -4496,6 +5271,242 @@
           "display_name"
         ],
         "title": "ResolvedDisruptionTarget",
+        "type": "object"
+      },
+      "RiskAlertResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/AlertResult"
+            },
+            "title": "Alerts",
+            "type": "array"
+          }
+        },
+        "required": [
+          "alerts"
+        ],
+        "title": "RiskAlertResponse",
+        "type": "object"
+      },
+      "RiskBacktestResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/BacktestResult"
+            },
+            "title": "Results",
+            "type": "array"
+          }
+        },
+        "required": [
+          "results"
+        ],
+        "title": "RiskBacktestResponse",
+        "type": "object"
+      },
+      "RiskFeatureType": {
+        "enum": [
+          "TRANSIT_ANOMALY",
+          "GEOPOLITICAL_SEVERITY",
+          "AIS_BEHAVIORAL_ANOMALY",
+          "MARKET_STRESS",
+          "SANCTIONS_EXPOSURE",
+          "INFRASTRUCTURE_PHYSICAL_SIGNAL"
+        ],
+        "title": "RiskFeatureType",
+        "type": "string"
+      },
+      "RiskLifecycle": {
+        "enum": [
+          "CREATED",
+          "CALCULATED",
+          "DEGRADED",
+          "SUPERSEDED",
+          "FAILED"
+        ],
+        "title": "RiskLifecycle",
+        "type": "string"
+      },
+      "RiskLifecycleTransition": {
+        "additionalProperties": false,
+        "properties": {
+          "current": {
+            "$ref": "#/components/schemas/RiskLifecycle"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "reason": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          },
+          "risk_id": {
+            "format": "uuid",
+            "title": "Risk Id",
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/RiskLifecycle"
+          }
+        },
+        "required": [
+          "risk_id",
+          "current",
+          "target",
+          "occurred_at",
+          "reason"
+        ],
+        "title": "RiskLifecycleTransition",
+        "type": "object"
+      },
+      "RiskOverviewResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "FIXTURE",
+              "LIVE",
+              "DEGRADED"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "risks": {
+            "items": {
+              "$ref": "#/components/schemas/CorridorRiskResult"
+            },
+            "title": "Risks",
+            "type": "array"
+          }
+        },
+        "required": [
+          "risks",
+          "generated_at",
+          "mode"
+        ],
+        "title": "RiskOverviewResponse",
+        "type": "object"
+      },
+      "RiskSeverity": {
+        "additionalProperties": false,
+        "properties": {
+          "unit": {
+            "const": "severity_point",
+            "default": "severity_point",
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "title": "RiskSeverity",
+        "type": "object"
+      },
+      "RiskSourceFailure": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/RiskSourceFailureCode"
+          },
+          "message": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "retryable": {
+            "title": "Retryable",
+            "type": "boolean"
+          },
+          "source_id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "code",
+          "message",
+          "retryable",
+          "occurred_at"
+        ],
+        "title": "RiskSourceFailure",
+        "type": "object"
+      },
+      "RiskSourceFailureCode": {
+        "enum": [
+          "UNAVAILABLE",
+          "STALE",
+          "RATE_LIMITED",
+          "INVALID_PAYLOAD",
+          "CREDENTIAL_MISSING"
+        ],
+        "title": "RiskSourceFailureCode",
+        "type": "string"
+      },
+      "RiskTimelinePoint": {
+        "additionalProperties": false,
+        "properties": {
+          "completeness": {
+            "$ref": "#/components/schemas/DataCompleteness"
+          },
+          "confidence": {
+            "$ref": "#/components/schemas/EvidenceConfidence"
+          },
+          "corridor_id": {
+            "format": "uuid",
+            "title": "Corridor Id",
+            "type": "string"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "risk_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Risk Fingerprint",
+            "type": "string"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/RiskSeverity"
+          }
+        },
+        "required": [
+          "corridor_id",
+          "effective_at",
+          "severity",
+          "confidence",
+          "completeness",
+          "risk_fingerprint"
+        ],
+        "title": "RiskTimelinePoint",
         "type": "object"
       },
       "RouteAllocation": {
@@ -7263,6 +8274,159 @@
         "summary": "Reserve Plan",
         "tags": [
           "strategic-reserve"
+        ]
+      }
+    },
+    "/api/v1/risk/alerts": {
+      "get": {
+        "operationId": "risk_alerts_api_v1_risk_alerts_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskAlertResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Risk Alerts",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/v1/risk/backtests": {
+      "get": {
+        "operationId": "risk_backtests_api_v1_risk_backtests_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskBacktestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Risk Backtests",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/v1/risk/corridors": {
+      "get": {
+        "operationId": "corridor_risks_api_v1_risk_corridors_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskOverviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Corridor Risks",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/v1/risk/corridors/{corridor_id}/timeline": {
+      "get": {
+        "operationId": "corridor_timeline_api_v1_risk_corridors__corridor_id__timeline_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "corridor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Corridor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RiskTimelinePoint"
+                  },
+                  "title": "Response Corridor Timeline Api V1 Risk Corridors  Corridor Id  Timeline Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Corridor Timeline",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/v1/risk/corridors/{risk_id}": {
+      "get": {
+        "operationId": "corridor_risk_api_v1_risk_corridors__risk_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "risk_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Risk Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorridorRiskResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Corridor Risk",
+        "tags": [
+          "risk-intelligence"
         ]
       }
     },

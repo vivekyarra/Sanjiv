@@ -106,6 +106,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/risk/alerts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Risk Alerts */
+        get: operations["risk_alerts_api_v1_risk_alerts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/risk/backtests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Risk Backtests */
+        get: operations["risk_backtests_api_v1_risk_backtests_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/risk/corridors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Corridor Risks */
+        get: operations["corridor_risks_api_v1_risk_corridors_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/risk/corridors/{corridor_id}/timeline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Corridor Timeline */
+        get: operations["corridor_timeline_api_v1_risk_corridors__corridor_id__timeline_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/risk/corridors/{risk_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Corridor Risk */
+        get: operations["corridor_risk_api_v1_risk_corridors__risk_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/scenario-runs": {
         parameters: {
             query?: never;
@@ -552,6 +637,114 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AlertResult */
+        AlertResult: {
+            /**
+             * Alert Id
+             * Format: uuid
+             */
+            alert_id: string;
+            /**
+             * Autonomous Action
+             * @default false
+             * @constant
+             */
+            autonomous_action: false;
+            completeness: components["schemas"]["DataCompleteness"];
+            confidence: components["schemas"]["EvidenceConfidence"];
+            /** Contributions */
+            contributions: components["schemas"]["FeatureContribution"][];
+            /**
+             * Corridor Id
+             * Format: uuid
+             */
+            corridor_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /** Explanation */
+            explanation: string;
+            /** Model Version */
+            model_version: string;
+            /** Recommended Analyst Action */
+            recommended_analyst_action: string;
+            /** Risk Fingerprint */
+            risk_fingerprint: string;
+            /**
+             * Risk Id
+             * Format: uuid
+             */
+            risk_id: string;
+            /** Rule Version */
+            rule_version: string;
+            severity: components["schemas"]["RiskSeverity"];
+            severity_band: components["schemas"]["AlertSeverity"];
+            status: components["schemas"]["AlertStatus"];
+        };
+        /** AlertRule */
+        AlertRule: {
+            /**
+             * Critical Requires Corroboration
+             * @default true
+             * @constant
+             */
+            critical_requires_corroboration: true;
+            /** Critical Threshold */
+            critical_threshold: number;
+            /** High Threshold */
+            high_threshold: number;
+            /** Minimum Completeness */
+            minimum_completeness: number;
+            /** Minimum Confidence */
+            minimum_confidence: number;
+            /** Rule Id */
+            rule_id: string;
+            /** Version */
+            version: string;
+        };
+        /**
+         * AlertSeverity
+         * @enum {string}
+         */
+        AlertSeverity: "INFO" | "WATCH" | "HIGH" | "CRITICAL";
+        /**
+         * AlertStatus
+         * @enum {string}
+         */
+        AlertStatus: "OPEN" | "SUPPRESSED" | "EXPIRED" | "RESOLVED";
+        /** AnomalyBaseline */
+        AnomalyBaseline: {
+            feature_type: components["schemas"]["RiskFeatureType"];
+            /** Fingerprint */
+            fingerprint: string;
+            /** Mean */
+            mean: number;
+            /** Observations */
+            observations: number[];
+            /** Standard Deviation */
+            standard_deviation: number;
+            /** Version */
+            version: string;
+            /**
+             * Window Ends At
+             * Format: date-time
+             */
+            window_ends_at: string;
+            /**
+             * Window Starts At
+             * Format: date-time
+             */
+            window_starts_at: string;
+        };
         /**
          * AssetKind
          * @enum {string}
@@ -659,6 +852,69 @@ export interface components {
          * @enum {string}
          */
         AuditOutcome: "SUCCEEDED" | "FAILED" | "BLOCKED";
+        /** BacktestCaseResult */
+        BacktestCaseResult: {
+            /** Actual Alert */
+            actual_alert: boolean;
+            /** Case Id */
+            case_id: string;
+            completeness: components["schemas"]["DataCompleteness"];
+            confidence: components["schemas"]["EvidenceConfidence"];
+            /** Expected Alert */
+            expected_alert: boolean;
+            /** Label */
+            label: string;
+            /** Lead Time Hours */
+            lead_time_hours: number;
+            /** Runtime Ms */
+            runtime_ms: number;
+            severity: components["schemas"]["RiskSeverity"];
+            /** Stable */
+            stable: boolean;
+        };
+        /** BacktestResult */
+        BacktestResult: {
+            /** Alert Stability */
+            alert_stability: number;
+            /**
+             * Backtest Id
+             * Format: uuid
+             */
+            backtest_id: string;
+            /** Cases */
+            cases: components["schemas"]["BacktestCaseResult"][];
+            /** Checksum Sha256 */
+            checksum_sha256: string;
+            /**
+             * Classification
+             * @enum {string}
+             */
+            classification: "SYNTHETIC_FIXTURE" | "RECORDED_REAL_DATA";
+            /** Detection Lead Time Hours */
+            detection_lead_time_hours: number;
+            /** False Positives */
+            false_positives: number;
+            /** Fingerprint */
+            fingerprint: string;
+            /**
+             * Fixture Evidence Only
+             * @default true
+             * @constant
+             */
+            fixture_evidence_only: true;
+            /** Library Id */
+            library_id: string;
+            /** Mean Completeness */
+            mean_completeness: number;
+            /** Model Version */
+            model_version: string;
+            /** Precision */
+            precision: number;
+            /** Runtime Ms */
+            runtime_ms: number;
+            /** Source Failure Case Count */
+            source_failure_case_count: number;
+        };
         /** BaselineFlow */
         BaselineFlow: {
             /** Assumption Ids */
@@ -803,6 +1059,65 @@ export interface components {
              */
             option_id: string | null;
         };
+        /** CorridorRiskResult */
+        CorridorRiskResult: {
+            /** Baseline Version */
+            baseline_version: string;
+            /**
+             * Calculated At
+             * Format: date-time
+             */
+            calculated_at: string;
+            completeness: components["schemas"]["DataCompleteness"];
+            confidence: components["schemas"]["EvidenceConfidence"];
+            /** Contributions */
+            contributions: components["schemas"]["FeatureContribution"][];
+            /**
+             * Corridor Id
+             * Format: uuid
+             */
+            corridor_id: string;
+            /** Corridor Name */
+            corridor_name: string;
+            corroboration: components["schemas"]["CorroborationResult"];
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /** Explanation */
+            explanation: string;
+            /** Features */
+            features: components["schemas"]["NormalizedRiskFeature"][];
+            /** Fingerprint */
+            fingerprint: string;
+            lifecycle: components["schemas"]["RiskLifecycle"];
+            /** Model Version */
+            model_version: string;
+            /**
+             * Risk Id
+             * Format: uuid
+             */
+            risk_id: string;
+            severity: components["schemas"]["RiskSeverity"];
+            /** Source Failures */
+            source_failures: components["schemas"]["RiskSourceFailure"][];
+        };
+        /** CorroborationResult */
+        CorroborationResult: {
+            /** Corroborating Features */
+            corroborating_features: components["schemas"]["RiskFeatureType"][];
+            /** Disagreeing Features */
+            disagreeing_features: components["schemas"]["RiskFeatureType"][];
+            /** Explanation */
+            explanation: string;
+            /** Independent Source Count */
+            independent_source_count: number;
+            /** Passed */
+            passed: boolean;
+            /** Stale Or Missing Features */
+            stale_or_missing_features: components["schemas"]["RiskFeatureType"][];
+        };
         /** CrudeGrade */
         CrudeGrade: {
             api_gravity: components["schemas"]["MetricEnvelope_float_"];
@@ -826,6 +1141,17 @@ export interface components {
             /** Sanctions State */
             sanctions_state: string;
             sulfur_pct: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** DataCompleteness */
+        DataCompleteness: {
+            /**
+             * Unit
+             * @default fraction
+             * @constant
+             */
+            unit: "fraction";
+            /** Value */
+            value: number;
         };
         /**
          * DataMode
@@ -879,6 +1205,17 @@ export interface components {
          * @enum {string}
          */
         DurationUnit: "hour" | "day";
+        /** EvidenceConfidence */
+        EvidenceConfidence: {
+            /**
+             * Unit
+             * @default fraction
+             * @constant
+             */
+            unit: "fraction";
+            /** Value */
+            value: number;
+        };
         /** EvidenceFingerprintReference */
         EvidenceFingerprintReference: {
             /**
@@ -930,6 +1267,18 @@ export interface components {
             /** Transformation */
             transformation: string;
             truth_class: components["schemas"]["TruthClass"];
+        };
+        /** FeatureContribution */
+        FeatureContribution: {
+            feature_type: components["schemas"]["RiskFeatureType"];
+            /** Normalized Value */
+            normalized_value: number;
+            /** Present */
+            present: boolean;
+            /** Weight */
+            weight: number;
+            /** Weighted Contribution */
+            weighted_contribution: number;
         };
         /** FixedReservePolicyInput */
         FixedReservePolicyInput: {
@@ -1339,6 +1688,56 @@ export interface components {
             unit: string;
             /** Value */
             value: number;
+        };
+        /** NormalizedRiskFeature */
+        NormalizedRiskFeature: {
+            /** Baseline Fingerprint */
+            baseline_fingerprint: string;
+            confidence: components["schemas"]["EvidenceConfidence"];
+            /**
+             * Corridor Id
+             * Format: uuid
+             */
+            corridor_id: string;
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Feature Id
+             * Format: uuid
+             */
+            feature_id: string;
+            feature_type: components["schemas"]["RiskFeatureType"];
+            /**
+             * Fetched At
+             * Format: date-time
+             */
+            fetched_at: string;
+            freshness: components["schemas"]["FreshnessStatus"];
+            /** Missing */
+            missing: boolean;
+            /**
+             * Normalized Value
+             * @default null
+             */
+            normalized_value: number | null;
+            /**
+             * Raw Value
+             * @default null
+             */
+            raw_value: number | null;
+            /** Source Id */
+            source_id: string;
+            source_state: components["schemas"]["SourceState"];
+            /** Transformation */
+            transformation: string;
+            truth_class: components["schemas"]["TruthClass"];
+            /** Unit */
+            unit: string;
         };
         /** ObjectiveBreakdown */
         ObjectiveBreakdown: {
@@ -2329,6 +2728,107 @@ export interface components {
             /** Requested Identifier */
             requested_identifier: string;
             target_type: components["schemas"]["DisruptionTargetType"];
+        };
+        /** RiskAlertResponse */
+        RiskAlertResponse: {
+            /** Alerts */
+            alerts: components["schemas"]["AlertResult"][];
+        };
+        /** RiskBacktestResponse */
+        RiskBacktestResponse: {
+            /** Results */
+            results: components["schemas"]["BacktestResult"][];
+        };
+        /**
+         * RiskFeatureType
+         * @enum {string}
+         */
+        RiskFeatureType: "TRANSIT_ANOMALY" | "GEOPOLITICAL_SEVERITY" | "AIS_BEHAVIORAL_ANOMALY" | "MARKET_STRESS" | "SANCTIONS_EXPOSURE" | "INFRASTRUCTURE_PHYSICAL_SIGNAL";
+        /**
+         * RiskLifecycle
+         * @enum {string}
+         */
+        RiskLifecycle: "CREATED" | "CALCULATED" | "DEGRADED" | "SUPERSEDED" | "FAILED";
+        /** RiskLifecycleTransition */
+        RiskLifecycleTransition: {
+            current: components["schemas"]["RiskLifecycle"];
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Reason */
+            reason: string;
+            /**
+             * Risk Id
+             * Format: uuid
+             */
+            risk_id: string;
+            target: components["schemas"]["RiskLifecycle"];
+        };
+        /** RiskOverviewResponse */
+        RiskOverviewResponse: {
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "FIXTURE" | "LIVE" | "DEGRADED";
+            /** Risks */
+            risks: components["schemas"]["CorridorRiskResult"][];
+        };
+        /** RiskSeverity */
+        RiskSeverity: {
+            /**
+             * Unit
+             * @default severity_point
+             * @constant
+             */
+            unit: "severity_point";
+            /** Value */
+            value: number;
+        };
+        /** RiskSourceFailure */
+        RiskSourceFailure: {
+            code: components["schemas"]["RiskSourceFailureCode"];
+            /** Message */
+            message: string;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Retryable */
+            retryable: boolean;
+            /** Source Id */
+            source_id: string;
+        };
+        /**
+         * RiskSourceFailureCode
+         * @enum {string}
+         */
+        RiskSourceFailureCode: "UNAVAILABLE" | "STALE" | "RATE_LIMITED" | "INVALID_PAYLOAD" | "CREDENTIAL_MISSING";
+        /** RiskTimelinePoint */
+        RiskTimelinePoint: {
+            completeness: components["schemas"]["DataCompleteness"];
+            confidence: components["schemas"]["EvidenceConfidence"];
+            /**
+             * Corridor Id
+             * Format: uuid
+             */
+            corridor_id: string;
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /** Risk Fingerprint */
+            risk_fingerprint: string;
+            severity: components["schemas"]["RiskSeverity"];
         };
         /** RouteAllocation */
         RouteAllocation: {
@@ -3455,6 +3955,128 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReservePlan"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    risk_alerts_api_v1_risk_alerts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskAlertResponse"];
+                };
+            };
+        };
+    };
+    risk_backtests_api_v1_risk_backtests_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskBacktestResponse"];
+                };
+            };
+        };
+    };
+    corridor_risks_api_v1_risk_corridors_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskOverviewResponse"];
+                };
+            };
+        };
+    };
+    corridor_timeline_api_v1_risk_corridors__corridor_id__timeline_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                corridor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskTimelinePoint"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    corridor_risk_api_v1_risk_corridors__risk_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                risk_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CorridorRiskResult"];
                 };
             };
             /** @description Validation Error */

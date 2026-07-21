@@ -70,3 +70,11 @@
 - Evidence audit fails: show the blocked metric/claim and do not approve the plan.
 
 End by explaining the human checkpoint: Sanjiv recommends and records approval; it does not place orders or release reserves.
+# Phase 6 Risk Intelligence demo
+
+1. Open `http://localhost:3000/risk-intelligence`; confirm the mode reads `FIXTURE` and the page states that severity is not disruption probability.
+2. Compare the ranked corridors' severity, confidence, completeness, freshness, and six visible contributions.
+3. Expand the evidence drawer on an elevated corridor and show corroborating sources, effective time, model/baseline versions, and fingerprint.
+4. Show the degraded source-outage corridor: missing features must read `UNAVAILABLE`/`MISSING`, not zero.
+5. Review alerts and emphasize that the only output is recommended analyst review with autonomous action disabled.
+6. Review the ten-case checksummed replay results and state explicitly that the metrics are fixture/replay evidence, not production accuracy.

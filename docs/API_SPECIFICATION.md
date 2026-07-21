@@ -80,6 +80,18 @@ The request carries the exact simulation run/result, confirmed scenario, immutab
 
 Phase 5 registers the reserve POST/GET paths. POST requires `Idempotency-Key`, a completed exact scenario run, server-owned identity, and one checked Phase 4 procurement plan from that run. The server builds all reserve inputs from the same immutable scenario/result/twin and procurement fingerprints, rejects unknown or expired opening inventory, runs the canonical reserve policies through bounded Pyomo/HiGHS, and persists only independently checked results at migration `20260721_0006`. GET rehydrates an immutable plan after restart; exact-fingerprint repeats are visibly reused.
 
+## Risk intelligence
+
+```text
+GET /api/v1/risk/corridors
+GET /api/v1/risk/corridors/{risk_id}
+GET /api/v1/risk/corridors/{corridor_id}/timeline
+GET /api/v1/risk/alerts
+GET /api/v1/risk/backtests
+```
+
+These read-only endpoints expose ranked current results, full contributions and evidence, effective-dated history, alert states, and checksummed replay results. `RiskSeverity` uses `severity_point` on 0-100; `EvidenceConfidence` and `DataCompleteness` use fractions on 0-1 and are never aliases. Missing features remain explicit, stale evidence degrades completeness/confidence, and critical alerts require corroboration. Backtest responses carry their fixture/recorded-data classification and `fixture_evidence_only=true`; they are not production-accuracy claims.
+
 ## Replay
 
 Phase 1 replay selection is startup configuration, not an unauthenticated mutation API. `SANJIV_REPLAY_DATASET`, `SANJIV_REPLAY_SPEED`, and `SANJIV_REPLAY_LOOP` select a validated manifest. Missing live credentials or exhausted live retries cause an automatic, audited, visibly explained fallback. Authenticated replay-session mutation endpoints are planned but are not part of the Phase 1 attack surface.

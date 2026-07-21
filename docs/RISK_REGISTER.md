@@ -30,3 +30,12 @@
 | Unauthorized approval | Low | Critical | Server-enforced roles and immutable audit record | Revoke approval and supersede plan | Security lead |
 
 Risks are reviewed at each phase gate. A demo may proceed with degraded sources only when the mode, timestamp, and consequences are visible to the operator and audience.
+# Phase 6 residual risks
+
+| Risk | State | Mitigation / remaining work |
+|---|---|---|
+| Synthetic replay overstates production performance | Open | Every backtest result is labeled `SYNTHETIC_FIXTURE` and fixture evidence only; do not cite its precision as production accuracy. Validate against licensed recorded history before operational use. |
+| Structural weights and alert thresholds are uncalibrated | Open | Versions are explicit and contributions visible. Calibrate with domain owners and out-of-sample replay before changing defaults. |
+| Live provider licensing/schema/rate limits drift | Open | Official documentation and terms are registered; live fetchers are optional, injected, bounded, and fail visibly. Reverify before enabling each provider. |
+| Source disagreement or ambiguous media/thermal signal creates false escalation | Mitigated in Phase 6 | Critical/high alerting requires independent operational corroboration; stale, incomplete, single-source and disagreeing cases are suppressed or downgraded. |
+| Read-only risk APIs lack deployment-level user authorization | Open | Endpoints contain no mutation or credentials. Production gateway authentication, authorization, rate limiting, and tenant policy remain deployment prerequisites. |

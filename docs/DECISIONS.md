@@ -83,3 +83,9 @@
 **Decision:** Reserve guidance uses Pyomo/HiGHS and a separate arithmetic checker, binds one exact checked procurement plan, and treats public site capacity and current opening fill as different facts. Unknown or expired opening fill blocks the site; policy floors, draw rates, routes, transit, receipts, stock conservation, and procurement-shared capacity are hard. Replenishment is fixed at zero unless verified input explicitly supplies it. Terminal plans are content-addressed and immutable.
 
 **Why:** Storage nameplate cannot establish usable stock, and procurement coordination cannot be reconstructed safely from mutable summaries. **Rejected:** inferring fill from capacity, hidden replenishment or loss, autonomous release, soft physical floors, unchecked solver output, and reserve plans detached from a Phase 4 fingerprint.
+# ADR-015: Deterministic structural risk with corroborated analyst alerts
+
+- **Status:** accepted for Phase 6
+- **Decision:** Compute `RiskSeverity` separately from evidence confidence and data completeness using six versioned structural components. Preserve missing features instead of imputing zero. Require fresh independent operational corroboration before high/critical alerts, and downgrade or suppress stale, incomplete, single-source, or disagreeing evidence. Persist immutable calculations and fixture-only backtests; expose analyst guidance without operational execution.
+- **Why:** A high signal score with weak evidence must not be presented with the certainty of a well-corroborated event. This boundary prevents media events, thermal hotspots, or isolated AIS behavior from becoming unsupported closure, attack, or damage claims.
+- **Consequences:** Provider credentials stay optional; CI/demo use the same adapter contracts with a checksummed CC0 synthetic replay. Production calibration and retrospective validation remain required before operational reliance.

@@ -40,6 +40,8 @@ class Settings(BaseSettings):
     sanjiv_scenario_api_key: str | None = None
     sanjiv_procurement_storage: str = "postgres"
     sanjiv_reserve_storage: str = "postgres"
+    sanjiv_risk_storage: str = "postgres"
+    sanjiv_risk_replay_manifest: Path = Path("data/replay/risk-intelligence-v1/manifest.json")
     sanjiv_llm_provider: str = "disabled"
     sanjiv_llm_model: str | None = None
     sanjiv_llm_timeout_seconds: float = Field(default=10.0, gt=0, le=60)

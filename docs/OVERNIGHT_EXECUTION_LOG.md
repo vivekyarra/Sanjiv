@@ -147,7 +147,21 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 
 ## Phase 6 - Risk intelligence and alerting
 
-- Status: not started; blocked on the Phase 5 green gate.
+- Phase 5 checkpoint: `6552c7a98ed93f1bbb14236b30cbd9f679d074a5` (`feat(phase-5): add strategic reserve optimiser`) was pushed to `origin/feature/phases-2-9-overnight-integration`; local/remote equality, clean tree, and draft PR #2 were verified before Phase 6 began.
+
+### Phase 6 completion gate (2026-07-21)
+
+- Starting HEAD: `6552c7a98ed93f1bbb14236b30cbd9f679d074a5`.
+- Implemented six provider-neutral source configurations/boundaries plus existing sanctions and Phase 1 AIS integration; deterministic effective-dated baselines; `corridor-risk-structural-v1`; separate 0-100 severity, 0-1 confidence, and 0-1 completeness; visible contributions/missingness/freshness/disagreement; `corridor-risk-alerts-v1` corroboration; immutable persistence; five read-only risk APIs; and `/risk-intelligence`.
+- Fixture: `data/replay/risk-intelligence-v1` is a checksummed CC0 `SYNTHETIC_FIXTURE` with ten required replay cases. It is not recorded history and its measurements are fixture evidence only. GDELT media events and NASA FIRMS thermal detections remain signals, never proof of closure, attack, or damage.
+- Migration `20260721_0007_corridor_risk_intelligence.py` upgraded from `0006`, downgraded exactly to `0006`, and re-upgraded to `0007`; PostgreSQL restart readback restored immutable risk, feature, contribution, alert, timeline, failure, transition, and backtest payloads, and the mutation trigger rejected a terminal calculation update.
+- Focused Phase 6 suite: 16 backend tests. Full Python suite: 157 tests. Web suite: 16 tests. Contract package: 1 test. No skipped/disabled tests were found.
+- Local deterministic fixture measurements: 100 identical corridor calculations measured 0.285 ms minimum, 0.296 ms median, and 0.493 ms maximum. The complete ten-case backtest measured 4.813 ms, 10.5-hour mean detected lead, precision 1.000, zero false positives, completeness 0.9238, two source-failure cases, and alert stability 1.000. These are local fixture measurements, not a production SLA or production-accuracy claim.
+- Gate: healthy PostgreSQL/PostGIS/TimescaleDB, Redis, and MinIO; `0007 -> 0006 -> 0007`; Ruff; strict mypy across 80 production files; focused/full pytest; OpenAPI and TypeScript drift; ESLint; TypeScript; web/contracts tests; production build including `/risk-intelligence`; Docker config; `git diff --check`; both npm audits with zero vulnerabilities; no dependency changes; no credential assignments; no skipped/disabled tests.
+- Focused security/data/model review: all APIs are read-only; provider credentials remain server-side and optional; exceptions are redacted; timeouts/retries/rate limits are bounded; fixture checksums and classifications are enforced; timestamps require time zones; non-finite values, malformed bounds, invalid lifecycle transitions, baseline/result/backtest fingerprint mismatches, missing evidence, and implicit zero-filling are rejected. High/critical alerts require fresh independent operational corroboration; stale, incomplete, media-only, thermal-only, AIS-only, and disagreeing evidence is suppressed or downgraded. No reportable security finding remains.
+- Official documentation and usage conditions for GDELT, IMF PortWatch, EIA, FRED, and NASA FIRMS are recorded in `docs/SOURCE_REGISTRY.md`. Live network acquisition was not enabled; CI and the primary demo remain credential-free.
+- Remaining risks: structural weights, source reliability, normalization, and alert thresholds require authorised calibration against licensed recorded history; provider schemas/terms/rate limits can drift; the synthetic library cannot establish production accuracy; and production gateway authn/authz, load/concurrency, monitoring, and operational incident procedures remain prerequisites.
+- Phase 7 status: not started. No evidence-auditor, approval, or autonomous operational behavior was implemented.
 
 ## Phase 7 - Evidence auditor, approval, and explainability
 

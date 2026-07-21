@@ -48,7 +48,7 @@ export function DigitalTwin() {
           <span className="brand-mark">S</span>
           <div><h1>Sanjiv</h1><p>India&apos;s Energy Resilience Command Center · Digital Twin</p><small>Keep India&apos;s energy moving.</small></div>
         </div>
-        <nav className="product-nav" aria-label="Product modules"><Link href="/">Live Maritime Watch</Link><Link className="active" href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link href="/response-planner">Response Planner</Link><Link href="/strategic-reserve">Strategic Reserve</Link></nav>
+        <nav className="product-nav" aria-label="Product modules"><Link href="/">Live Maritime Watch</Link><Link className="active" href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link href="/response-planner">Response Planner</Link><Link href="/strategic-reserve">Strategic Reserve</Link><Link href="/risk-intelligence">Risk Intelligence</Link></nav>
       </header>
 
       {error && <div className="operational-warning" role="alert">{error}</div>}

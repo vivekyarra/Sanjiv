@@ -42,7 +42,7 @@ export function StrategicReserve() {
       <span className="mode-badge">MODELED · ASSUMPTION-DEPENDENT OPENING FILL</span>
     </header>
     <nav className="product-nav" aria-label="Product modules">
-      <Link href="/">Live Maritime Watch</Link><Link href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link href="/response-planner">Response Planner</Link><Link className="active" href="/strategic-reserve">Strategic Reserve</Link>
+      <Link href="/">Live Maritime Watch</Link><Link href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link href="/response-planner">Response Planner</Link><Link className="active" href="/strategic-reserve">Strategic Reserve</Link><Link href="/risk-intelligence">Risk Intelligence</Link>
     </nav>
     <section className="scenario-card">
       <h2>Generate policy guidance</h2>

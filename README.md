@@ -5,7 +5,11 @@
 
 Sanjiv is a decision-intelligence system for observing threats to India’s energy-supply corridors, compiling validated disruption scenarios, simulating no-action consequences, and producing deterministic, evidence-backed procurement and strategic-reserve response plans.
 
-The repository includes the Phase 0 truth foundation, Phase 1 Live Maritime Watch, the Phase 2 India energy-network digital twin, Phase 3 Scenario Lab, the Phase 4 Response Planner, and the Phase 5 Strategic Reserve planner. All operational screens work without credentials. Phase 5 coordinates four checked reserve-policy results with one exact immutable Phase 4 plan while keeping public site capacity separate from assumption-backed opening fill.
+The repository includes the Phase 0 truth foundation through Phase 6 Risk Intelligence. All operational screens work without credentials. Phase 6 ranks corridor severity while keeping evidence confidence, data completeness, freshness, and source health separate.
+
+## Phase 6 Risk Intelligence
+
+Open `http://localhost:3000/risk-intelligence`. The credential-free primary demo uses a checksummed CC0 `SYNTHETIC_FIXTURE` replay library through the same normalized adapter contract as optional live providers. It shows ranked corridors, structural feature contributions, corroboration, source freshness, evidence, alerts, timelines, and fixture-only backtest measurements. Risk severity is not disruption probability. Media events and thermal detections are signals, not proof of closure, attack, or damage; every recommended action is analyst review only.
 
 ## Phase 4 Response Planner
 
