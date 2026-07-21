@@ -39,7 +39,7 @@ jobs:
           uv run alembic upgrade head
           uv run alembic downgrade 20260720_0001
           uv run alembic upgrade head
-          test "$(uv run alembic current | tail -n 1)" = "20260721_0007 (head)"
+          test "$(uv run alembic current | tail -n 1)" = "20260721_0008 (head)"
       - run: npm run contracts:check
       - run: npm run lint
       - run: npm run typecheck
