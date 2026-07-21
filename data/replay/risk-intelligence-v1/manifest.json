@@ -16,6 +16,6 @@
     {"source_id":"FRED","documentation":"https://fred.stlouisfed.org/docs/api/fred/overview.html","license":"FRED API terms and underlying series-specific rights apply; API key required"},
     {"source_id":"NASA_FIRMS","documentation":"https://firms.modaps.eosdis.nasa.gov/api/area/","license":"NASA Earthdata reuse/citation policy; MAP_KEY and transaction limits apply"},
     {"source_id":"SANCTIONS_BOUNDARY","documentation":"docs/SOURCE_REGISTRY.md","license":"Existing loaded-list boundary and source-specific rights"},
-    {"source_id":"AIS_PHASE_1","documentation":"docs/PHASE_1_LIVE_MARITIME_WATCH.md","license":"Existing Phase 1 adapter/replay contract and source-specific rights"}
+    {"source_id":"AIS_REPLAY","documentation":"docs/SOURCE_REGISTRY.md","license":"Registered replay contract and source-specific rights"}
   ]
 }

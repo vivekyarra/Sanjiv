@@ -39,7 +39,9 @@ test("measure map FPS and interaction latency without prewritten values", async 
     classification: "MEASURED_LOCAL_BROWSER_REPLAY",
     notice: "Actual browser measurements, not an SLA or target claim.",
   };
-  const target = path.resolve("reports/performance/browser-benchmark.json");
-  fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+  if (process.env.SANJIV_UPDATE_EVIDENCE === "1") {
+    const target = path.resolve("reports/performance/browser-benchmark.json");
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+  }
 });
