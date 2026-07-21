@@ -74,6 +74,10 @@ POST /api/v1/plans/{plan_id}/rejections
 
 Plan generation requests explicit profiles; the standard request is all of `LOWEST_COST`, `BALANCED`, and `HIGHEST_RESILIENCE`. Responses include solver status/version, input hash, objective breakdown, actions, rejected options, constraint report, metric envelopes, audit status, and lifecycle state. Approval requires an unchanged plan/assumption hash, successful audit, feasible solution, authenticated approver, and optional comment.
 
+The first Phase 4 checkpoint freezes `ProcurementPlanRequest`, `ProcurementPlanResponse`, and their nested schemas for the documented procurement POST/GET paths. These schemas are generated into OpenAPI components and TypeScript, but the paths are deliberately not registered as callable API operations yet. A later Phase 4 checkpoint must add the solver/application service and persistence before exposing either route. Contract-only clients can prepare typed payloads but must not infer endpoint availability.
+
+The request carries the exact simulation run/result, confirmed scenario, immutable twin snapshot, evidence/assumption hashes, fixed reserve policy, hard constraints, solver configuration, selected profiles, and versioned objective weights. The response shape separates solver results from operational plans: only independently checked `OPTIMAL` or `FEASIBLE` results may have a plan. Infeasible, timeout, error, not-run, or failed-check outcomes remain typed diagnostics with no plan.
+
 ## Replay
 
 Phase 1 replay selection is startup configuration, not an unauthenticated mutation API. `SANJIV_REPLAY_DATASET`, `SANJIV_REPLAY_SPEED`, and `SANJIV_REPLAY_LOOP` select a validated manifest. Missing live credentials or exhausted live retries cause an automatic, audited, visibly explained fallback. Authenticated replay-session mutation endpoints are planned but are not part of the Phase 1 attack surface.

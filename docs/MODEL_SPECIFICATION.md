@@ -65,6 +65,8 @@ Currency and unit conversion use effective-dated evidence. Unavailable commercia
 
 ## Procurement model
 
+The first Phase 4 checkpoint freezes only the optimiser boundary: typed inputs, profile weights, solver/check results, constraints, actions/allocations, landed-cost and objective breakdowns, failures, lifecycle states, and canonical fingerprints. It does not implement these equations, construct a Pyomo model, invoke HiGHS, generate a plan, or expose procurement routes. All three profiles share the same versioned hard constraints and differ only in versioned objective weights.
+
 Decision `x[s,g,r,p,t] >= 0` is delivered volume. Auxiliary variables represent shortage, concentration, delay, and soft-policy violations.
 
 ```text
@@ -84,6 +86,8 @@ minimise shortage + α*reserve_depletion
 ```
 
 Release variables are bounded by site inventory, draw rate, connection capacity, transit delay, receiving capacity, and policy minimum floor. Remaining stock is conserved by site and interval. Phase 4 holds reserve policy fixed; Phase 5 solves procurement and reserve actions from one shared input snapshot. **Calibration:** α, β, γ, policy floors, replenishment outlook, and extension-risk assumptions.
+
+At the Phase 4 contract boundary, the reserve policy is identified by an immutable fingerprint and explicitly sets `decision_variables_enabled=false` and `release_schedule_fixed=true`. No reserve quantity is selected, recommended, or varied by a procurement profile.
 
 ## Phase 3 deterministic no-action model
 

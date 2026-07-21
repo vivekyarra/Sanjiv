@@ -533,6 +533,17 @@ export interface components {
             /** Value */
             value: unknown;
         };
+        /** AssumptionFingerprintReference */
+        AssumptionFingerprintReference: {
+            /** Assumption Hash */
+            assumption_hash: string;
+            /**
+             * Assumption Id
+             * Format: uuid
+             */
+            assumption_id: string;
+            status: components["schemas"]["AssumptionStatus"];
+        };
         /**
          * AssumptionStatus
          * @enum {string}
@@ -670,11 +681,60 @@ export interface components {
             twin_snapshot: components["schemas"]["TwinSnapshotReference"];
             validation: components["schemas"]["ScenarioValidationResult"];
         };
+        /** ConfirmedScenarioReference */
+        ConfirmedScenarioReference: {
+            /**
+             * Confirmed At
+             * Format: date-time
+             */
+            confirmed_at: string;
+            /** Scenario Fingerprint */
+            scenario_fingerprint: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+        };
         /**
          * ConnectionState
          * @enum {string}
          */
         ConnectionState: "CONNECTING" | "CONNECTED" | "DISCONNECTED" | "DEGRADED";
+        /**
+         * ConstraintFamily
+         * @enum {string}
+         */
+        ConstraintFamily: "PHYSICAL" | "SUPPLIER_CAPACITY" | "ROUTE_CAPACITY" | "REFINERY_CAPACITY" | "DELIVERY_WINDOW" | "BUDGET" | "SANCTIONS" | "COMPATIBILITY" | "POLICY" | "CONCENTRATION" | "MASS_BALANCE";
+        /** ConstraintReport */
+        ConstraintReport: {
+            /** Checked Constraint Ids */
+            checked_constraint_ids: string[];
+            /** Checked Families */
+            checked_families: components["schemas"]["ConstraintFamily"][];
+            /** Feasible */
+            feasible: boolean;
+            /** Hard Constraint Version */
+            hard_constraint_version: string;
+            /** Violations */
+            violations?: components["schemas"]["ConstraintViolation"][];
+        };
+        /** ConstraintViolation */
+        ConstraintViolation: {
+            actual: components["schemas"]["MetricEnvelope_float_"];
+            /** Constraint Id */
+            constraint_id: string;
+            excess: components["schemas"]["MetricEnvelope_float_"];
+            family: components["schemas"]["ConstraintFamily"];
+            limit: components["schemas"]["MetricEnvelope_float_"];
+            /** Message */
+            message: string;
+            /**
+             * Option Id
+             * @default null
+             */
+            option_id: string | null;
+        };
         /** CrudeGrade */
         CrudeGrade: {
             api_gravity: components["schemas"]["MetricEnvelope_float_"];
@@ -751,6 +811,16 @@ export interface components {
          * @enum {string}
          */
         DurationUnit: "hour" | "day";
+        /** EvidenceFingerprintReference */
+        EvidenceFingerprintReference: {
+            /**
+             * Evidence Id
+             * Format: uuid
+             */
+            evidence_id: string;
+            /** Raw Payload Hash */
+            raw_payload_hash: string;
+        };
         /** EvidenceRecord */
         EvidenceRecord: {
             /** Confidence */
@@ -792,6 +862,31 @@ export interface components {
             /** Transformation */
             transformation: string;
             truth_class: components["schemas"]["TruthClass"];
+        };
+        /** FixedReservePolicyInput */
+        FixedReservePolicyInput: {
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            /**
+             * Decision Variables Enabled
+             * @default false
+             * @constant
+             */
+            decision_variables_enabled: false;
+            /** Evidence Ids */
+            evidence_ids?: string[];
+            /** Policy Fingerprint */
+            policy_fingerprint: string;
+            /** Policy Id */
+            policy_id: string;
+            /** Policy Version */
+            policy_version: string;
+            /**
+             * Release Schedule Fixed
+             * @default true
+             * @constant
+             */
+            release_schedule_fixed: true;
         };
         /** FlowResult */
         FlowResult: {
@@ -882,6 +977,44 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** HardConstraintConfiguration */
+        HardConstraintConfiguration: {
+            budget_limit: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Compatibility Exclusion Enforced
+             * @default true
+             * @constant
+             */
+            compatibility_exclusion_enforced: true;
+            corridor_concentration_limit: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Physical Constraints Enforced
+             * @default true
+             * @constant
+             */
+            physical_constraints_enforced: true;
+            /**
+             * Policy Constraints Enforced
+             * @default true
+             * @constant
+             */
+            policy_constraints_enforced: true;
+            /**
+             * Reserve Policy Fixed
+             * @default true
+             * @constant
+             */
+            reserve_policy_fixed: true;
+            /**
+             * Sanctions Exclusion Enforced
+             * @default true
+             * @constant
+             */
+            sanctions_exclusion_enforced: true;
+            supplier_concentration_limit: components["schemas"]["MetricEnvelope_float_"];
+            /** Version */
+            version: string;
+        };
         /** HealthResponse */
         HealthResponse: {
             /**
@@ -906,6 +1039,35 @@ export interface components {
              * @constant
              */
             version: "0.3.0";
+        };
+        /** IndependentCheckResult */
+        IndependentCheckResult: {
+            /** Bounds Passed */
+            bounds_passed: boolean;
+            /**
+             * Checked At
+             * Format: date-time
+             */
+            checked_at: string;
+            /** Checker Version */
+            checker_version: string;
+            /** Compatibility Exclusion Passed */
+            compatibility_exclusion_passed: boolean;
+            /** Failure Codes */
+            failure_codes?: string[];
+            /** Fingerprint Reproduction Passed */
+            fingerprint_reproduction_passed: boolean;
+            /** Mass Balance Passed */
+            mass_balance_passed: boolean;
+            /** Objective Reconstruction Passed */
+            objective_reconstruction_passed: boolean;
+            /** Passed */
+            passed: boolean;
+            reconstructed_objective: components["schemas"]["MetricEnvelope_float_"];
+            reported_objective: components["schemas"]["MetricEnvelope_float_"];
+            /** Sanctions Exclusion Passed */
+            sanctions_exclusion_passed: boolean;
+            tolerance: components["schemas"]["MetricEnvelope_float_"];
         };
         /** IndiaBoundAssessment */
         IndiaBoundAssessment: {
@@ -983,6 +1145,19 @@ export interface components {
              * Format: uuid
              */
             refinery_id: string;
+        };
+        /** LandedCostBreakdown */
+        LandedCostBreakdown: {
+            commodity_price: components["schemas"]["MetricEnvelope_float_"];
+            compatibility_penalty: components["schemas"]["MetricEnvelope_float_"];
+            emissions: components["schemas"]["MetricEnvelope_float_"];
+            financing: components["schemas"]["MetricEnvelope_float_"];
+            freight: components["schemas"]["MetricEnvelope_float_"];
+            insurance_and_risk_premium: components["schemas"]["MetricEnvelope_float_"];
+            port_and_handling: components["schemas"]["MetricEnvelope_float_"];
+            quality_differential: components["schemas"]["MetricEnvelope_float_"];
+            route_fees: components["schemas"]["MetricEnvelope_float_"];
+            total: components["schemas"]["MetricEnvelope_float_"];
         };
         /** MassBalanceReport */
         MassBalanceReport: {
@@ -1066,6 +1241,43 @@ export interface components {
             unit: string;
             /** Value */
             value: number;
+        };
+        /** ObjectiveBreakdown */
+        ObjectiveBreakdown: {
+            compatibility_penalty: components["schemas"]["MetricEnvelope_float_"];
+            corridor_concentration_penalty: components["schemas"]["MetricEnvelope_float_"];
+            delay_penalty: components["schemas"]["MetricEnvelope_float_"];
+            emissions_penalty: components["schemas"]["MetricEnvelope_float_"];
+            landed_cost: components["schemas"]["MetricEnvelope_float_"];
+            route_risk_penalty: components["schemas"]["MetricEnvelope_float_"];
+            shortfall_penalty: components["schemas"]["MetricEnvelope_float_"];
+            supplier_concentration_penalty: components["schemas"]["MetricEnvelope_float_"];
+            total: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** ObjectiveWeight */
+        ObjectiveWeight: {
+            /**
+             * Unit
+             * @default weight
+             * @constant
+             */
+            unit: "weight";
+            /** Value */
+            value: number;
+        };
+        /** ObjectiveWeights */
+        ObjectiveWeights: {
+            compatibility_penalty: components["schemas"]["ObjectiveWeight"];
+            corridor_concentration: components["schemas"]["ObjectiveWeight"];
+            delay: components["schemas"]["ObjectiveWeight"];
+            emissions: components["schemas"]["ObjectiveWeight"];
+            landed_cost: components["schemas"]["ObjectiveWeight"];
+            profile: components["schemas"]["ProcurementProfile"];
+            route_risk: components["schemas"]["ObjectiveWeight"];
+            shortfall: components["schemas"]["ObjectiveWeight"];
+            supplier_concentration: components["schemas"]["ObjectiveWeight"];
+            /** Version */
+            version: string;
         };
         /**
          * OperatingMode
@@ -1166,6 +1378,257 @@ export interface components {
             /** Tolerance */
             tolerance: number;
         };
+        /** ProcurementAction */
+        ProcurementAction: {
+            /**
+             * Action Id
+             * Format: uuid
+             */
+            action_id: string;
+            /**
+             * Action Type
+             * @default PROCURE
+             * @constant
+             */
+            action_type: "PROCURE";
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            /**
+             * Delivery Window End
+             * Format: date-time
+             */
+            delivery_window_end: string;
+            /**
+             * Delivery Window Start
+             * Format: date-time
+             */
+            delivery_window_start: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            landed_cost: components["schemas"]["LandedCostBreakdown"];
+            /**
+             * Option Id
+             * Format: uuid
+             */
+            option_id: string;
+            refinery: components["schemas"]["RefineryAllocation"];
+            route: components["schemas"]["RouteAllocation"];
+            supplier: components["schemas"]["SupplierAllocation"];
+        };
+        /** ProcurementFailure */
+        ProcurementFailure: {
+            /** Code */
+            code: string;
+            /** Details */
+            details?: {
+                [key: string]: string | number | boolean;
+            };
+            /** Message */
+            message: string;
+            /**
+             * Retryable
+             * @default false
+             */
+            retryable: boolean;
+            stage: components["schemas"]["ProcurementFailureStage"];
+        };
+        /**
+         * ProcurementFailureStage
+         * @enum {string}
+         */
+        ProcurementFailureStage: "INPUT_VALIDATION" | "SOLVER" | "INDEPENDENT_CHECK" | "CONTRACT";
+        /** ProcurementLifecycleTransition */
+        ProcurementLifecycleTransition: {
+            current: components["schemas"]["ProcurementPlanLifecycle"];
+            target: components["schemas"]["ProcurementPlanLifecycle"];
+        };
+        /** ProcurementOptimisationInput */
+        ProcurementOptimisationInput: {
+            hard_constraints: components["schemas"]["HardConstraintConfiguration"];
+            /** Input Fingerprint */
+            input_fingerprint: string;
+            /**
+             * Input Schema Version
+             * @default procurement-input-v1
+             * @constant
+             */
+            input_schema_version: "procurement-input-v1";
+            /** Options */
+            options: components["schemas"]["ProcurementOption"][];
+            provenance: components["schemas"]["ProcurementProvenance"];
+            reserve_policy: components["schemas"]["FixedReservePolicyInput"];
+        };
+        /** ProcurementOption */
+        ProcurementOption: {
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            commercially_available_volume: components["schemas"]["MetricEnvelope_float_"];
+            commodity_price: components["schemas"]["MetricEnvelope_float_"];
+            /** Compatibility Permitted */
+            compatibility_permitted: boolean;
+            /**
+             * Delivery Window End
+             * Format: date-time
+             */
+            delivery_window_end: string;
+            /**
+             * Delivery Window Start
+             * Format: date-time
+             */
+            delivery_window_start: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            freight: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Grade Id
+             * Format: uuid
+             */
+            grade_id: string;
+            /**
+             * Option Id
+             * Format: uuid
+             */
+            option_id: string;
+            /**
+             * Refinery Id
+             * Format: uuid
+             */
+            refinery_id: string;
+            refinery_receiving_capacity: components["schemas"]["MetricEnvelope_float_"];
+            route_capacity: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Route Id
+             * Format: uuid
+             */
+            route_id: string;
+            /** Sanctions Permitted */
+            sanctions_permitted: boolean;
+            supplier_capacity: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Supplier Id
+             * Format: uuid
+             */
+            supplier_id: string;
+            transport_availability: components["schemas"]["TransportAvailability"];
+        };
+        /** ProcurementPlan */
+        ProcurementPlan: {
+            /** Audit Event Ids */
+            audit_event_ids: string[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            fingerprint_inputs: components["schemas"]["ProcurementPlanFingerprintInputs"];
+            /**
+             * Lifecycle
+             * @enum {string}
+             */
+            lifecycle: "FEASIBLE" | "APPROVED" | "REJECTED" | "SUPERSEDED";
+            /** Plan Fingerprint */
+            plan_fingerprint: string;
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            profile: components["schemas"]["ProcurementProfile"];
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            solver_result: components["schemas"]["SolverResult"];
+        };
+        /** ProcurementPlanFingerprintInputs */
+        ProcurementPlanFingerprintInputs: {
+            /** Assumptions */
+            assumptions?: components["schemas"]["AssumptionFingerprintReference"][];
+            confirmed_scenario: components["schemas"]["ConfirmedScenarioReference"];
+            /** Evidence */
+            evidence: components["schemas"]["EvidenceFingerprintReference"][];
+            /** Hard Constraint Version */
+            hard_constraint_version: string;
+            /** Model Version */
+            model_version: string;
+            objective_weights: components["schemas"]["ObjectiveWeights"];
+            optimisation_input: components["schemas"]["ProcurementOptimisationInput"];
+            /** Optimisation Input Fingerprint */
+            optimisation_input_fingerprint: string;
+            profile: components["schemas"]["ProcurementProfile"];
+            /** Reserve Policy Fingerprint */
+            reserve_policy_fingerprint: string;
+            simulation_result: components["schemas"]["SimulationResultReference"];
+            simulation_run: components["schemas"]["SimulationRunReference"];
+            solver_configuration: components["schemas"]["SolverConfiguration"];
+            twin_snapshot: components["schemas"]["TwinSnapshotReference"];
+        };
+        /**
+         * ProcurementPlanLifecycle
+         * @enum {string}
+         */
+        ProcurementPlanLifecycle: "REQUESTED" | "SOLVING" | "CHECKING" | "FEASIBLE" | "APPROVED" | "REJECTED" | "FAILED" | "SUPERSEDED";
+        /** ProcurementPlanRequest */
+        ProcurementPlanRequest: {
+            /** Model Version */
+            model_version: string;
+            /** Objective Weights */
+            objective_weights: components["schemas"]["ObjectiveWeights"][];
+            optimisation_input: components["schemas"]["ProcurementOptimisationInput"];
+            /** Profiles */
+            profiles: components["schemas"]["ProcurementProfile"][];
+            solver_configuration: components["schemas"]["SolverConfiguration"];
+        };
+        /** ProcurementPlanResponse */
+        ProcurementPlanResponse: {
+            /** Failures */
+            failures?: components["schemas"]["ProcurementFailure"][];
+            /** Plans */
+            plans?: components["schemas"]["ProcurementPlan"][];
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /** Results */
+            results: components["schemas"]["SolverResult"][];
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+        };
+        /**
+         * ProcurementProfile
+         * @enum {string}
+         */
+        ProcurementProfile: "LOWEST_COST" | "BALANCED" | "HIGHEST_RESILIENCE";
+        /** ProcurementProvenance */
+        ProcurementProvenance: {
+            /** Assumptions */
+            assumptions?: components["schemas"]["AssumptionFingerprintReference"][];
+            confirmed_scenario: components["schemas"]["ConfirmedScenarioReference"];
+            /** Evidence */
+            evidence: components["schemas"]["EvidenceFingerprintReference"][];
+            simulation_result: components["schemas"]["SimulationResultReference"];
+            simulation_run: components["schemas"]["SimulationRunReference"];
+            twin_snapshot: components["schemas"]["TwinSnapshotReference"];
+        };
+        /** RefineryAllocation */
+        RefineryAllocation: {
+            /**
+             * Grade Id
+             * Format: uuid
+             */
+            grade_id: string;
+            /**
+             * Refinery Id
+             * Format: uuid
+             */
+            refinery_id: string;
+            volume: components["schemas"]["MetricEnvelope_float_"];
+        };
         /** RefineryCompatibility */
         RefineryCompatibility: {
             /** Allowed */
@@ -1207,6 +1670,25 @@ export interface components {
             refinery_id: string;
             shortfall: components["schemas"]["MetricEnvelope_float_"];
         };
+        /** RejectedOption */
+        RejectedOption: {
+            /** Explanation */
+            explanation: string;
+            /**
+             * Option Id
+             * Format: uuid
+             */
+            option_id: string;
+            /** Reason Codes */
+            reason_codes: components["schemas"]["RejectedOptionReasonCode"][];
+            /** Violated Constraint Ids */
+            violated_constraint_ids: string[];
+        };
+        /**
+         * RejectedOptionReasonCode
+         * @enum {string}
+         */
+        RejectedOptionReasonCode: "SANCTIONS_EXCLUSION" | "GRADE_INCOMPATIBLE" | "SUPPLIER_CAPACITY_EXCEEDED" | "ROUTE_CAPACITY_EXCEEDED" | "REFINERY_CAPACITY_EXCEEDED" | "DELIVERY_WINDOW_MISSED" | "BUDGET_EXCEEDED" | "CONCENTRATION_LIMIT_EXCEEDED" | "COMMERCIAL_AVAILABILITY_UNVERIFIED" | "TRANSPORT_AVAILABILITY_UNVERIFIED" | "POLICY_EXCLUSION" | "DOMINATED";
         /** ResolvedDisruptionTarget */
         ResolvedDisruptionTarget: {
             /**
@@ -1221,6 +1703,15 @@ export interface components {
             /** Requested Identifier */
             requested_identifier: string;
             target_type: components["schemas"]["DisruptionTargetType"];
+        };
+        /** RouteAllocation */
+        RouteAllocation: {
+            /**
+             * Route Id
+             * Format: uuid
+             */
+            route_id: string;
+            volume: components["schemas"]["MetricEnvelope_float_"];
         };
         /** SanctionsAssessment */
         SanctionsAssessment: {
@@ -1537,6 +2028,35 @@ export interface components {
             timeline: components["schemas"]["TimelinePoint"][];
             uncertainty: components["schemas"]["UncertaintyRange"];
         };
+        /** SimulationResultReference */
+        SimulationResultReference: {
+            /**
+             * Result Id
+             * Format: uuid
+             */
+            result_id: string;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /** Scenario Fingerprint */
+            scenario_fingerprint: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            /** Simulation Fingerprint */
+            simulation_fingerprint: string;
+            /** Twin Snapshot Fingerprint */
+            twin_snapshot_fingerprint: string;
+            /**
+             * Twin Snapshot Id
+             * Format: uuid
+             */
+            twin_snapshot_id: string;
+        };
         /** SimulationRun */
         SimulationRun: {
             /** Cancellation Requested At */
@@ -1579,11 +2099,142 @@ export interface components {
             status: components["schemas"]["SimulationStatus"];
             twin_snapshot: components["schemas"]["TwinSnapshotReference"];
         };
+        /** SimulationRunReference */
+        SimulationRunReference: {
+            /** Model Version */
+            model_version: string;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /** Scenario Fingerprint */
+            scenario_fingerprint: string;
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            /** Simulation Fingerprint */
+            simulation_fingerprint: string;
+            /** Twin Snapshot Fingerprint */
+            twin_snapshot_fingerprint: string;
+            /**
+             * Twin Snapshot Id
+             * Format: uuid
+             */
+            twin_snapshot_id: string;
+        };
         /**
          * SimulationStatus
          * @enum {string}
          */
         SimulationStatus: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELLED";
+        /** SolverConfiguration */
+        SolverConfiguration: {
+            /**
+             * Deterministic
+             * @default true
+             * @constant
+             */
+            deterministic: true;
+            /**
+             * Random Seed
+             * @default 0
+             */
+            random_seed: number;
+            relative_mip_gap: components["schemas"]["SolverQuantity"];
+            /**
+             * Solver Name
+             * @default HIGHS
+             * @constant
+             */
+            solver_name: "HIGHS";
+            /** Solver Version */
+            solver_version: string;
+            /**
+             * Thread Count
+             * @default 1
+             */
+            thread_count: number;
+            time_limit: components["schemas"]["SolverQuantity"];
+        };
+        /** SolverMetadata */
+        SolverMetadata: {
+            /**
+             * Completed At
+             * @default null
+             */
+            completed_at: string | null;
+            configuration: components["schemas"]["SolverConfiguration"];
+            /** Hard Constraint Version */
+            hard_constraint_version: string;
+            /** @default null */
+            iterations: components["schemas"]["SolverQuantity"] | null;
+            /** Model Version */
+            model_version: string;
+            /** Objective Weight Version */
+            objective_weight_version: string;
+            /** @default null */
+            runtime: components["schemas"]["SolverQuantity"] | null;
+            /**
+             * Solver Name
+             * @default HIGHS
+             * @constant
+             */
+            solver_name: "HIGHS";
+            /** Solver Version */
+            solver_version: string;
+            /**
+             * Started At
+             * @default null
+             */
+            started_at: string | null;
+        };
+        /** SolverQuantity */
+        SolverQuantity: {
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "second" | "fraction" | "iteration";
+            /** Value */
+            value: number;
+        };
+        /** SolverResult */
+        SolverResult: {
+            /** Actions */
+            actions?: components["schemas"]["ProcurementAction"][];
+            /** @default null */
+            constraints: components["schemas"]["ConstraintReport"] | null;
+            /** @default null */
+            failure: components["schemas"]["ProcurementFailure"] | null;
+            /** @default null */
+            independent_check: components["schemas"]["IndependentCheckResult"] | null;
+            metadata: components["schemas"]["SolverMetadata"];
+            /** @default null */
+            objective: components["schemas"]["ObjectiveBreakdown"] | null;
+            profile: components["schemas"]["ProcurementProfile"];
+            /** Refinery Allocations */
+            refinery_allocations?: components["schemas"]["RefineryAllocation"][];
+            /** Rejected Options */
+            rejected_options?: components["schemas"]["RejectedOption"][];
+            /**
+             * Result Id
+             * Format: uuid
+             */
+            result_id: string;
+            /** Route Allocations */
+            route_allocations?: components["schemas"]["RouteAllocation"][];
+            status: components["schemas"]["SolverStatus"];
+            /** Supplier Allocations */
+            supplier_allocations?: components["schemas"]["SupplierAllocation"][];
+        };
+        /**
+         * SolverStatus
+         * @enum {string}
+         */
+        SolverStatus: "OPTIMAL" | "FEASIBLE" | "INFEASIBLE" | "TIMEOUT" | "ERROR" | "NOT_RUN";
         /** SourceHealthRecord */
         SourceHealthRecord: {
             /**
@@ -1666,6 +2317,20 @@ export interface components {
              */
             twin_snapshot_id: string;
         };
+        /** SupplierAllocation */
+        SupplierAllocation: {
+            /**
+             * Grade Id
+             * Format: uuid
+             */
+            grade_id: string;
+            /**
+             * Supplier Id
+             * Format: uuid
+             */
+            supplier_id: string;
+            volume: components["schemas"]["MetricEnvelope_float_"];
+        };
         /** SupportedScenarioType */
         SupportedScenarioType: {
             /** Description */
@@ -1695,6 +2360,29 @@ export interface components {
             /** Step */
             step: number;
         };
+        /** TransportAvailability */
+        TransportAvailability: {
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            /**
+             * Candidate Reference
+             * @default null
+             */
+            candidate_reference: string | null;
+            /**
+             * Commercially Confirmed
+             * @default false
+             */
+            commercially_confirmed: boolean;
+            /** Evidence Ids */
+            evidence_ids?: string[];
+            status: components["schemas"]["TransportAvailabilityStatus"];
+        };
+        /**
+         * TransportAvailabilityStatus
+         * @enum {string}
+         */
+        TransportAvailabilityStatus: "NOT_ASSESSED" | "CANDIDATE" | "EVIDENCE_BACKED_CONFIRMED" | "UNAVAILABLE";
         /**
          * TruthClass
          * @enum {string}

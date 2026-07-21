@@ -88,6 +88,18 @@ Canonical contracts are Pydantic v2 models exposed through OpenAPI and generated
 Phase 3 reuses `MetricEnvelope`, `EvidenceRef`, `Assumption`, `AuditEvent`, freshness, confidence, and truth-class contracts. Baseline facts retain their existing classification; simulator outputs are `MODELED`. Missing private inventory is not converted into a number.
 - A plan cannot become `APPROVED` when audit status is failed, evidence is missing, solver status is not feasible/optimal, or the plan hash differs from the reviewed hash.
 
+## Phase 4 procurement contract checkpoint
+
+The first Phase 4 checkpoint freezes contracts only. `ProcurementOptimisationInput` binds one exact `SimulationRunReference`, `SimulationResultReference`, confirmed-scenario fingerprint, and immutable `TwinSnapshotReference`. It also contains one versioned hard-constraint configuration, a fixed reserve-policy fingerprint with `decision_variables_enabled=false`, bounded candidate options, and the exact SHA-256 hashes of every referenced evidence and approved assumption record. Evidence and assumption fingerprint sets must exactly match the input references; commercial availability, supplier capacity, commodity price, freight, route capacity, and refinery receiving capacity cannot be omitted or hidden outside that set.
+
+`ProcurementPlanRequest` selects one or more unique `ProcurementProfile` values and supplies exactly one versioned `ObjectiveWeights` set for each. Profiles are `LOWEST_COST`, `BALANCED`, and `HIGHEST_RESILIENCE`. Profiles can change only objective weights; physical, sanctions, compatibility, policy, budget, concentration, and fixed-reserve constraints stay in the shared immutable input. The contract does not contain a reserve release decision variable.
+
+`SolverResult` distinguishes `OPTIMAL`, `FEASIBLE`, `INFEASIBLE`, `TIMEOUT`, `ERROR`, and `NOT_RUN`. Only optimal or feasible results may carry actions, allocations, and an objective, and those states require a feasible `ConstraintReport` plus a passed `IndependentCheckResult`. Infeasible, timed-out, errored, not-run, or independently failed output cannot become a `ProcurementPlan`. `RejectedOption` uses bounded reason codes and relevant hard-constraint IDs, including sanctions, incompatibility, unverified commercial availability, and unverified transport availability.
+
+`ProcurementPlanFingerprintInputs` is canonical JSON over the optimiser model version, profile and objective-weight version, exact solver configuration, optimisation-input hash, hard-constraint and fixed-reserve policy versions, evidence and assumption hashes, and immutable simulation/scenario/twin identities. SHA-256 fingerprints are stable under JSON key ordering and change when any material value or version changes. Output quantities and objectives use `MetricEnvelope` with `MODELED` truth; physical and monetary quantities use explicit validated units.
+
+The future POST and GET procurement API request/response schemas are present in generated OpenAPI and TypeScript contracts, but no callable endpoint, solver, storage, plan generation, recommendation, or approval flow exists in this checkpoint.
+
 ## Phase 2 digital-twin contracts
 
 - `TwinNode` uses a deterministic UUIDv5 plus a stable canonical ID and one of `SUPPLIER`, `LOAD_PORT`, `CHOKEPOINT`, `INDIAN_PORT`, `REFINERY`, or `RESERVE_SITE`. Coordinates are WGS84. Capacity, baseline supply, and baseline demand are complete metric envelopes when present.

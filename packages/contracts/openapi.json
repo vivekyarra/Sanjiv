@@ -146,6 +146,31 @@
         "title": "Assumption",
         "type": "object"
       },
+      "AssumptionFingerprintReference": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_hash": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Assumption Hash",
+            "type": "string"
+          },
+          "assumption_id": {
+            "format": "uuid",
+            "title": "Assumption Id",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AssumptionStatus"
+          }
+        },
+        "required": [
+          "assumption_id",
+          "assumption_hash",
+          "status"
+        ],
+        "title": "AssumptionFingerprintReference",
+        "type": "object"
+      },
       "AssumptionStatus": {
         "enum": [
           "DRAFT",
@@ -489,6 +514,33 @@
         "title": "ConfirmedScenario",
         "type": "object"
       },
+      "ConfirmedScenarioReference": {
+        "additionalProperties": false,
+        "properties": {
+          "confirmed_at": {
+            "format": "date-time",
+            "title": "Confirmed At",
+            "type": "string"
+          },
+          "scenario_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Scenario Fingerprint",
+            "type": "string"
+          },
+          "scenario_id": {
+            "format": "uuid",
+            "title": "Scenario Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenario_id",
+          "scenario_fingerprint",
+          "confirmed_at"
+        ],
+        "title": "ConfirmedScenarioReference",
+        "type": "object"
+      },
       "ConnectionState": {
         "enum": [
           "CONNECTING",
@@ -498,6 +550,126 @@
         ],
         "title": "ConnectionState",
         "type": "string"
+      },
+      "ConstraintFamily": {
+        "enum": [
+          "PHYSICAL",
+          "SUPPLIER_CAPACITY",
+          "ROUTE_CAPACITY",
+          "REFINERY_CAPACITY",
+          "DELIVERY_WINDOW",
+          "BUDGET",
+          "SANCTIONS",
+          "COMPATIBILITY",
+          "POLICY",
+          "CONCENTRATION",
+          "MASS_BALANCE"
+        ],
+        "title": "ConstraintFamily",
+        "type": "string"
+      },
+      "ConstraintReport": {
+        "additionalProperties": false,
+        "properties": {
+          "checked_constraint_ids": {
+            "items": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 2000,
+            "minItems": 1,
+            "title": "Checked Constraint Ids",
+            "type": "array"
+          },
+          "checked_families": {
+            "items": {
+              "$ref": "#/components/schemas/ConstraintFamily"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Checked Families",
+            "type": "array"
+          },
+          "feasible": {
+            "title": "Feasible",
+            "type": "boolean"
+          },
+          "hard_constraint_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Hard Constraint Version",
+            "type": "string"
+          },
+          "violations": {
+            "items": {
+              "$ref": "#/components/schemas/ConstraintViolation"
+            },
+            "maxItems": 2000,
+            "title": "Violations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "feasible",
+          "hard_constraint_version",
+          "checked_families",
+          "checked_constraint_ids"
+        ],
+        "title": "ConstraintReport",
+        "type": "object"
+      },
+      "ConstraintViolation": {
+        "additionalProperties": false,
+        "properties": {
+          "actual": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "constraint_id": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Constraint Id",
+            "type": "string"
+          },
+          "excess": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "family": {
+            "$ref": "#/components/schemas/ConstraintFamily"
+          },
+          "limit": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "message": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "option_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Option Id"
+          }
+        },
+        "required": [
+          "constraint_id",
+          "family",
+          "message",
+          "actual",
+          "limit",
+          "excess"
+        ],
+        "title": "ConstraintViolation",
+        "type": "object"
       },
       "CrudeGrade": {
         "additionalProperties": false,
@@ -741,6 +913,27 @@
         "title": "DurationUnit",
         "type": "string"
       },
+      "EvidenceFingerprintReference": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_id": {
+            "format": "uuid",
+            "title": "Evidence Id",
+            "type": "string"
+          },
+          "raw_payload_hash": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Raw Payload Hash",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evidence_id",
+          "raw_payload_hash"
+        ],
+        "title": "EvidenceFingerprintReference",
+        "type": "object"
+      },
       "EvidenceRecord": {
         "additionalProperties": false,
         "properties": {
@@ -861,6 +1054,65 @@
           "license"
         ],
         "title": "EvidenceRecord",
+        "type": "object"
+      },
+      "FixedReservePolicyInput": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 2000,
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "decision_variables_enabled": {
+            "const": false,
+            "default": false,
+            "title": "Decision Variables Enabled",
+            "type": "boolean"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 2000,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "policy_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Policy Fingerprint",
+            "type": "string"
+          },
+          "policy_id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Policy Id",
+            "type": "string"
+          },
+          "policy_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Policy Version",
+            "type": "string"
+          },
+          "release_schedule_fixed": {
+            "const": true,
+            "default": true,
+            "title": "Release Schedule Fixed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "policy_id",
+          "policy_version",
+          "policy_fingerprint"
+        ],
+        "title": "FixedReservePolicyInput",
         "type": "object"
       },
       "FlowResult": {
@@ -1069,6 +1321,64 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "HardConstraintConfiguration": {
+        "additionalProperties": false,
+        "properties": {
+          "budget_limit": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "compatibility_exclusion_enforced": {
+            "const": true,
+            "default": true,
+            "title": "Compatibility Exclusion Enforced",
+            "type": "boolean"
+          },
+          "corridor_concentration_limit": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "physical_constraints_enforced": {
+            "const": true,
+            "default": true,
+            "title": "Physical Constraints Enforced",
+            "type": "boolean"
+          },
+          "policy_constraints_enforced": {
+            "const": true,
+            "default": true,
+            "title": "Policy Constraints Enforced",
+            "type": "boolean"
+          },
+          "reserve_policy_fixed": {
+            "const": true,
+            "default": true,
+            "title": "Reserve Policy Fixed",
+            "type": "boolean"
+          },
+          "sanctions_exclusion_enforced": {
+            "const": true,
+            "default": true,
+            "title": "Sanctions Exclusion Enforced",
+            "type": "boolean"
+          },
+          "supplier_concentration_limit": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "budget_limit",
+          "supplier_concentration_limit",
+          "corridor_concentration_limit"
+        ],
+        "title": "HardConstraintConfiguration",
+        "type": "object"
+      },
       "HealthResponse": {
         "properties": {
           "checked_at": {
@@ -1102,6 +1412,85 @@
           "checked_at"
         ],
         "title": "HealthResponse",
+        "type": "object"
+      },
+      "IndependentCheckResult": {
+        "additionalProperties": false,
+        "properties": {
+          "bounds_passed": {
+            "title": "Bounds Passed",
+            "type": "boolean"
+          },
+          "checked_at": {
+            "format": "date-time",
+            "title": "Checked At",
+            "type": "string"
+          },
+          "checker_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Checker Version",
+            "type": "string"
+          },
+          "compatibility_exclusion_passed": {
+            "title": "Compatibility Exclusion Passed",
+            "type": "boolean"
+          },
+          "failure_codes": {
+            "items": {
+              "maxLength": 100,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Failure Codes",
+            "type": "array"
+          },
+          "fingerprint_reproduction_passed": {
+            "title": "Fingerprint Reproduction Passed",
+            "type": "boolean"
+          },
+          "mass_balance_passed": {
+            "title": "Mass Balance Passed",
+            "type": "boolean"
+          },
+          "objective_reconstruction_passed": {
+            "title": "Objective Reconstruction Passed",
+            "type": "boolean"
+          },
+          "passed": {
+            "title": "Passed",
+            "type": "boolean"
+          },
+          "reconstructed_objective": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "reported_objective": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "sanctions_exclusion_passed": {
+            "title": "Sanctions Exclusion Passed",
+            "type": "boolean"
+          },
+          "tolerance": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "checker_version",
+          "checked_at",
+          "passed",
+          "mass_balance_passed",
+          "bounds_passed",
+          "objective_reconstruction_passed",
+          "sanctions_exclusion_passed",
+          "compatibility_exclusion_passed",
+          "fingerprint_reproduction_passed",
+          "reported_objective",
+          "reconstructed_objective",
+          "tolerance"
+        ],
+        "title": "IndependentCheckResult",
         "type": "object"
       },
       "IndiaBoundAssessment": {
@@ -1330,6 +1719,55 @@
         "title": "InventoryTrajectory",
         "type": "object"
       },
+      "LandedCostBreakdown": {
+        "additionalProperties": false,
+        "properties": {
+          "commodity_price": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "compatibility_penalty": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "emissions": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "financing": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "freight": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "insurance_and_risk_premium": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "port_and_handling": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "quality_differential": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "route_fees": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "total": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "commodity_price",
+          "quality_differential",
+          "freight",
+          "insurance_and_risk_premium",
+          "port_and_handling",
+          "route_fees",
+          "financing",
+          "emissions",
+          "compatibility_penalty",
+          "total"
+        ],
+        "title": "LandedCostBreakdown",
+        "type": "object"
+      },
       "MassBalanceReport": {
         "additionalProperties": false,
         "properties": {
@@ -1545,6 +1983,124 @@
           "model_version"
         ],
         "title": "MetricEnvelope[int]",
+        "type": "object"
+      },
+      "ObjectiveBreakdown": {
+        "additionalProperties": false,
+        "properties": {
+          "compatibility_penalty": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "corridor_concentration_penalty": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "delay_penalty": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "emissions_penalty": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "landed_cost": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "route_risk_penalty": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "shortfall_penalty": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "supplier_concentration_penalty": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "total": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "landed_cost",
+          "shortfall_penalty",
+          "delay_penalty",
+          "route_risk_penalty",
+          "supplier_concentration_penalty",
+          "corridor_concentration_penalty",
+          "compatibility_penalty",
+          "emissions_penalty",
+          "total"
+        ],
+        "title": "ObjectiveBreakdown",
+        "type": "object"
+      },
+      "ObjectiveWeight": {
+        "additionalProperties": false,
+        "properties": {
+          "unit": {
+            "const": "weight",
+            "default": "weight",
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "minimum": 0,
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "title": "ObjectiveWeight",
+        "type": "object"
+      },
+      "ObjectiveWeights": {
+        "additionalProperties": false,
+        "properties": {
+          "compatibility_penalty": {
+            "$ref": "#/components/schemas/ObjectiveWeight"
+          },
+          "corridor_concentration": {
+            "$ref": "#/components/schemas/ObjectiveWeight"
+          },
+          "delay": {
+            "$ref": "#/components/schemas/ObjectiveWeight"
+          },
+          "emissions": {
+            "$ref": "#/components/schemas/ObjectiveWeight"
+          },
+          "landed_cost": {
+            "$ref": "#/components/schemas/ObjectiveWeight"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProcurementProfile"
+          },
+          "route_risk": {
+            "$ref": "#/components/schemas/ObjectiveWeight"
+          },
+          "shortfall": {
+            "$ref": "#/components/schemas/ObjectiveWeight"
+          },
+          "supplier_concentration": {
+            "$ref": "#/components/schemas/ObjectiveWeight"
+          },
+          "version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "profile",
+          "version",
+          "landed_cost",
+          "shortfall",
+          "delay",
+          "route_risk",
+          "supplier_concentration",
+          "corridor_concentration",
+          "compatibility_penalty",
+          "emissions"
+        ],
+        "title": "ObjectiveWeights",
         "type": "object"
       },
       "OperatingMode": {
@@ -1792,6 +2348,657 @@
         "title": "PhysicalInvariantReport",
         "type": "object"
       },
+      "ProcurementAction": {
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "format": "uuid",
+            "title": "Action Id",
+            "type": "string"
+          },
+          "action_type": {
+            "const": "PROCURE",
+            "default": "PROCURE",
+            "title": "Action Type",
+            "type": "string"
+          },
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 2000,
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "delivery_window_end": {
+            "format": "date-time",
+            "title": "Delivery Window End",
+            "type": "string"
+          },
+          "delivery_window_start": {
+            "format": "date-time",
+            "title": "Delivery Window Start",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 2000,
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "landed_cost": {
+            "$ref": "#/components/schemas/LandedCostBreakdown"
+          },
+          "option_id": {
+            "format": "uuid",
+            "title": "Option Id",
+            "type": "string"
+          },
+          "refinery": {
+            "$ref": "#/components/schemas/RefineryAllocation"
+          },
+          "route": {
+            "$ref": "#/components/schemas/RouteAllocation"
+          },
+          "supplier": {
+            "$ref": "#/components/schemas/SupplierAllocation"
+          }
+        },
+        "required": [
+          "action_id",
+          "option_id",
+          "supplier",
+          "route",
+          "refinery",
+          "delivery_window_start",
+          "delivery_window_end",
+          "landed_cost",
+          "evidence_ids"
+        ],
+        "title": "ProcurementAction",
+        "type": "object"
+      },
+      "ProcurementFailure": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "title": "Code",
+            "type": "string"
+          },
+          "details": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "maxLength": 1000,
+                  "type": "string"
+                },
+                {
+                  "maximum": 1000000000000.0,
+                  "minimum": -1000000000000.0,
+                  "type": "number"
+                },
+                {
+                  "maximum": 1000000000,
+                  "minimum": -1000000000,
+                  "type": "integer"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "maxProperties": 50,
+            "propertyNames": {
+              "maxLength": 100,
+              "minLength": 1
+            },
+            "title": "Details",
+            "type": "object"
+          },
+          "message": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "retryable": {
+            "default": false,
+            "title": "Retryable",
+            "type": "boolean"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/ProcurementFailureStage"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "stage"
+        ],
+        "title": "ProcurementFailure",
+        "type": "object"
+      },
+      "ProcurementFailureStage": {
+        "enum": [
+          "INPUT_VALIDATION",
+          "SOLVER",
+          "INDEPENDENT_CHECK",
+          "CONTRACT"
+        ],
+        "title": "ProcurementFailureStage",
+        "type": "string"
+      },
+      "ProcurementLifecycleTransition": {
+        "additionalProperties": false,
+        "properties": {
+          "current": {
+            "$ref": "#/components/schemas/ProcurementPlanLifecycle"
+          },
+          "target": {
+            "$ref": "#/components/schemas/ProcurementPlanLifecycle"
+          }
+        },
+        "required": [
+          "current",
+          "target"
+        ],
+        "title": "ProcurementLifecycleTransition",
+        "type": "object"
+      },
+      "ProcurementOptimisationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "hard_constraints": {
+            "$ref": "#/components/schemas/HardConstraintConfiguration"
+          },
+          "input_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Input Fingerprint",
+            "type": "string"
+          },
+          "input_schema_version": {
+            "const": "procurement-input-v1",
+            "default": "procurement-input-v1",
+            "title": "Input Schema Version",
+            "type": "string"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/ProcurementOption"
+            },
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Options",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/ProcurementProvenance"
+          },
+          "reserve_policy": {
+            "$ref": "#/components/schemas/FixedReservePolicyInput"
+          }
+        },
+        "required": [
+          "provenance",
+          "hard_constraints",
+          "reserve_policy",
+          "options",
+          "input_fingerprint"
+        ],
+        "title": "ProcurementOptimisationInput",
+        "type": "object"
+      },
+      "ProcurementOption": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 2000,
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "commercially_available_volume": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "commodity_price": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "compatibility_permitted": {
+            "title": "Compatibility Permitted",
+            "type": "boolean"
+          },
+          "delivery_window_end": {
+            "format": "date-time",
+            "title": "Delivery Window End",
+            "type": "string"
+          },
+          "delivery_window_start": {
+            "format": "date-time",
+            "title": "Delivery Window Start",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 2000,
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "freight": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "grade_id": {
+            "format": "uuid",
+            "title": "Grade Id",
+            "type": "string"
+          },
+          "option_id": {
+            "format": "uuid",
+            "title": "Option Id",
+            "type": "string"
+          },
+          "refinery_id": {
+            "format": "uuid",
+            "title": "Refinery Id",
+            "type": "string"
+          },
+          "refinery_receiving_capacity": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "route_capacity": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "route_id": {
+            "format": "uuid",
+            "title": "Route Id",
+            "type": "string"
+          },
+          "sanctions_permitted": {
+            "title": "Sanctions Permitted",
+            "type": "boolean"
+          },
+          "supplier_capacity": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "supplier_id": {
+            "format": "uuid",
+            "title": "Supplier Id",
+            "type": "string"
+          },
+          "transport_availability": {
+            "$ref": "#/components/schemas/TransportAvailability"
+          }
+        },
+        "required": [
+          "option_id",
+          "supplier_id",
+          "grade_id",
+          "route_id",
+          "refinery_id",
+          "delivery_window_start",
+          "delivery_window_end",
+          "supplier_capacity",
+          "commercially_available_volume",
+          "route_capacity",
+          "refinery_receiving_capacity",
+          "commodity_price",
+          "freight",
+          "sanctions_permitted",
+          "compatibility_permitted",
+          "transport_availability",
+          "evidence_ids"
+        ],
+        "title": "ProcurementOption",
+        "type": "object"
+      },
+      "ProcurementPlan": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_event_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Audit Event Ids",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "fingerprint_inputs": {
+            "$ref": "#/components/schemas/ProcurementPlanFingerprintInputs"
+          },
+          "lifecycle": {
+            "enum": [
+              "FEASIBLE",
+              "APPROVED",
+              "REJECTED",
+              "SUPERSEDED"
+            ],
+            "title": "Lifecycle",
+            "type": "string"
+          },
+          "plan_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Plan Fingerprint",
+            "type": "string"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProcurementProfile"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "solver_result": {
+            "$ref": "#/components/schemas/SolverResult"
+          }
+        },
+        "required": [
+          "plan_id",
+          "run_id",
+          "profile",
+          "lifecycle",
+          "fingerprint_inputs",
+          "plan_fingerprint",
+          "solver_result",
+          "created_at",
+          "audit_event_ids"
+        ],
+        "title": "ProcurementPlan",
+        "type": "object"
+      },
+      "ProcurementPlanFingerprintInputs": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "$ref": "#/components/schemas/AssumptionFingerprintReference"
+            },
+            "maxItems": 2000,
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "confirmed_scenario": {
+            "$ref": "#/components/schemas/ConfirmedScenarioReference"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceFingerprintReference"
+            },
+            "maxItems": 2000,
+            "minItems": 1,
+            "title": "Evidence",
+            "type": "array"
+          },
+          "hard_constraint_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Hard Constraint Version",
+            "type": "string"
+          },
+          "model_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Model Version",
+            "type": "string"
+          },
+          "objective_weights": {
+            "$ref": "#/components/schemas/ObjectiveWeights"
+          },
+          "optimisation_input": {
+            "$ref": "#/components/schemas/ProcurementOptimisationInput"
+          },
+          "optimisation_input_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Optimisation Input Fingerprint",
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProcurementProfile"
+          },
+          "reserve_policy_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Reserve Policy Fingerprint",
+            "type": "string"
+          },
+          "simulation_result": {
+            "$ref": "#/components/schemas/SimulationResultReference"
+          },
+          "simulation_run": {
+            "$ref": "#/components/schemas/SimulationRunReference"
+          },
+          "solver_configuration": {
+            "$ref": "#/components/schemas/SolverConfiguration"
+          },
+          "twin_snapshot": {
+            "$ref": "#/components/schemas/TwinSnapshotReference"
+          }
+        },
+        "required": [
+          "model_version",
+          "profile",
+          "objective_weights",
+          "solver_configuration",
+          "optimisation_input",
+          "optimisation_input_fingerprint",
+          "simulation_run",
+          "simulation_result",
+          "confirmed_scenario",
+          "twin_snapshot",
+          "hard_constraint_version",
+          "reserve_policy_fingerprint",
+          "evidence"
+        ],
+        "title": "ProcurementPlanFingerprintInputs",
+        "type": "object"
+      },
+      "ProcurementPlanLifecycle": {
+        "enum": [
+          "REQUESTED",
+          "SOLVING",
+          "CHECKING",
+          "FEASIBLE",
+          "APPROVED",
+          "REJECTED",
+          "FAILED",
+          "SUPERSEDED"
+        ],
+        "title": "ProcurementPlanLifecycle",
+        "type": "string"
+      },
+      "ProcurementPlanRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "model_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Model Version",
+            "type": "string"
+          },
+          "objective_weights": {
+            "items": {
+              "$ref": "#/components/schemas/ObjectiveWeights"
+            },
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Objective Weights",
+            "type": "array"
+          },
+          "optimisation_input": {
+            "$ref": "#/components/schemas/ProcurementOptimisationInput"
+          },
+          "profiles": {
+            "items": {
+              "$ref": "#/components/schemas/ProcurementProfile"
+            },
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Profiles",
+            "type": "array"
+          },
+          "solver_configuration": {
+            "$ref": "#/components/schemas/SolverConfiguration"
+          }
+        },
+        "required": [
+          "optimisation_input",
+          "profiles",
+          "objective_weights",
+          "solver_configuration",
+          "model_version"
+        ],
+        "title": "ProcurementPlanRequest",
+        "type": "object"
+      },
+      "ProcurementPlanResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "failures": {
+            "items": {
+              "$ref": "#/components/schemas/ProcurementFailure"
+            },
+            "maxItems": 3,
+            "title": "Failures",
+            "type": "array"
+          },
+          "plans": {
+            "items": {
+              "$ref": "#/components/schemas/ProcurementPlan"
+            },
+            "maxItems": 3,
+            "title": "Plans",
+            "type": "array"
+          },
+          "request_id": {
+            "format": "uuid",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/SolverResult"
+            },
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Results",
+            "type": "array"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "run_id",
+          "results"
+        ],
+        "title": "ProcurementPlanResponse",
+        "type": "object"
+      },
+      "ProcurementProfile": {
+        "enum": [
+          "LOWEST_COST",
+          "BALANCED",
+          "HIGHEST_RESILIENCE"
+        ],
+        "title": "ProcurementProfile",
+        "type": "string"
+      },
+      "ProcurementProvenance": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "$ref": "#/components/schemas/AssumptionFingerprintReference"
+            },
+            "maxItems": 2000,
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "confirmed_scenario": {
+            "$ref": "#/components/schemas/ConfirmedScenarioReference"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceFingerprintReference"
+            },
+            "maxItems": 2000,
+            "minItems": 1,
+            "title": "Evidence",
+            "type": "array"
+          },
+          "simulation_result": {
+            "$ref": "#/components/schemas/SimulationResultReference"
+          },
+          "simulation_run": {
+            "$ref": "#/components/schemas/SimulationRunReference"
+          },
+          "twin_snapshot": {
+            "$ref": "#/components/schemas/TwinSnapshotReference"
+          }
+        },
+        "required": [
+          "simulation_run",
+          "simulation_result",
+          "confirmed_scenario",
+          "twin_snapshot",
+          "evidence"
+        ],
+        "title": "ProcurementProvenance",
+        "type": "object"
+      },
+      "RefineryAllocation": {
+        "additionalProperties": false,
+        "properties": {
+          "grade_id": {
+            "format": "uuid",
+            "title": "Grade Id",
+            "type": "string"
+          },
+          "refinery_id": {
+            "format": "uuid",
+            "title": "Refinery Id",
+            "type": "string"
+          },
+          "volume": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "refinery_id",
+          "grade_id",
+          "volume"
+        ],
+        "title": "RefineryAllocation",
+        "type": "object"
+      },
       "RefineryCompatibility": {
         "additionalProperties": false,
         "properties": {
@@ -1895,6 +3102,68 @@
         "title": "RefineryThroughputResult",
         "type": "object"
       },
+      "RejectedOption": {
+        "additionalProperties": false,
+        "properties": {
+          "explanation": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Explanation",
+            "type": "string"
+          },
+          "option_id": {
+            "format": "uuid",
+            "title": "Option Id",
+            "type": "string"
+          },
+          "reason_codes": {
+            "items": {
+              "$ref": "#/components/schemas/RejectedOptionReasonCode"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Reason Codes",
+            "type": "array"
+          },
+          "violated_constraint_ids": {
+            "items": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Violated Constraint Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "option_id",
+          "reason_codes",
+          "violated_constraint_ids",
+          "explanation"
+        ],
+        "title": "RejectedOption",
+        "type": "object"
+      },
+      "RejectedOptionReasonCode": {
+        "enum": [
+          "SANCTIONS_EXCLUSION",
+          "GRADE_INCOMPATIBLE",
+          "SUPPLIER_CAPACITY_EXCEEDED",
+          "ROUTE_CAPACITY_EXCEEDED",
+          "REFINERY_CAPACITY_EXCEEDED",
+          "DELIVERY_WINDOW_MISSED",
+          "BUDGET_EXCEEDED",
+          "CONCENTRATION_LIMIT_EXCEEDED",
+          "COMMERCIAL_AVAILABILITY_UNVERIFIED",
+          "TRANSPORT_AVAILABILITY_UNVERIFIED",
+          "POLICY_EXCLUSION",
+          "DOMINATED"
+        ],
+        "title": "RejectedOptionReasonCode",
+        "type": "string"
+      },
       "ResolvedDisruptionTarget": {
         "additionalProperties": false,
         "properties": {
@@ -1927,6 +3196,25 @@
           "display_name"
         ],
         "title": "ResolvedDisruptionTarget",
+        "type": "object"
+      },
+      "RouteAllocation": {
+        "additionalProperties": false,
+        "properties": {
+          "route_id": {
+            "format": "uuid",
+            "title": "Route Id",
+            "type": "string"
+          },
+          "volume": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "route_id",
+          "volume"
+        ],
+        "title": "RouteAllocation",
         "type": "object"
       },
       "SanctionsAssessment": {
@@ -2697,6 +3985,57 @@
         "title": "SimulationResult",
         "type": "object"
       },
+      "SimulationResultReference": {
+        "additionalProperties": false,
+        "properties": {
+          "result_id": {
+            "format": "uuid",
+            "title": "Result Id",
+            "type": "string"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "scenario_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Scenario Fingerprint",
+            "type": "string"
+          },
+          "scenario_id": {
+            "format": "uuid",
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "simulation_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Simulation Fingerprint",
+            "type": "string"
+          },
+          "twin_snapshot_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Twin Snapshot Fingerprint",
+            "type": "string"
+          },
+          "twin_snapshot_id": {
+            "format": "uuid",
+            "title": "Twin Snapshot Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result_id",
+          "run_id",
+          "scenario_id",
+          "scenario_fingerprint",
+          "simulation_fingerprint",
+          "twin_snapshot_id",
+          "twin_snapshot_fingerprint"
+        ],
+        "title": "SimulationResultReference",
+        "type": "object"
+      },
       "SimulationRun": {
         "additionalProperties": false,
         "properties": {
@@ -2826,6 +4165,58 @@
         "title": "SimulationRun",
         "type": "object"
       },
+      "SimulationRunReference": {
+        "additionalProperties": false,
+        "properties": {
+          "model_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Model Version",
+            "type": "string"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "scenario_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Scenario Fingerprint",
+            "type": "string"
+          },
+          "scenario_id": {
+            "format": "uuid",
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "simulation_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Simulation Fingerprint",
+            "type": "string"
+          },
+          "twin_snapshot_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Twin Snapshot Fingerprint",
+            "type": "string"
+          },
+          "twin_snapshot_id": {
+            "format": "uuid",
+            "title": "Twin Snapshot Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "scenario_id",
+          "scenario_fingerprint",
+          "simulation_fingerprint",
+          "twin_snapshot_id",
+          "twin_snapshot_fingerprint",
+          "model_version"
+        ],
+        "title": "SimulationRunReference",
+        "type": "object"
+      },
       "SimulationStatus": {
         "enum": [
           "QUEUED",
@@ -2835,6 +4226,299 @@
           "CANCELLED"
         ],
         "title": "SimulationStatus",
+        "type": "string"
+      },
+      "SolverConfiguration": {
+        "additionalProperties": false,
+        "properties": {
+          "deterministic": {
+            "const": true,
+            "default": true,
+            "title": "Deterministic",
+            "type": "boolean"
+          },
+          "random_seed": {
+            "default": 0,
+            "maximum": 2147483647,
+            "minimum": 0,
+            "title": "Random Seed",
+            "type": "integer"
+          },
+          "relative_mip_gap": {
+            "$ref": "#/components/schemas/SolverQuantity"
+          },
+          "solver_name": {
+            "const": "HIGHS",
+            "default": "HIGHS",
+            "title": "Solver Name",
+            "type": "string"
+          },
+          "solver_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Solver Version",
+            "type": "string"
+          },
+          "thread_count": {
+            "default": 1,
+            "maximum": 64,
+            "minimum": 1,
+            "title": "Thread Count",
+            "type": "integer"
+          },
+          "time_limit": {
+            "$ref": "#/components/schemas/SolverQuantity"
+          }
+        },
+        "required": [
+          "solver_version",
+          "time_limit",
+          "relative_mip_gap"
+        ],
+        "title": "SolverConfiguration",
+        "type": "object"
+      },
+      "SolverMetadata": {
+        "additionalProperties": false,
+        "properties": {
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Completed At"
+          },
+          "configuration": {
+            "$ref": "#/components/schemas/SolverConfiguration"
+          },
+          "hard_constraint_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Hard Constraint Version",
+            "type": "string"
+          },
+          "iterations": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SolverQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "model_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Model Version",
+            "type": "string"
+          },
+          "objective_weight_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Objective Weight Version",
+            "type": "string"
+          },
+          "runtime": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SolverQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "solver_name": {
+            "const": "HIGHS",
+            "default": "HIGHS",
+            "title": "Solver Name",
+            "type": "string"
+          },
+          "solver_version": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Solver Version",
+            "type": "string"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Started At"
+          }
+        },
+        "required": [
+          "solver_version",
+          "model_version",
+          "objective_weight_version",
+          "hard_constraint_version",
+          "configuration"
+        ],
+        "title": "SolverMetadata",
+        "type": "object"
+      },
+      "SolverQuantity": {
+        "additionalProperties": false,
+        "properties": {
+          "unit": {
+            "enum": [
+              "second",
+              "fraction",
+              "iteration"
+            ],
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "minimum": 0,
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value",
+          "unit"
+        ],
+        "title": "SolverQuantity",
+        "type": "object"
+      },
+      "SolverResult": {
+        "additionalProperties": false,
+        "properties": {
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/ProcurementAction"
+            },
+            "maxItems": 500,
+            "title": "Actions",
+            "type": "array"
+          },
+          "constraints": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConstraintReport"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "failure": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProcurementFailure"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "independent_check": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/IndependentCheckResult"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/SolverMetadata"
+          },
+          "objective": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ObjectiveBreakdown"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProcurementProfile"
+          },
+          "refinery_allocations": {
+            "items": {
+              "$ref": "#/components/schemas/RefineryAllocation"
+            },
+            "maxItems": 500,
+            "title": "Refinery Allocations",
+            "type": "array"
+          },
+          "rejected_options": {
+            "items": {
+              "$ref": "#/components/schemas/RejectedOption"
+            },
+            "maxItems": 500,
+            "title": "Rejected Options",
+            "type": "array"
+          },
+          "result_id": {
+            "format": "uuid",
+            "title": "Result Id",
+            "type": "string"
+          },
+          "route_allocations": {
+            "items": {
+              "$ref": "#/components/schemas/RouteAllocation"
+            },
+            "maxItems": 500,
+            "title": "Route Allocations",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SolverStatus"
+          },
+          "supplier_allocations": {
+            "items": {
+              "$ref": "#/components/schemas/SupplierAllocation"
+            },
+            "maxItems": 500,
+            "title": "Supplier Allocations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result_id",
+          "profile",
+          "status",
+          "metadata"
+        ],
+        "title": "SolverResult",
+        "type": "object"
+      },
+      "SolverStatus": {
+        "enum": [
+          "OPTIMAL",
+          "FEASIBLE",
+          "INFEASIBLE",
+          "TIMEOUT",
+          "ERROR",
+          "NOT_RUN"
+        ],
+        "title": "SolverStatus",
         "type": "string"
       },
       "SourceHealthRecord": {
@@ -3071,6 +4755,31 @@
         "title": "StructuredScenarioInput",
         "type": "object"
       },
+      "SupplierAllocation": {
+        "additionalProperties": false,
+        "properties": {
+          "grade_id": {
+            "format": "uuid",
+            "title": "Grade Id",
+            "type": "string"
+          },
+          "supplier_id": {
+            "format": "uuid",
+            "title": "Supplier Id",
+            "type": "string"
+          },
+          "volume": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "supplier_id",
+          "grade_id",
+          "volume"
+        ],
+        "title": "SupplierAllocation",
+        "type": "object"
+      },
       "SupportedScenarioType": {
         "additionalProperties": false,
         "properties": {
@@ -3144,6 +4853,66 @@
         ],
         "title": "TimelinePoint",
         "type": "object"
+      },
+      "TransportAvailability": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "candidate_reference": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Candidate Reference"
+          },
+          "commercially_confirmed": {
+            "default": false,
+            "title": "Commercially Confirmed",
+            "type": "boolean"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TransportAvailabilityStatus"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "TransportAvailability",
+        "type": "object"
+      },
+      "TransportAvailabilityStatus": {
+        "enum": [
+          "NOT_ASSESSED",
+          "CANDIDATE",
+          "EVIDENCE_BACKED_CONFIRMED",
+          "UNAVAILABLE"
+        ],
+        "title": "TransportAvailabilityStatus",
+        "type": "string"
       },
       "TruthClass": {
         "enum": [

@@ -6,4 +6,9 @@ test("generated API contracts exist", () => {
   const generated = fs.readFileSync(new URL("../src/generated.ts", import.meta.url), "utf8");
   assert.match(generated, /MetricEnvelope/);
   assert.match(generated, /EvidenceRecord/);
+  assert.match(generated, /ProcurementOptimisationInput/);
+  assert.match(generated, /ProcurementPlanRequest/);
+  assert.match(generated, /ProcurementPlanFingerprintInputs/);
+  assert.match(generated, /IndependentCheckResult/);
+  assert.match(generated, /SolverStatus/);
 });

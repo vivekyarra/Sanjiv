@@ -22,6 +22,7 @@ from sanjiv.maritime.repository import InMemoryMaritimeRepository, PostgresMarit
 from sanjiv.maritime.routes import router as maritime_router
 from sanjiv.maritime.routes import websocket_router
 from sanjiv.maritime.service import MaritimeWatchService
+from sanjiv.procurement.openapi import add_procurement_contract_schemas
 from sanjiv.scenarios.compiler import (
     DisabledScenarioProvider,
     OpenAIResponsesScenarioProvider,
@@ -180,6 +181,7 @@ def create_app(
 
         return build_foundation_sample()
 
+    add_procurement_contract_schemas(application)
     return application
 
 

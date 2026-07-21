@@ -83,7 +83,19 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 
 ## Phase 4 - Procurement optimiser
 
-- Status: not started. First incomplete task is freezing the Phase 4 procurement-plan and solver contracts; no Phase 4 implementation has begun.
+### Micro-plan
+
+1. Freeze the canonical optimiser input, profile, solver, independent-check, plan, action/allocation, cost/objective, constraint, rejection, lifecycle, failure, and fingerprint contracts.
+2. Bind every request to immutable Phase 3 simulation/scenario and Phase 2 twin identities, plus exact evidence/assumption hashes and a fixed Phase 4 reserve-policy input.
+3. Generate contract-only OpenAPI and TypeScript schemas for the documented future procurement POST/GET paths without registering callable routes.
+4. Prove invalid-unit, negative/non-finite value, state-coherence, sanctions/compatibility, evidence/assumption completeness, transport-claim, and fingerprint invariants with focused tests.
+5. Run the complete repository gate and focused security/contract review, then commit and push the checkpoint while keeping pull request #2 draft.
+
+### Checkpoint status
+
+- In progress: the procurement optimiser contracts are frozen and focused contract tests are being integrated into the full repository gate.
+- This is not Phase 4 completion. No optimisation equations, Pyomo/HiGHS execution, persistence, working procurement endpoint, plan generation, Response Planner UI, recommendation, rerouting action, reserve release, or approval workflow is included.
+- Remaining Phase 4 work begins with the optimiser input builder and landed-cost service, followed by shared hard constraints, the lowest-cost solve, independent checker implementation, balanced/resilience solves, persistence/API exposure, explanations, Response Planner UI, scenario-library validation, and the full Phase 4 hard gate.
 
 ## Phase 5 - Strategic reserve optimiser
 
