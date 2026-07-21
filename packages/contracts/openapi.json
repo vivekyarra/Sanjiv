@@ -1055,9 +1055,100 @@
         "title": "BaselineResult",
         "type": "object"
       },
+      "BriefingExport": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "byte_count": {
+            "minimum": 1.0,
+            "title": "Byte Count",
+            "type": "integer"
+          },
+          "content_type": {
+            "title": "Content Type",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "execution_authorized": {
+            "const": false,
+            "default": false,
+            "title": "Execution Authorized",
+            "type": "boolean"
+          },
+          "export_id": {
+            "format": "uuid",
+            "title": "Export Id",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ExportKind"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "plan_kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlanKind"
+              },
+              {
+                "const": "LPG",
+                "type": "string"
+              }
+            ],
+            "title": "Plan Kind"
+          },
+          "sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Sha256",
+            "type": "string"
+          },
+          "truth_label": {
+            "const": "AUDITED_DECISION_SUPPORT",
+            "title": "Truth Label",
+            "type": "string"
+          },
+          "values_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Values Fingerprint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "export_id",
+          "plan_id",
+          "plan_kind",
+          "kind",
+          "created_at",
+          "content_type",
+          "filename",
+          "sha256",
+          "byte_count",
+          "audit_fingerprint",
+          "values_fingerprint",
+          "truth_label"
+        ],
+        "title": "BriefingExport",
+        "type": "object"
+      },
       "Commodity": {
         "enum": [
-          "CRUDE_OIL"
+          "CRUDE_OIL",
+          "LPG"
         ],
         "title": "Commodity",
         "type": "string"
@@ -1505,6 +1596,35 @@
         "title": "CorroborationResult",
         "type": "object"
       },
+      "CreateCommentRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "comment": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Comment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "comment"
+        ],
+        "title": "CreateCommentRequest",
+        "type": "object"
+      },
+      "CreateExportRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/ExportKind"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "CreateExportRequest",
+        "type": "object"
+      },
       "CrudeGrade": {
         "additionalProperties": false,
         "properties": {
@@ -1614,6 +1734,14 @@
           "USER_SUPPLIED"
         ],
         "title": "DataMode",
+        "type": "string"
+      },
+      "DatasetClassification": {
+        "enum": [
+          "SYNTHETIC_FIXTURE",
+          "RECORDED_REAL_DATA"
+        ],
+        "title": "DatasetClassification",
         "type": "string"
       },
       "DisruptedResult": {
@@ -2168,6 +2296,23 @@
         ],
         "title": "ExplanationConstraint",
         "type": "object"
+      },
+      "ExportKind": {
+        "enum": [
+          "EXECUTIVE_BRIEFING",
+          "PROCUREMENT_ACTION_PACKAGE",
+          "STRATEGIC_RESERVE_GUIDANCE",
+          "RISK_ROUTE_MAP",
+          "SCENARIO_JSON",
+          "ASSUMPTIONS_SHEET",
+          "EVIDENCE_APPENDIX",
+          "MODEL_VERSION_APPENDIX",
+          "APPROVAL_RECORD",
+          "MACHINE_READABLE_JSON",
+          "PDF_BRIEFING"
+        ],
+        "title": "ExportKind",
+        "type": "string"
       },
       "FeatureContribution": {
         "additionalProperties": false,
@@ -2975,6 +3120,344 @@
         "title": "LifecycleAction",
         "type": "string"
       },
+      "LpgAllocation": {
+        "additionalProperties": false,
+        "properties": {
+          "arrival_days": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "landed_cost": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "route_id": {
+            "title": "Route Id",
+            "type": "string"
+          },
+          "supplier_id": {
+            "title": "Supplier Id",
+            "type": "string"
+          },
+          "terminal_id": {
+            "title": "Terminal Id",
+            "type": "string"
+          },
+          "volume": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "route_id",
+          "supplier_id",
+          "terminal_id",
+          "volume",
+          "arrival_days",
+          "landed_cost"
+        ],
+        "title": "LpgAllocation",
+        "type": "object"
+      },
+      "LpgNetwork": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_notice": {
+            "title": "Assumption Notice",
+            "type": "string"
+          },
+          "baseline_demand": {
+            "exclusiveMinimum": 0.0,
+            "title": "Baseline Demand",
+            "type": "number"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/DatasetClassification"
+          },
+          "dataset_id": {
+            "title": "Dataset Id",
+            "type": "string"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "license": {
+            "title": "License",
+            "type": "string"
+          },
+          "public_reserve_policy": {
+            "const": "NOT_APPLICABLE",
+            "title": "Public Reserve Policy",
+            "type": "string"
+          },
+          "redistribution_status": {
+            "title": "Redistribution Status",
+            "type": "string"
+          },
+          "routes": {
+            "items": {
+              "$ref": "#/components/schemas/LpgRoute"
+            },
+            "minItems": 1,
+            "title": "Routes",
+            "type": "array"
+          },
+          "suppliers": {
+            "items": {
+              "$ref": "#/components/schemas/LpgSupplier"
+            },
+            "minItems": 1,
+            "title": "Suppliers",
+            "type": "array"
+          },
+          "terminals": {
+            "items": {
+              "$ref": "#/components/schemas/LpgTerminal"
+            },
+            "minItems": 1,
+            "title": "Terminals",
+            "type": "array"
+          },
+          "unit": {
+            "const": "tonne_per_day",
+            "title": "Unit",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "dataset_id",
+          "version",
+          "classification",
+          "license",
+          "redistribution_status",
+          "unit",
+          "effective_at",
+          "expires_at",
+          "suppliers",
+          "terminals",
+          "routes",
+          "baseline_demand",
+          "public_reserve_policy",
+          "assumption_notice"
+        ],
+        "title": "LpgNetwork",
+        "type": "object"
+      },
+      "LpgPlan": {
+        "additionalProperties": false,
+        "properties": {
+          "allocations": {
+            "items": {
+              "$ref": "#/components/schemas/LpgAllocation"
+            },
+            "minItems": 1,
+            "title": "Allocations",
+            "type": "array"
+          },
+          "audit_status": {
+            "$ref": "#/components/schemas/EvidenceAuditStatus"
+          },
+          "checker_passed": {
+            "const": true,
+            "title": "Checker Passed",
+            "type": "boolean"
+          },
+          "delivered_volume": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "evidence_coverage": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "profile": {
+            "enum": [
+              "LOWEST_COST",
+              "BALANCED",
+              "HIGHEST_RESILIENCE"
+            ],
+            "title": "Profile",
+            "type": "string"
+          },
+          "replay_run_id": {
+            "format": "uuid",
+            "title": "Replay Run Id",
+            "type": "string"
+          },
+          "reserve_handling": {
+            "const": "NOT_APPLICABLE",
+            "title": "Reserve Handling",
+            "type": "string"
+          },
+          "residual_shortage": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "route_concentration": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "solver_status": {
+            "const": "OPTIMAL",
+            "title": "Solver Status",
+            "type": "string"
+          },
+          "supplier_concentration": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "total_landed_cost": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "plan_id",
+          "replay_run_id",
+          "profile",
+          "allocations",
+          "delivered_volume",
+          "residual_shortage",
+          "total_landed_cost",
+          "supplier_concentration",
+          "route_concentration",
+          "reserve_handling",
+          "solver_status",
+          "checker_passed",
+          "audit_status",
+          "evidence_coverage",
+          "fingerprint"
+        ],
+        "title": "LpgPlan",
+        "type": "object"
+      },
+      "LpgRoute": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline_flow": {
+            "minimum": 0.0,
+            "title": "Baseline Flow",
+            "type": "number"
+          },
+          "capacity": {
+            "minimum": 0.0,
+            "title": "Capacity",
+            "type": "number"
+          },
+          "cost_usd_per_tonne": {
+            "minimum": 0.0,
+            "title": "Cost Usd Per Tonne",
+            "type": "number"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "supplier_id": {
+            "title": "Supplier Id",
+            "type": "string"
+          },
+          "terminal_id": {
+            "title": "Terminal Id",
+            "type": "string"
+          },
+          "transit_days": {
+            "exclusiveMinimum": 0.0,
+            "title": "Transit Days",
+            "type": "number"
+          },
+          "via": {
+            "title": "Via",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "supplier_id",
+          "terminal_id",
+          "via",
+          "capacity",
+          "baseline_flow",
+          "transit_days",
+          "cost_usd_per_tonne"
+        ],
+        "title": "LpgRoute",
+        "type": "object"
+      },
+      "LpgSupplier": {
+        "additionalProperties": false,
+        "properties": {
+          "capacity": {
+            "minimum": 0.0,
+            "title": "Capacity",
+            "type": "number"
+          },
+          "country_code": {
+            "maxLength": 2,
+            "minLength": 2,
+            "title": "Country Code",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "sanctioned": {
+            "title": "Sanctioned",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "country_code",
+          "capacity",
+          "sanctioned"
+        ],
+        "title": "LpgSupplier",
+        "type": "object"
+      },
+      "LpgTerminal": {
+        "additionalProperties": false,
+        "properties": {
+          "capacity": {
+            "minimum": 0.0,
+            "title": "Capacity",
+            "type": "number"
+          },
+          "compatible": {
+            "title": "Compatible",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "capacity",
+          "compatible"
+        ],
+        "title": "LpgTerminal",
+        "type": "object"
+      },
       "MassBalanceReport": {
         "additionalProperties": false,
         "properties": {
@@ -3190,6 +3673,21 @@
           "model_version"
         ],
         "title": "MetricEnvelope[int]",
+        "type": "object"
+      },
+      "MonitorPlanRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "replay_run_id": {
+            "format": "uuid",
+            "title": "Replay Run Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "replay_run_id"
+        ],
+        "title": "MonitorPlanRequest",
         "type": "object"
       },
       "NormalizedRiskFeature": {
@@ -3699,6 +4197,65 @@
         "title": "PhysicalInvariantReport",
         "type": "object"
       },
+      "PlanComment": {
+        "additionalProperties": false,
+        "properties": {
+          "actor_id": {
+            "title": "Actor Id",
+            "type": "string"
+          },
+          "actor_role": {
+            "$ref": "#/components/schemas/GovernanceRole"
+          },
+          "comment": {
+            "title": "Comment",
+            "type": "string"
+          },
+          "comment_id": {
+            "format": "uuid",
+            "title": "Comment Id",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "idempotency_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Idempotency Fingerprint",
+            "type": "string"
+          },
+          "immutable": {
+            "const": true,
+            "default": true,
+            "title": "Immutable",
+            "type": "boolean"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "request_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Request Fingerprint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "comment_id",
+          "plan_id",
+          "actor_id",
+          "actor_role",
+          "comment",
+          "idempotency_fingerprint",
+          "request_fingerprint",
+          "created_at"
+        ],
+        "title": "PlanComment",
+        "type": "object"
+      },
       "PlanExplanation": {
         "additionalProperties": false,
         "properties": {
@@ -4043,6 +4600,77 @@
           "idempotency_fingerprint"
         ],
         "title": "PlanLifecycleRecord",
+        "type": "object"
+      },
+      "PlanMonitoringRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "deviation": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "execution_integration": {
+            "const": false,
+            "default": false,
+            "title": "Execution Integration",
+            "type": "boolean"
+          },
+          "expected_shortage": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "mode": {
+            "const": "REPLAY",
+            "default": "REPLAY",
+            "title": "Mode",
+            "type": "string"
+          },
+          "monitoring_id": {
+            "format": "uuid",
+            "title": "Monitoring Id",
+            "type": "string"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "replay_run_id": {
+            "format": "uuid",
+            "title": "Replay Run Id",
+            "type": "string"
+          },
+          "replayed_shortage": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "stale_input_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Stale Input Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "monitoring_id",
+          "plan_id",
+          "replay_run_id",
+          "observed_at",
+          "expected_shortage",
+          "replayed_shortage",
+          "deviation",
+          "stale_input_warnings",
+          "audit_fingerprint"
+        ],
+        "title": "PlanMonitoringRecord",
         "type": "object"
       },
       "PlanReviewState": {
@@ -5134,6 +5762,438 @@
           "comment"
         ],
         "title": "RejectionRequest",
+        "type": "object"
+      },
+      "ReplayCase": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "case_id": {
+            "pattern": "^[a-z0-9][a-z0-9-]{2,100}$",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/DatasetClassification"
+          },
+          "commodity": {
+            "$ref": "#/components/schemas/Commodity"
+          },
+          "demand_change_percent": {
+            "maximum": 100.0,
+            "minimum": -50.0,
+            "title": "Demand Change Percent",
+            "type": "number"
+          },
+          "disruption_percent": {
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Disruption Percent",
+            "type": "number"
+          },
+          "duration_days": {
+            "maximum": 180.0,
+            "minimum": 1.0,
+            "title": "Duration Days",
+            "type": "integer"
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/ReplayEventType"
+          },
+          "expected_detection": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Expected Detection",
+            "type": "string"
+          },
+          "expected_invariants": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 30,
+            "minItems": 1,
+            "title": "Expected Invariants",
+            "type": "array"
+          },
+          "expected_plan_outcome": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Expected Plan Outcome",
+            "type": "string"
+          },
+          "license": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "License",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "original_interval": {
+            "$ref": "#/components/schemas/ReplayInterval"
+          },
+          "redistribution_status": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Redistribution Status",
+            "type": "string"
+          },
+          "source_completeness": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Source Completeness",
+            "type": "number"
+          },
+          "source_or_generator": {
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Source Or Generator",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "name",
+          "classification",
+          "source_or_generator",
+          "original_interval",
+          "license",
+          "redistribution_status",
+          "commodity",
+          "event_type",
+          "disruption_percent",
+          "duration_days",
+          "demand_change_percent",
+          "source_completeness",
+          "assumptions",
+          "expected_invariants",
+          "expected_detection",
+          "expected_plan_outcome"
+        ],
+        "title": "ReplayCase",
+        "type": "object"
+      },
+      "ReplayCatalogue": {
+        "additionalProperties": false,
+        "properties": {
+          "cases": {
+            "items": {
+              "$ref": "#/components/schemas/ReplayCase"
+            },
+            "minItems": 20,
+            "title": "Cases",
+            "type": "array"
+          },
+          "manifest": {
+            "$ref": "#/components/schemas/ReplayManifest"
+          }
+        },
+        "required": [
+          "manifest",
+          "cases"
+        ],
+        "title": "ReplayCatalogue",
+        "type": "object"
+      },
+      "ReplayEventType": {
+        "enum": [
+          "CHOKEPOINT_DISRUPTION",
+          "SUPPLIER_OUTAGE",
+          "PORT_DISRUPTION",
+          "REFINERY_OUTAGE",
+          "SANCTIONS_EVENT",
+          "DEMAND_SHOCK",
+          "COMPOUND_DISRUPTION",
+          "FALSE_NEWS_SPIKE",
+          "SOURCE_OUTAGE",
+          "STALE_EVIDENCE",
+          "SOLVER_INFEASIBILITY",
+          "EXTENDED_DISRUPTION"
+        ],
+        "title": "ReplayEventType",
+        "type": "string"
+      },
+      "ReplayInterval": {
+        "additionalProperties": false,
+        "properties": {
+          "ends_at": {
+            "format": "date-time",
+            "title": "Ends At",
+            "type": "string"
+          },
+          "starts_at": {
+            "format": "date-time",
+            "title": "Starts At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "starts_at",
+          "ends_at"
+        ],
+        "title": "ReplayInterval",
+        "type": "object"
+      },
+      "ReplayManifest": {
+        "additionalProperties": false,
+        "properties": {
+          "case_count": {
+            "minimum": 20.0,
+            "title": "Case Count",
+            "type": "integer"
+          },
+          "checksum_sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Checksum Sha256",
+            "type": "string"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/DatasetClassification"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "dataset_id": {
+            "title": "Dataset Id",
+            "type": "string"
+          },
+          "license": {
+            "title": "License",
+            "type": "string"
+          },
+          "payload": {
+            "title": "Payload",
+            "type": "string"
+          },
+          "redistribution_status": {
+            "title": "Redistribution Status",
+            "type": "string"
+          },
+          "source_or_generator": {
+            "title": "Source Or Generator",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          },
+          "warning": {
+            "title": "Warning",
+            "type": "string"
+          }
+        },
+        "required": [
+          "dataset_id",
+          "version",
+          "classification",
+          "source_or_generator",
+          "payload",
+          "checksum_sha256",
+          "license",
+          "redistribution_status",
+          "case_count",
+          "created_at",
+          "warning"
+        ],
+        "title": "ReplayManifest",
+        "type": "object"
+      },
+      "ReplayRun": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "$ref": "#/components/schemas/Assumption"
+            },
+            "minItems": 1,
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "audit_status": {
+            "$ref": "#/components/schemas/EvidenceAuditStatus"
+          },
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "checker_passed": {
+            "title": "Checker Passed",
+            "type": "boolean"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/DatasetClassification"
+          },
+          "commodity": {
+            "$ref": "#/components/schemas/Commodity"
+          },
+          "completed_at": {
+            "format": "date-time",
+            "title": "Completed At",
+            "type": "string"
+          },
+          "cost_increase": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "detection_lead_time": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "detection_outcome": {
+            "title": "Detection Outcome",
+            "type": "string"
+          },
+          "evidence_coverage": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "evidence_records": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceRecord"
+            },
+            "minItems": 1,
+            "title": "Evidence Records",
+            "type": "array"
+          },
+          "expected_invariants": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Expected Invariants",
+            "type": "array"
+          },
+          "export_allowed": {
+            "title": "Export Allowed",
+            "type": "boolean"
+          },
+          "fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "invariant_results": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "title": "Invariant Results",
+            "type": "object"
+          },
+          "library_checksum": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Library Checksum",
+            "type": "string"
+          },
+          "library_id": {
+            "title": "Library Id",
+            "type": "string"
+          },
+          "no_action_shortage": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "plan_outcome": {
+            "title": "Plan Outcome",
+            "type": "string"
+          },
+          "recommendation_runtime": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "recommended_shortage": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "shortfall_reduction": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "started_at": {
+            "format": "date-time",
+            "title": "Started At",
+            "type": "string"
+          },
+          "timeline": {
+            "items": {
+              "$ref": "#/components/schemas/ReplayTimelinePoint"
+            },
+            "minItems": 1,
+            "title": "Timeline",
+            "type": "array"
+          },
+          "truth_label": {
+            "default": "FIXTURE",
+            "enum": [
+              "FIXTURE",
+              "REPLAY"
+            ],
+            "title": "Truth Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "case_id",
+          "library_id",
+          "library_checksum",
+          "classification",
+          "commodity",
+          "started_at",
+          "completed_at",
+          "detection_lead_time",
+          "recommendation_runtime",
+          "evidence_coverage",
+          "no_action_shortage",
+          "recommended_shortage",
+          "shortfall_reduction",
+          "cost_increase",
+          "timeline",
+          "expected_invariants",
+          "invariant_results",
+          "detection_outcome",
+          "plan_outcome",
+          "audit_status",
+          "checker_passed",
+          "export_allowed",
+          "evidence_records",
+          "assumptions",
+          "fingerprint"
+        ],
+        "title": "ReplayRun",
+        "type": "object"
+      },
+      "ReplayTimelinePoint": {
+        "additionalProperties": false,
+        "properties": {
+          "day": {
+            "minimum": 0.0,
+            "title": "Day",
+            "type": "integer"
+          },
+          "no_action_shortage": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "recommended_shortage": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "day",
+          "no_action_shortage",
+          "recommended_shortage"
+        ],
+        "title": "ReplayTimelinePoint",
         "type": "object"
       },
       "ReserveAction": {
@@ -6789,8 +7849,11 @@
             "type": "array"
           },
           "commodity": {
-            "const": "CRUDE_OIL",
             "default": "CRUDE_OIL",
+            "enum": [
+              "CRUDE_OIL",
+              "LPG"
+            ],
             "title": "Commodity",
             "type": "string"
           },
@@ -6908,6 +7971,255 @@
           "validator_version"
         ],
         "title": "ScenarioValidationResult",
+        "type": "object"
+      },
+      "SensitivityCorrelation": {
+        "additionalProperties": false,
+        "properties": {
+          "coefficient": {
+            "maximum": 1.0,
+            "minimum": -1.0,
+            "title": "Coefficient",
+            "type": "number"
+          },
+          "left": {
+            "title": "Left",
+            "type": "string"
+          },
+          "right": {
+            "title": "Right",
+            "type": "string"
+          }
+        },
+        "required": [
+          "left",
+          "right",
+          "coefficient"
+        ],
+        "title": "SensitivityCorrelation",
+        "type": "object"
+      },
+      "SensitivityDriver": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "normalized_effect": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "rank": {
+            "minimum": 1.0,
+            "title": "Rank",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "rank",
+          "normalized_effect"
+        ],
+        "title": "SensitivityDriver",
+        "type": "object"
+      },
+      "SensitivityMode": {
+        "enum": [
+          "FAST",
+          "DEEP"
+        ],
+        "title": "SensitivityMode",
+        "type": "string"
+      },
+      "SensitivityRange": {
+        "additionalProperties": false,
+        "properties": {
+          "maximum": {
+            "title": "Maximum",
+            "type": "number"
+          },
+          "minimum": {
+            "title": "Minimum",
+            "type": "number"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "minimum",
+          "maximum",
+          "unit"
+        ],
+        "title": "SensitivityRange",
+        "type": "object"
+      },
+      "SensitivityRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "correlations": {
+            "items": {
+              "$ref": "#/components/schemas/SensitivityCorrelation"
+            },
+            "maxItems": 20,
+            "title": "Correlations",
+            "type": "array"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/SensitivityMode",
+            "default": "FAST"
+          },
+          "ranges": {
+            "items": {
+              "$ref": "#/components/schemas/SensitivityRange"
+            },
+            "maxItems": 20,
+            "title": "Ranges",
+            "type": "array"
+          },
+          "seed": {
+            "default": 20260721,
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          }
+        },
+        "title": "SensitivityRequest",
+        "type": "object"
+      },
+      "SensitivityResult": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "best_case": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "correlations": {
+            "items": {
+              "$ref": "#/components/schemas/SensitivityCorrelation"
+            },
+            "title": "Correlations",
+            "type": "array"
+          },
+          "drivers": {
+            "items": {
+              "$ref": "#/components/schemas/SensitivityDriver"
+            },
+            "title": "Drivers",
+            "type": "array"
+          },
+          "fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "median": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/SensitivityMode"
+          },
+          "p10": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "p90": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "plan_kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlanKind"
+              },
+              {
+                "const": "LPG",
+                "type": "string"
+              }
+            ],
+            "title": "Plan Kind"
+          },
+          "plan_stability": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "probability_claimed": {
+            "const": false,
+            "default": false,
+            "title": "Probability Claimed",
+            "type": "boolean"
+          },
+          "ranges": {
+            "items": {
+              "$ref": "#/components/schemas/SensitivityRange"
+            },
+            "title": "Ranges",
+            "type": "array"
+          },
+          "sample_count": {
+            "title": "Sample Count",
+            "type": "integer"
+          },
+          "sampling_method": {
+            "const": "SEEDED_LATIN_HYPERCUBE_V1",
+            "title": "Sampling Method",
+            "type": "string"
+          },
+          "seed": {
+            "title": "Seed",
+            "type": "integer"
+          },
+          "sensitivity_id": {
+            "format": "uuid",
+            "title": "Sensitivity Id",
+            "type": "string"
+          },
+          "stability_method_version": {
+            "const": "allocation-l1-threshold-v1",
+            "title": "Stability Method Version",
+            "type": "string"
+          },
+          "worst_case": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "sensitivity_id",
+          "plan_id",
+          "plan_kind",
+          "mode",
+          "seed",
+          "sample_count",
+          "sampling_method",
+          "ranges",
+          "correlations",
+          "median",
+          "p10",
+          "p90",
+          "best_case",
+          "worst_case",
+          "drivers",
+          "plan_stability",
+          "stability_method_version",
+          "audit_fingerprint",
+          "fingerprint"
+        ],
+        "title": "SensitivityResult",
         "type": "object"
       },
       "SimulationConfiguration": {
@@ -7990,6 +9302,15 @@
             "maxItems": 20,
             "title": "Assumptions",
             "type": "array"
+          },
+          "commodity": {
+            "default": "CRUDE_OIL",
+            "enum": [
+              "CRUDE_OIL",
+              "LPG"
+            ],
+            "title": "Commodity",
+            "type": "string"
           },
           "disruption_duration": {
             "$ref": "#/components/schemas/DurationQuantity"
@@ -9160,6 +10481,90 @@
         ]
       }
     },
+    "/api/v1/exports/{export_id}": {
+      "get": {
+        "operationId": "export_metadata_api_v1_exports__export_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "export_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Export Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BriefingExport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Export Metadata",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
+    "/api/v1/exports/{export_id}/download": {
+      "get": {
+        "operationId": "download_export_api_v1_exports__export_id__download_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "export_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Export Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download Export",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
     "/api/v1/geofences": {
       "get": {
         "operationId": "geofences_api_v1_geofences_get",
@@ -9182,6 +10587,91 @@
         "summary": "Geofences",
         "tags": [
           "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/lpg-plans/{plan_id}/exports": {
+      "post": {
+        "operationId": "create_lpg_export_api_v1_lpg_plans__plan_id__exports_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BriefingExport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Lpg Export",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
+    "/api/v1/lpg/network": {
+      "get": {
+        "operationId": "lpg_network_api_v1_lpg_network_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LpgNetwork"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Lpg Network",
+        "tags": [
+          "phase-8"
         ]
       }
     },
@@ -9417,6 +10907,147 @@
         ]
       }
     },
+    "/api/v1/plans/{plan_id}/comments": {
+      "get": {
+        "operationId": "comments_api_v1_plans__plan_id__comments_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PlanComment"
+                  },
+                  "title": "Response Comments Api V1 Plans  Plan Id  Comments Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Comments",
+        "tags": [
+          "phase-8"
+        ]
+      },
+      "post": {
+        "operationId": "create_comment_api_v1_plans__plan_id__comments_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Demo-Identity",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Demo-Identity"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Governance-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Governance-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanComment"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Comment",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
     "/api/v1/plans/{plan_id}/explanation": {
       "get": {
         "operationId": "explanation_api_v1_plans__plan_id__explanation_get",
@@ -9460,6 +11091,70 @@
         ]
       }
     },
+    "/api/v1/plans/{plan_id}/exports": {
+      "post": {
+        "operationId": "create_export_api_v1_plans__plan_id__exports_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BriefingExport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Export",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
     "/api/v1/plans/{plan_id}/governance": {
       "get": {
         "operationId": "governance_api_v1_plans__plan_id__governance_get",
@@ -9500,6 +11195,115 @@
         "summary": "Governance",
         "tags": [
           "evidence-auditor"
+        ]
+      }
+    },
+    "/api/v1/plans/{plan_id}/monitoring": {
+      "get": {
+        "operationId": "monitoring_api_v1_plans__plan_id__monitoring_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PlanMonitoringRecord"
+                  },
+                  "title": "Response Monitoring Api V1 Plans  Plan Id  Monitoring Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Monitoring",
+        "tags": [
+          "phase-8"
+        ]
+      },
+      "post": {
+        "operationId": "create_monitoring_api_v1_plans__plan_id__monitoring_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonitorPlanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanMonitoringRecord"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Monitoring",
+        "tags": [
+          "phase-8"
         ]
       }
     },
@@ -9740,6 +11544,70 @@
         ]
       }
     },
+    "/api/v1/plans/{plan_id}/sensitivity-runs": {
+      "post": {
+        "operationId": "sensitivity_api_v1_plans__plan_id__sensitivity_runs_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SensitivityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensitivityResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Sensitivity",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
     "/api/v1/plans/{plan_id}/supersessions": {
       "post": {
         "operationId": "supersede_api_v1_plans__plan_id__supersessions_post",
@@ -9876,6 +11744,195 @@
         "summary": "Procurement Plan",
         "tags": [
           "response-planner"
+        ]
+      }
+    },
+    "/api/v1/replay-cases/{case_id}/runs": {
+      "post": {
+        "operationId": "execute_replay_api_v1_replay_cases__case_id__runs_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "title": "Case Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayRun"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Execute Replay",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
+    "/api/v1/replay-catalogue": {
+      "get": {
+        "operationId": "replay_catalogue_api_v1_replay_catalogue_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayCatalogue"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Replay Catalogue",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
+    "/api/v1/replay-runs": {
+      "get": {
+        "operationId": "replay_runs_api_v1_replay_runs_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ReplayRun"
+                  },
+                  "title": "Response Replay Runs Api V1 Replay Runs Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Replay Runs",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
+    "/api/v1/replay-runs/{run_id}": {
+      "get": {
+        "operationId": "replay_run_api_v1_replay_runs__run_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayRun"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Replay Run",
+        "tags": [
+          "phase-8"
+        ]
+      }
+    },
+    "/api/v1/replay-runs/{run_id}/lpg-plans": {
+      "get": {
+        "operationId": "lpg_plans_api_v1_replay_runs__run_id__lpg_plans_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/LpgPlan"
+                  },
+                  "title": "Response Lpg Plans Api V1 Replay Runs  Run Id  Lpg Plans Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Lpg Plans",
+        "tags": [
+          "phase-8"
         ]
       }
     },
@@ -11034,6 +13091,49 @@
         "summary": "Validation Result",
         "tags": [
           "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/sensitivity-runs/{sensitivity_id}": {
+      "get": {
+        "operationId": "sensitivity_result_api_v1_sensitivity_runs__sensitivity_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sensitivity_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Sensitivity Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensitivityResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Sensitivity Result",
+        "tags": [
+          "phase-8"
         ]
       }
     },

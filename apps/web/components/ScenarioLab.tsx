@@ -235,6 +235,7 @@ export function ScenarioLab() {
           <Link href="/strategic-reserve">Strategic Reserve</Link>
           <Link href="/risk-intelligence">Risk Intelligence</Link>
           <Link href="/evidence-approval">Evidence &amp; Approval</Link>
+          <Link href="/historical-replay">Historical Replay</Link>
         </nav>
       </header>
 

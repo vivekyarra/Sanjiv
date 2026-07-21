@@ -143,3 +143,30 @@ a { color: inherit; }
   .twin-grid { grid-template-columns: 1fr; }.network-board { border-right: 0; }.twin-inspector { max-height: none; }
   .scenario-status-strip { grid-template-columns: repeat(2, 1fr); }.scenario-layout { grid-template-columns: 1fr; }.scenario-sidebar { padding: 0 18px 18px; }.structured-grid, .candidate-facts, .comparison-grid { grid-template-columns: 1fr; }
 }
+
+.advanced-center { min-height: 100vh; background: radial-gradient(circle at 30% 0%, #17372b 0, #07110d 48%); }
+.advanced-center > .scenario-card { margin: 14px; }
+.replay-control-card select, .advanced-center .planner-form select { padding: 10px; border: 1px solid #365b49; background: #07130e; color: #ecfdf5; border-radius: 5px; }
+.replay-timeline { height: 190px; padding: 18px 4px 0; display: flex; align-items: flex-end; gap: 4px; border-bottom: 1px solid #294b3d; overflow-x: auto; }
+.replay-timeline > div { flex: 1 0 18px; height: 100%; min-width: 18px; display: flex; align-items: flex-end; justify-content: end; flex-direction: column; gap: 2px; }
+.replay-timeline i, .replay-timeline b { width: 48%; min-height: 2px; display: inline-block; }
+.replay-timeline i { background: linear-gradient(#ef9f43, #8b3d26); }
+.replay-timeline b { background: linear-gradient(#56df91, #1f7047); }
+.replay-timeline span { width: 100%; color: #708f7f; font-size: 7px; text-align: center; }
+.advanced-center .metric-strip { margin: 14px 0; border: 1px solid #19352b; }
+.advanced-center .metric-strip .metric { min-width: 0; padding: 12px; }
+.advanced-center .metric-strip strong { overflow-wrap: anywhere; }
+.stability-score { display: block; margin: 8px 0; color: #86efac; font: 500 34px Georgia, serif; }
+.degraded-state { border-color: #9f4242; background: #2d1515; }
+.advanced-center a { overflow-wrap: anywhere; }
+
+@media (max-width: 920px) {
+  .advanced-center > .scenario-card { margin: 10px; }
+  .advanced-center .metric-strip { grid-template-columns: 1fr 1fr; }
+  .replay-timeline { height: 150px; }
+}
+
+@media (max-width: 520px) {
+  .advanced-center .metric-strip { grid-template-columns: 1fr; }
+  .product-nav { overflow-x: auto; padding-bottom: 4px; }
+}

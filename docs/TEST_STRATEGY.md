@@ -73,3 +73,20 @@ stale plan/assumption/audit hashes; lifecycle ordering, concurrency and idempote
 approval records; PostgreSQL restart readback; migration downgrade/re-upgrade; canonical APIs;
 generated-contract drift; and every evidence/assumption/audit/review UI path. A failed metric must
 remain in the API and UI with its reason and cannot be approved or exported.
+
+## Phase 8 validation gate
+
+- Validate at least 20 independently named replay cases, manifest/payload checksums, classification,
+  license, redistribution status, assumptions, invariants, expected outcomes, and restart readback.
+- Execute every case, including stale evidence and solver infeasibility, and assert blocked status is
+  explicit rather than omitted.
+- Verify LPG unit consistency, mass conservation, supplier/route/terminal capacity, sanctions and
+  compatibility exclusions, three response profiles, and `NOT_APPLICABLE` reserve handling without
+  weakening crude tests.
+- Prove fast/deep sensitivity reproducibility, stored seed/design/ranges/correlations, quantiles,
+  drivers, stability version, and explicit non-probability language.
+- Assert every JSON/PDF export value equals audited API context, failed audits block plan exports,
+  content checksums survive readback, comments are immutable/idempotent/server-attributed, and
+  monitoring exposes deviations/staleness without execution controls.
+- Exercise the Historical Replay UI's replay, crude/LPG, sensitivity, export, comment, monitoring,
+  truth-label, keyboard, responsive, empty/loading/error, and no-autonomous-execution paths.

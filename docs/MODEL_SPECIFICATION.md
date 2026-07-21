@@ -126,6 +126,24 @@ Similarity is one minus normalized L1 distance over supplier-route allocation sh
 
 ## Validation
 
+### Phase 8 deterministic replay, LPG, and stability models
+
+Each replay case is a deterministic event sequence. Detection lead time is the bounded difference
+between the declared onset and the first qualifying signal; recommendation runtime is measured by
+the execution service and stored, never prewritten. Expected invariants and outcome reason codes are
+evaluated against the same checksummed case definition.
+
+LPG uses `tonne_per_day` and a commodity-specific network. For every allocation `x_r` on route `r`:
+`0 <= x_r <= route_capacity_r`, supplier totals do not exceed supplier capacity, terminal receipts
+do not exceed terminal capacity, sanctioned or incompatible paths receive zero, and delivered plus
+residual shortage equals disrupted demand within tolerance. Crude reserve capacity and opening-fill
+assumptions are not reused for LPG; reserve handling is `NOT_APPLICABLE` in this fixture model.
+
+Fast and deep sensitivity use recorded deterministic seeds and versioned Latin-hypercube sample
+designs (40 and 500 samples respectively). The output stores median, P10/P90, extrema, ranked
+drivers, and a stability score derived from plan-ranking consistency. These are scenario sensitivity
+statistics, not calibrated event probabilities or confidence intervals.
+
 Every solution is independently checked for mass-balance residual, bound/constraint violation, objective reconstruction, sanctions/compatibility exclusion, and deterministic reproduction tolerance. Failed checks block the plan. Model cards record final equations, calibrated values, training/backtest period where relevant, limitations, and version history.
 ### Phase 4 deterministic input boundary
 

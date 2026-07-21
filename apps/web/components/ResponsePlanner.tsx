@@ -42,7 +42,7 @@ export function ResponsePlanner() {
       <span className="mode-badge">MODELED · SYNTHETIC COMMERCIAL FIXTURE</span>
     </header>
     <nav className="product-nav" aria-label="Product modules">
-      <Link href="/">Live Maritime Watch</Link><Link href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link className="active" href="/response-planner">Response Planner</Link><Link href="/strategic-reserve">Strategic Reserve</Link><Link href="/risk-intelligence">Risk Intelligence</Link><Link href="/evidence-approval">Evidence &amp; Approval</Link>
+      <Link href="/">Live Maritime Watch</Link><Link href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link className="active" href="/response-planner">Response Planner</Link><Link href="/strategic-reserve">Strategic Reserve</Link><Link href="/risk-intelligence">Risk Intelligence</Link><Link href="/evidence-approval">Evidence &amp; Approval</Link><Link href="/historical-replay">Historical Replay</Link>
     </nav>
     <section className="scenario-card">
       <h2>Generate all three profiles</h2>

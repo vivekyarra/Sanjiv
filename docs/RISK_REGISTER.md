@@ -50,3 +50,14 @@ Risks are reviewed at each phase gate. A demo may proceed with degraded sources 
 | Demo identity selector mistaken for production authentication | Open | It works only with the development/test identity map. Production governance fails closed until server-side API-key/identity-role mapping exists; replace with the deployment IdP before real use. |
 | Structural fixture assumptions remain decision inputs | Open | The auditor proves visibility, approval, expiry, scope, and integrity, not real-world accuracy. Replace synthetic commercial and reserve inputs with verified operator records. |
 | Optional future narrative provider invents unsupported content | Mitigated in Phase 7 | Deterministic explanation is complete and default. Any provider output must pass the audited-figure and claim-language guard before presentation. |
+
+# Phase 8 residual risks
+
+| Risk | State | Mitigation / remaining work |
+|---|---|---|
+| Synthetic replay mistaken for recorded history or production accuracy | Mitigated in Phase 8 | Catalogue, API, UI, and exports carry `SYNTHETIC_FIXTURE`, checksum, generator, license, redistribution status, and an explicit warning. Recorded validation remains future operator work. |
+| LPG fixture assumptions mistaken for commercial availability | Open | All LPG capacity, cost, demand, and availability values are expiring synthetic assumptions; plans are modeled candidates only. Replace them with verified operator evidence before real decisions. |
+| LPG/crude unit or reserve-policy leakage | Mitigated in Phase 8 | Commodity-specific contracts, explicit units, physical checker tests, crude refusal of LPG scenarios, and LPG reserve `NOT_APPLICABLE` prevent silent substitution. |
+| Sensitivity percentiles interpreted as calibrated probability | Mitigated in Phase 8 | API/UI/export language identifies deterministic seeded sensitivity and forbids probability/confidence-interval claims. |
+| Export corruption or value drift | Mitigated in Phase 8 | Exports are built from immutable audited context, exact values are contract-tested, and content is SHA-256 verified on readback/download. |
+| Review comment identity forgery or idempotency abuse | Mitigated in Phase 8 | Actor/role are server-resolved, production fails closed, immutable IDs derive from plan and idempotency key, and payload conflicts return `409`. |

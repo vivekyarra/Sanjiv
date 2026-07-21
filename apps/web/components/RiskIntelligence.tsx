@@ -37,7 +37,7 @@ export function RiskIntelligence() {
       <span className="mode-badge">{overview?.mode ?? "LOADING"} · SEVERITY IS NOT DISRUPTION PROBABILITY</span>
     </header>
     <nav className="product-nav" aria-label="Product modules">
-      <Link href="/">Live Maritime Watch</Link><Link href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link href="/response-planner">Response Planner</Link><Link href="/strategic-reserve">Strategic Reserve</Link><Link className="active" href="/risk-intelligence">Risk Intelligence</Link><Link href="/evidence-approval">Evidence &amp; Approval</Link>
+      <Link href="/">Live Maritime Watch</Link><Link href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link href="/response-planner">Response Planner</Link><Link href="/strategic-reserve">Strategic Reserve</Link><Link className="active" href="/risk-intelligence">Risk Intelligence</Link><Link href="/evidence-approval">Evidence &amp; Approval</Link><Link href="/historical-replay">Historical Replay</Link>
     </nav>
     {error && <section className="scenario-card" role="alert"><h2>Unavailable</h2><p>{error}</p><p>Source and model failures remain explicit; missing features never silently become zero.</p></section>}
     {!overview && !error && <section className="scenario-card"><p>Loading ranked corridors, source freshness and replay evidence…</p></section>}

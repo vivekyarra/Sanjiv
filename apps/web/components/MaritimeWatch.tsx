@@ -209,6 +209,7 @@ export function MaritimeWatch() {
           <Link className="module-link" href="/strategic-reserve">Strategic Reserve</Link>
           <Link className="module-link" href="/risk-intelligence">Risk Intelligence</Link>
           <Link className="module-link" href="/evidence-approval">Evidence &amp; Approval</Link>
+          <Link className="module-link" href="/historical-replay">Historical Replay</Link>
           <span className={`mode-chip ${mode.tone}`}>{mode.label}</span>
           <span className={`connection-chip ${socketState.toLowerCase()}`}><i />{connectionLabel(socketState)}</span>
           <time>{snapshot ? formatTime(snapshot.as_of) : "Waiting for source"}</time>

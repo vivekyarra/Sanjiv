@@ -38,6 +38,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/exports/{export_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Metadata */
+        get: operations["export_metadata_api_v1_exports__export_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/exports/{export_id}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download Export */
+        get: operations["download_export_api_v1_exports__export_id__download_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/geofences": {
         parameters: {
             query?: never;
@@ -47,6 +81,40 @@ export interface paths {
         };
         /** Geofences */
         get: operations["geofences_api_v1_geofences_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lpg-plans/{plan_id}/exports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Lpg Export */
+        post: operations["create_lpg_export_api_v1_lpg_plans__plan_id__exports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lpg/network": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lpg Network */
+        get: operations["lpg_network_api_v1_lpg_network_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -140,6 +208,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/plans/{plan_id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Comments */
+        get: operations["comments_api_v1_plans__plan_id__comments_get"];
+        put?: never;
+        /** Create Comment */
+        post: operations["create_comment_api_v1_plans__plan_id__comments_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/plans/{plan_id}/explanation": {
         parameters: {
             query?: never;
@@ -157,6 +243,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/plans/{plan_id}/exports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Export */
+        post: operations["create_export_api_v1_plans__plan_id__exports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/plans/{plan_id}/governance": {
         parameters: {
             query?: never;
@@ -168,6 +271,24 @@ export interface paths {
         get: operations["governance_api_v1_plans__plan_id__governance_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plans/{plan_id}/monitoring": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Monitoring */
+        get: operations["monitoring_api_v1_plans__plan_id__monitoring_get"];
+        put?: never;
+        /** Create Monitoring */
+        post: operations["create_monitoring_api_v1_plans__plan_id__monitoring_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -209,6 +330,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/plans/{plan_id}/sensitivity-runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sensitivity */
+        post: operations["sensitivity_api_v1_plans__plan_id__sensitivity_runs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/plans/{plan_id}/supersessions": {
         parameters: {
             query?: never;
@@ -235,6 +373,91 @@ export interface paths {
         };
         /** Procurement Plan */
         get: operations["procurement_plan_api_v1_procurement_plans__plan_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/replay-cases/{case_id}/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Execute Replay */
+        post: operations["execute_replay_api_v1_replay_cases__case_id__runs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/replay-catalogue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Replay Catalogue */
+        get: operations["replay_catalogue_api_v1_replay_catalogue_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/replay-runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Replay Runs */
+        get: operations["replay_runs_api_v1_replay_runs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/replay-runs/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Replay Run */
+        get: operations["replay_run_api_v1_replay_runs__run_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/replay-runs/{run_id}/lpg-plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lpg Plans */
+        get: operations["lpg_plans_api_v1_replay_runs__run_id__lpg_plans_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -643,6 +866,23 @@ export interface paths {
         };
         /** Validation Result */
         get: operations["validation_result_api_v1_scenarios__scenario_id__validation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sensitivity-runs/{sensitivity_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Sensitivity Result */
+        get: operations["sensitivity_result_api_v1_sensitivity_runs__sensitivity_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1181,11 +1421,55 @@ export interface components {
             total_demand: components["schemas"]["MetricEnvelope_float_"];
             total_supply: components["schemas"]["MetricEnvelope_float_"];
         };
+        /** BriefingExport */
+        BriefingExport: {
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            /** Byte Count */
+            byte_count: number;
+            /** Content Type */
+            content_type: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Execution Authorized
+             * @default false
+             * @constant
+             */
+            execution_authorized: false;
+            /**
+             * Export Id
+             * Format: uuid
+             */
+            export_id: string;
+            /** Filename */
+            filename: string;
+            kind: components["schemas"]["ExportKind"];
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            /** Plan Kind */
+            plan_kind: components["schemas"]["PlanKind"] | "LPG";
+            /** Sha256 */
+            sha256: string;
+            /**
+             * Truth Label
+             * @constant
+             */
+            truth_label: "AUDITED_DECISION_SUPPORT";
+            /** Values Fingerprint */
+            values_fingerprint: string;
+        };
         /**
          * Commodity
          * @enum {string}
          */
-        Commodity: "CRUDE_OIL";
+        Commodity: "CRUDE_OIL" | "LPG";
         /**
          * CompatibilityClass
          * @enum {string}
@@ -1349,6 +1633,15 @@ export interface components {
             /** Stale Or Missing Features */
             stale_or_missing_features: components["schemas"]["RiskFeatureType"][];
         };
+        /** CreateCommentRequest */
+        CreateCommentRequest: {
+            /** Comment */
+            comment: string;
+        };
+        /** CreateExportRequest */
+        CreateExportRequest: {
+            kind: components["schemas"]["ExportKind"];
+        };
         /** CrudeGrade */
         CrudeGrade: {
             api_gravity: components["schemas"]["MetricEnvelope_float_"];
@@ -1389,6 +1682,11 @@ export interface components {
          * @enum {string}
          */
         DataMode: "LIVE" | "CACHED" | "REPLAY" | "FIXTURE" | "USER_SUPPLIED";
+        /**
+         * DatasetClassification
+         * @enum {string}
+         */
+        DatasetClassification: "SYNTHETIC_FIXTURE" | "RECORDED_REAL_DATA";
         /** DisruptedResult */
         DisruptedResult: {
             cumulative_shortfall: components["schemas"]["MetricEnvelope_float_"];
@@ -1606,6 +1904,11 @@ export interface components {
             /** Satisfied */
             satisfied: boolean;
         };
+        /**
+         * ExportKind
+         * @enum {string}
+         */
+        ExportKind: "EXECUTIVE_BRIEFING" | "PROCUREMENT_ACTION_PACKAGE" | "STRATEGIC_RESERVE_GUIDANCE" | "RISK_ROUTE_MAP" | "SCENARIO_JSON" | "ASSUMPTIONS_SHEET" | "EVIDENCE_APPENDIX" | "MODEL_VERSION_APPENDIX" | "APPROVAL_RECORD" | "MACHINE_READABLE_JSON" | "PDF_BRIEFING";
         /** FeatureContribution */
         FeatureContribution: {
             feature_type: components["schemas"]["RiskFeatureType"];
@@ -1954,6 +2257,145 @@ export interface components {
          * @enum {string}
          */
         LifecycleAction: "SUBMIT_FOR_REVIEW" | "REVIEW" | "APPROVE" | "REJECT" | "SUPERSEDE";
+        /** LpgAllocation */
+        LpgAllocation: {
+            arrival_days: components["schemas"]["MetricEnvelope_float_"];
+            landed_cost: components["schemas"]["MetricEnvelope_float_"];
+            /** Route Id */
+            route_id: string;
+            /** Supplier Id */
+            supplier_id: string;
+            /** Terminal Id */
+            terminal_id: string;
+            volume: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** LpgNetwork */
+        LpgNetwork: {
+            /** Assumption Notice */
+            assumption_notice: string;
+            /** Baseline Demand */
+            baseline_demand: number;
+            classification: components["schemas"]["DatasetClassification"];
+            /** Dataset Id */
+            dataset_id: string;
+            /**
+             * Effective At
+             * Format: date-time
+             */
+            effective_at: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** License */
+            license: string;
+            /**
+             * Public Reserve Policy
+             * @constant
+             */
+            public_reserve_policy: "NOT_APPLICABLE";
+            /** Redistribution Status */
+            redistribution_status: string;
+            /** Routes */
+            routes: components["schemas"]["LpgRoute"][];
+            /** Suppliers */
+            suppliers: components["schemas"]["LpgSupplier"][];
+            /** Terminals */
+            terminals: components["schemas"]["LpgTerminal"][];
+            /**
+             * Unit
+             * @constant
+             */
+            unit: "tonne_per_day";
+            /** Version */
+            version: string;
+        };
+        /** LpgPlan */
+        LpgPlan: {
+            /** Allocations */
+            allocations: components["schemas"]["LpgAllocation"][];
+            audit_status: components["schemas"]["EvidenceAuditStatus"];
+            /**
+             * Checker Passed
+             * @constant
+             */
+            checker_passed: true;
+            delivered_volume: components["schemas"]["MetricEnvelope_float_"];
+            evidence_coverage: components["schemas"]["MetricEnvelope_float_"];
+            /** Fingerprint */
+            fingerprint: string;
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            /**
+             * Profile
+             * @enum {string}
+             */
+            profile: "LOWEST_COST" | "BALANCED" | "HIGHEST_RESILIENCE";
+            /**
+             * Replay Run Id
+             * Format: uuid
+             */
+            replay_run_id: string;
+            /**
+             * Reserve Handling
+             * @constant
+             */
+            reserve_handling: "NOT_APPLICABLE";
+            residual_shortage: components["schemas"]["MetricEnvelope_float_"];
+            route_concentration: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Solver Status
+             * @constant
+             */
+            solver_status: "OPTIMAL";
+            supplier_concentration: components["schemas"]["MetricEnvelope_float_"];
+            total_landed_cost: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** LpgRoute */
+        LpgRoute: {
+            /** Baseline Flow */
+            baseline_flow: number;
+            /** Capacity */
+            capacity: number;
+            /** Cost Usd Per Tonne */
+            cost_usd_per_tonne: number;
+            /** Id */
+            id: string;
+            /** Supplier Id */
+            supplier_id: string;
+            /** Terminal Id */
+            terminal_id: string;
+            /** Transit Days */
+            transit_days: number;
+            /** Via */
+            via: string;
+        };
+        /** LpgSupplier */
+        LpgSupplier: {
+            /** Capacity */
+            capacity: number;
+            /** Country Code */
+            country_code: string;
+            /** Id */
+            id: string;
+            /** Sanctioned */
+            sanctioned: boolean;
+        };
+        /** LpgTerminal */
+        LpgTerminal: {
+            /** Capacity */
+            capacity: number;
+            /** Compatible */
+            compatible: boolean;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+        };
         /** MassBalanceReport */
         MassBalanceReport: {
             absolute_residual: components["schemas"]["MetricEnvelope_float_"];
@@ -2036,6 +2478,14 @@ export interface components {
             unit: string;
             /** Value */
             value: number;
+        };
+        /** MonitorPlanRequest */
+        MonitorPlanRequest: {
+            /**
+             * Replay Run Id
+             * Format: uuid
+             */
+            replay_run_id: string;
         };
         /** NormalizedRiskFeature */
         NormalizedRiskFeature: {
@@ -2235,6 +2685,39 @@ export interface components {
             /** Tolerance */
             tolerance: number;
         };
+        /** PlanComment */
+        PlanComment: {
+            /** Actor Id */
+            actor_id: string;
+            actor_role: components["schemas"]["GovernanceRole"];
+            /** Comment */
+            comment: string;
+            /**
+             * Comment Id
+             * Format: uuid
+             */
+            comment_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Idempotency Fingerprint */
+            idempotency_fingerprint: string;
+            /**
+             * Immutable
+             * @default true
+             * @constant
+             */
+            immutable: true;
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            /** Request Fingerprint */
+            request_fingerprint: string;
+        };
         /** PlanExplanation */
         PlanExplanation: {
             /** Allocation Rationale */
@@ -2369,6 +2852,48 @@ export interface components {
             state: components["schemas"]["PlanReviewState"];
             /** Superseding Plan Id */
             superseding_plan_id?: string | null;
+        };
+        /** PlanMonitoringRecord */
+        PlanMonitoringRecord: {
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            deviation: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Execution Integration
+             * @default false
+             * @constant
+             */
+            execution_integration: false;
+            expected_shortage: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Mode
+             * @default REPLAY
+             * @constant
+             */
+            mode: "REPLAY";
+            /**
+             * Monitoring Id
+             * Format: uuid
+             */
+            monitoring_id: string;
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            /**
+             * Replay Run Id
+             * Format: uuid
+             */
+            replay_run_id: string;
+            replayed_shortage: components["schemas"]["MetricEnvelope_float_"];
+            /** Stale Input Warnings */
+            stale_input_warnings: string[];
         };
         /**
          * PlanReviewState
@@ -2778,6 +3303,159 @@ export interface components {
             comment: string;
             /** Plan Fingerprint */
             plan_fingerprint: string;
+        };
+        /** ReplayCase */
+        ReplayCase: {
+            /** Assumptions */
+            assumptions: string[];
+            /** Case Id */
+            case_id: string;
+            classification: components["schemas"]["DatasetClassification"];
+            commodity: components["schemas"]["Commodity"];
+            /** Demand Change Percent */
+            demand_change_percent: number;
+            /** Disruption Percent */
+            disruption_percent: number;
+            /** Duration Days */
+            duration_days: number;
+            event_type: components["schemas"]["ReplayEventType"];
+            /** Expected Detection */
+            expected_detection: string;
+            /** Expected Invariants */
+            expected_invariants: string[];
+            /** Expected Plan Outcome */
+            expected_plan_outcome: string;
+            /** License */
+            license: string;
+            /** Name */
+            name: string;
+            original_interval: components["schemas"]["ReplayInterval"];
+            /** Redistribution Status */
+            redistribution_status: string;
+            /** Source Completeness */
+            source_completeness: number;
+            /** Source Or Generator */
+            source_or_generator: string;
+        };
+        /** ReplayCatalogue */
+        ReplayCatalogue: {
+            /** Cases */
+            cases: components["schemas"]["ReplayCase"][];
+            manifest: components["schemas"]["ReplayManifest"];
+        };
+        /**
+         * ReplayEventType
+         * @enum {string}
+         */
+        ReplayEventType: "CHOKEPOINT_DISRUPTION" | "SUPPLIER_OUTAGE" | "PORT_DISRUPTION" | "REFINERY_OUTAGE" | "SANCTIONS_EVENT" | "DEMAND_SHOCK" | "COMPOUND_DISRUPTION" | "FALSE_NEWS_SPIKE" | "SOURCE_OUTAGE" | "STALE_EVIDENCE" | "SOLVER_INFEASIBILITY" | "EXTENDED_DISRUPTION";
+        /** ReplayInterval */
+        ReplayInterval: {
+            /**
+             * Ends At
+             * Format: date-time
+             */
+            ends_at: string;
+            /**
+             * Starts At
+             * Format: date-time
+             */
+            starts_at: string;
+        };
+        /** ReplayManifest */
+        ReplayManifest: {
+            /** Case Count */
+            case_count: number;
+            /** Checksum Sha256 */
+            checksum_sha256: string;
+            classification: components["schemas"]["DatasetClassification"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Dataset Id */
+            dataset_id: string;
+            /** License */
+            license: string;
+            /** Payload */
+            payload: string;
+            /** Redistribution Status */
+            redistribution_status: string;
+            /** Source Or Generator */
+            source_or_generator: string;
+            /** Version */
+            version: string;
+            /** Warning */
+            warning: string;
+        };
+        /** ReplayRun */
+        ReplayRun: {
+            /** Assumptions */
+            assumptions: components["schemas"]["Assumption"][];
+            audit_status: components["schemas"]["EvidenceAuditStatus"];
+            /** Case Id */
+            case_id: string;
+            /** Checker Passed */
+            checker_passed: boolean;
+            classification: components["schemas"]["DatasetClassification"];
+            commodity: components["schemas"]["Commodity"];
+            /**
+             * Completed At
+             * Format: date-time
+             */
+            completed_at: string;
+            cost_increase: components["schemas"]["MetricEnvelope_float_"];
+            detection_lead_time: components["schemas"]["MetricEnvelope_float_"];
+            /** Detection Outcome */
+            detection_outcome: string;
+            evidence_coverage: components["schemas"]["MetricEnvelope_float_"];
+            /** Evidence Records */
+            evidence_records: components["schemas"]["EvidenceRecord"][];
+            /** Expected Invariants */
+            expected_invariants: string[];
+            /** Export Allowed */
+            export_allowed: boolean;
+            /** Fingerprint */
+            fingerprint: string;
+            /** Invariant Results */
+            invariant_results: {
+                [key: string]: boolean;
+            };
+            /** Library Checksum */
+            library_checksum: string;
+            /** Library Id */
+            library_id: string;
+            no_action_shortage: components["schemas"]["MetricEnvelope_float_"];
+            /** Plan Outcome */
+            plan_outcome: string;
+            recommendation_runtime: components["schemas"]["MetricEnvelope_float_"];
+            recommended_shortage: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            shortfall_reduction: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /** Timeline */
+            timeline: components["schemas"]["ReplayTimelinePoint"][];
+            /**
+             * Truth Label
+             * @default FIXTURE
+             * @enum {string}
+             */
+            truth_label: "FIXTURE" | "REPLAY";
+        };
+        /** ReplayTimelinePoint */
+        ReplayTimelinePoint: {
+            /** Day */
+            day: number;
+            no_action_shortage: components["schemas"]["MetricEnvelope_float_"];
+            recommended_shortage: components["schemas"]["MetricEnvelope_float_"];
         };
         /** ReserveAction */
         ReserveAction: {
@@ -3467,9 +4145,9 @@ export interface components {
             /**
              * Commodity
              * @default CRUDE_OIL
-             * @constant
+             * @enum {string}
              */
-            commodity: "CRUDE_OIL";
+            commodity: "CRUDE_OIL" | "LPG";
             disruption_duration: components["schemas"]["DurationQuantity"];
             /**
              * Disruption Start
@@ -3517,6 +4195,105 @@ export interface components {
             validation_id: string;
             /** Validator Version */
             validator_version: string;
+        };
+        /** SensitivityCorrelation */
+        SensitivityCorrelation: {
+            /** Coefficient */
+            coefficient: number;
+            /** Left */
+            left: string;
+            /** Right */
+            right: string;
+        };
+        /** SensitivityDriver */
+        SensitivityDriver: {
+            /** Name */
+            name: string;
+            normalized_effect: components["schemas"]["MetricEnvelope_float_"];
+            /** Rank */
+            rank: number;
+        };
+        /**
+         * SensitivityMode
+         * @enum {string}
+         */
+        SensitivityMode: "FAST" | "DEEP";
+        /** SensitivityRange */
+        SensitivityRange: {
+            /** Maximum */
+            maximum: number;
+            /** Minimum */
+            minimum: number;
+            /** Name */
+            name: string;
+            /** Unit */
+            unit: string;
+        };
+        /** SensitivityRequest */
+        SensitivityRequest: {
+            /** Correlations */
+            correlations?: components["schemas"]["SensitivityCorrelation"][];
+            /** @default FAST */
+            mode: components["schemas"]["SensitivityMode"];
+            /** Ranges */
+            ranges?: components["schemas"]["SensitivityRange"][];
+            /**
+             * Seed
+             * @default 20260721
+             */
+            seed: number;
+        };
+        /** SensitivityResult */
+        SensitivityResult: {
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            best_case: components["schemas"]["MetricEnvelope_float_"];
+            /** Correlations */
+            correlations: components["schemas"]["SensitivityCorrelation"][];
+            /** Drivers */
+            drivers: components["schemas"]["SensitivityDriver"][];
+            /** Fingerprint */
+            fingerprint: string;
+            median: components["schemas"]["MetricEnvelope_float_"];
+            mode: components["schemas"]["SensitivityMode"];
+            p10: components["schemas"]["MetricEnvelope_float_"];
+            p90: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            /** Plan Kind */
+            plan_kind: components["schemas"]["PlanKind"] | "LPG";
+            plan_stability: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Probability Claimed
+             * @default false
+             * @constant
+             */
+            probability_claimed: false;
+            /** Ranges */
+            ranges: components["schemas"]["SensitivityRange"][];
+            /** Sample Count */
+            sample_count: number;
+            /**
+             * Sampling Method
+             * @constant
+             */
+            sampling_method: "SEEDED_LATIN_HYPERCUBE_V1";
+            /** Seed */
+            seed: number;
+            /**
+             * Sensitivity Id
+             * Format: uuid
+             */
+            sensitivity_id: string;
+            /**
+             * Stability Method Version
+             * @constant
+             */
+            stability_method_version: "allocation-l1-threshold-v1";
+            worst_case: components["schemas"]["MetricEnvelope_float_"];
         };
         /** SimulationConfiguration */
         SimulationConfiguration: {
@@ -3948,6 +4725,12 @@ export interface components {
         StructuredScenarioInput: {
             /** Assumptions */
             assumptions?: components["schemas"]["Assumption"][];
+            /**
+             * Commodity
+             * @default CRUDE_OIL
+             * @enum {string}
+             */
+            commodity: "CRUDE_OIL" | "LPG";
             disruption_duration: components["schemas"]["DurationQuantity"];
             /** Disruption Start */
             disruption_start?: string | null;
@@ -4408,6 +5191,68 @@ export interface operations {
             };
         };
     };
+    export_metadata_api_v1_exports__export_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                export_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BriefingExport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    download_export_api_v1_exports__export_id__download_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                export_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     geofences_api_v1_geofences_get: {
         parameters: {
             query?: never;
@@ -4424,6 +5269,63 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Geofence"][];
+                };
+            };
+        };
+    };
+    create_lpg_export_api_v1_lpg_plans__plan_id__exports_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateExportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BriefingExport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    lpg_network_api_v1_lpg_network_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LpgNetwork"];
                 };
             };
         };
@@ -4569,6 +5471,76 @@ export interface operations {
             };
         };
     };
+    comments_api_v1_plans__plan_id__comments_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanComment"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_comment_api_v1_plans__plan_id__comments_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Demo-Identity"?: string | null;
+                "X-Sanjiv-Governance-Key"?: string | null;
+            };
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCommentRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanComment"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     explanation_api_v1_plans__plan_id__explanation_get: {
         parameters: {
             query?: never;
@@ -4600,6 +5572,43 @@ export interface operations {
             };
         };
     };
+    create_export_api_v1_plans__plan_id__exports_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateExportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BriefingExport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     governance_api_v1_plans__plan_id__governance_get: {
         parameters: {
             query?: never;
@@ -4618,6 +5627,74 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlanGovernanceState"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    monitoring_api_v1_plans__plan_id__monitoring_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanMonitoringRecord"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_monitoring_api_v1_plans__plan_id__monitoring_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MonitorPlanRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanMonitoringRecord"];
                 };
             };
             /** @description Validation Error */
@@ -4740,6 +5817,43 @@ export interface operations {
             };
         };
     };
+    sensitivity_api_v1_plans__plan_id__sensitivity_runs_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SensitivityRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SensitivityResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     supersede_api_v1_plans__plan_id__supersessions_post: {
         parameters: {
             query?: never;
@@ -4797,6 +5911,141 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProcurementPlan"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    execute_replay_api_v1_replay_cases__case_id__runs_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                case_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReplayRun"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    replay_catalogue_api_v1_replay_catalogue_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReplayCatalogue"];
+                };
+            };
+        };
+    };
+    replay_runs_api_v1_replay_runs_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReplayRun"][];
+                };
+            };
+        };
+    };
+    replay_run_api_v1_replay_runs__run_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReplayRun"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    lpg_plans_api_v1_replay_runs__run_id__lpg_plans_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LpgPlan"][];
                 };
             };
             /** @description Validation Error */
@@ -5522,6 +6771,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ScenarioValidationResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    sensitivity_result_api_v1_sensitivity_runs__sensitivity_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sensitivity_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SensitivityResult"];
                 };
             };
             /** @description Validation Error */

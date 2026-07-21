@@ -115,6 +115,9 @@ immutable-record enforcement.
 
 ## Phase 8 — Historical replay, LPG, briefing export, and advanced UX (XL)
 
+**Status:** complete. The Phase 8 repository, migration, security, frontend, and production-build
+gate passed on 2026-07-21.
+
 - **Goal:** prove generality, historical behavior, and decision-package usability.
 - **Deliverables/modules:** curated replay catalogue/backtests, LPG assets/models, FIRMS layer, sensitivity controls, stability calculation, collaboration/approval UX, briefing/PDF export, plan monitoring.
 - **Dependencies/order:** replay foundation/model audit → historical cases → LPG extensions → advanced analysis → export/monitoring.
@@ -123,6 +126,15 @@ immutable-record enforcement.
 - **Demo result:** historical validation, LPG scenario, sensitivity/stability, downloadable briefing and tracked approval.
 - **Risks:** scope dilution and licensing. Crude gates remain mandatory; ship only licensed/redacted replay data.
 - **Parallel:** replay curation, LPG reference data, and export design after Phase 7 contracts.
+
+### Phase 8 implementation checkpoint
+
+The implemented checkpoint provides a checksum-verified catalogue of 21 CC0 synthetic replay
+cases, stored deterministic replay runs and timelines, a typed LPG network and checked three-profile
+response pipeline, reproducible fast/deep sensitivity with explicit non-probability language,
+audited JSON/PDF decision packages, immutable comments, plan monitoring, and the Historical Replay
+decision screen. Crude behavior remains unchanged, LPG reserve handling is explicitly
+`NOT_APPLICABLE`, and every fixture remains visibly distinct from live or recorded history.
 
 ## Phase 9 — Integration, performance, security, failure testing, and demo hardening (L)
 

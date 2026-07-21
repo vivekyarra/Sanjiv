@@ -38,7 +38,7 @@ def _raise(error: AuditDomainError) -> NoReturn:
     raise HTTPException(status_code=error.status_code, detail=payload.model_dump(mode="json"))
 
 
-def _identity(
+def resolve_governance_identity(
     request: Request, supplied_identity: str | None, supplied_key: str | None
 ) -> tuple[str, GovernanceRole]:
     settings: Settings = request.app.state.settings
@@ -145,7 +145,7 @@ async def _act(
     superseding_plan_id: UUID | None = None,
 ) -> PlanLifecycleRecord:
     try:
-        actor_id, actor_role = _identity(request, demo_identity, governance_key)
+        actor_id, actor_role = resolve_governance_identity(request, demo_identity, governance_key)
         return await _service(request).act(
             plan_id,
             payload,

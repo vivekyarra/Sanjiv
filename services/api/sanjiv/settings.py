@@ -44,6 +44,9 @@ class Settings(BaseSettings):
     sanjiv_risk_storage: str = "postgres"
     sanjiv_risk_replay_manifest: Path = Path("data/replay/risk-intelligence-v1/manifest.json")
     sanjiv_audit_storage: str = "postgres"
+    sanjiv_phase8_storage: str = "postgres"
+    sanjiv_phase8_replay_manifest: Path = Path("data/replay/energy-validation-v1/manifest.json")
+    sanjiv_lpg_fixture_manifest: Path = Path("data/fixtures/lpg/manifest.json")
     sanjiv_demo_identity: str = "local-demo-approver"
     sanjiv_demo_identities: str = (
         '{"local-demo-operator":"operator","local-demo-reviewer":"reviewer",'

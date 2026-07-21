@@ -115,7 +115,7 @@ class ScenarioDefault(BaseModel):
 class ScenarioParameters(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
-    commodity: Literal["CRUDE_OIL"] = "CRUDE_OIL"
+    commodity: Literal["CRUDE_OIL", "LPG"] = "CRUDE_OIL"
     disruption_start: datetime
     disruption_duration: DurationQuantity
     simulation_horizon: DurationQuantity
@@ -128,6 +128,7 @@ class StructuredScenarioInput(BaseModel):
 
     scenario_name: str = Field(min_length=1, max_length=200)
     twin_snapshot_id: UUID
+    commodity: Literal["CRUDE_OIL", "LPG"] = "CRUDE_OIL"
     disruption_start: datetime | None = None
     disruption_duration: DurationQuantity
     simulation_horizon: DurationQuantity | None = None

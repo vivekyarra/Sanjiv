@@ -184,7 +184,38 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 
 ## Phase 8 - Historical replay, LPG, briefing, and advanced UX
 
-- Status: not started; blocked on the Phase 7 green gate.
+- Status: complete locally; checkpoint commit, push, and GitHub Actions pending.
+- Implemented a checksum-verified 21-case CC0 `SYNTHETIC_FIXTURE` catalogue covering chokepoint,
+  supplier, port, refinery, sanctions, demand, compound, false-news, source-outage, stale-evidence,
+  infeasible-solver, extended-disruption, and LPG cases. Runs persist timelines, no-action/response
+  metrics, lead time, measured recommendation runtime, evidence coverage, and structured blocking.
+- Added a typed LPG network and commodity pipeline with `tonne_per_day` invariants, three checked
+  response profiles, explicit assumption/fingerprint provenance, and reserve policy
+  `NOT_APPLICABLE`; crude simulation rejects LPG rather than silently substituting crude assets.
+- Added reproducible fast/deep seeded sensitivity, stability scoring, audited JSON/PDF packages,
+  immutable server-attributed comments, outcome monitoring, and the accessible Historical Replay UI.
+- Focused checkpoint: 12 Phase 8 backend/persistence/migration tests passed; 23 web tests passed;
+  Ruff and strict mypy passed across 96 API modules; regenerated OpenAPI/TypeScript contracts are in
+  sync. Final totals and gate evidence will be recorded only after the complete gate succeeds.
+- Full gate (2026-07-21): healthy PostgreSQL/PostGIS/TimescaleDB, Redis, and MinIO; reversible
+  `20260721_0009 -> 20260721_0008 -> 20260721_0009`; 178 Python tests, 23 web tests, and 1
+  generated-contract test; Ruff; strict mypy across 96 production modules; ESLint; strict
+  TypeScript; OpenAPI/generated TypeScript drift; production Next.js build including
+  `/historical-replay`; Docker Compose config; `git diff --check`; full and production npm audits
+  with zero vulnerabilities; strict `pip-audit` with no known vulnerabilities; and Bandit with no
+  surviving findings.
+- Production UI smoke: the real `/historical-replay` route loaded 21 declared cases with explicit
+  `REPLAY · SYNTHETIC FIXTURE · NOT LIVE` truth. A crude case produced its stored timeline and passed
+  audit/checker; the LPG Hormuz case produced three checked profiles, `tonne`-only invariants,
+  `RESERVE · NOT APPLICABLE`, and a SHA-256-bound audited package. Browser console contained no
+  warnings or errors. The first `127.0.0.1` request was correctly rejected by the configured origin
+  policy; the documented `localhost` origin passed.
+- Security/truth review: Phase 8 adds no external network source, operational action, order, charter,
+  reserve release, or live-data claim. Replay and LPG payloads are CC0 checksummed synthetic
+  fixtures; deterministic statistical sampling is explicitly non-cryptographic and not probability;
+  the OpenAI destination remains a fixed HTTPS literal; SQL is parameterized or static. No
+  critical/high or reportable medium finding remains. Optional `gitleaks` and `trivy` binaries are
+  still unavailable locally and remain part of the Phase 9 container/repository hardening gate.
 
 ## Phase 9 - Integration, security, performance, failure, and demo hardening
 

@@ -116,3 +116,10 @@ Phase 1 replay datasets have checksummed manifests, classification, source attri
 Local and demo deployment uses Docker Compose: `web`, `api`, three worker processes, PostgreSQL with PostGIS/TimescaleDB, Redis, MinIO, and an optional reverse proxy/telemetry profile. Production begins with the same containers on a single managed host or small container service, managed databases/object storage where available, TLS termination, backups, and OpenTelemetry export. Scaling is vertical first, then worker replicas by measured queue latency. Kubernetes and domain microservices require an ADR backed by workload measurements.
 
 Phase 4 remains inside the FastAPI modular monolith: thin procurement routes call a typed application service, which builds immutable domain inputs, invokes bounded in-process Pyomo/HiGHS, runs a separate arithmetic checker, and writes content-addressed terminal JSONB plus normalized actions/rejections. A worker move is deferred until measured solve concurrency requires it; the public contract and fingerprints do not depend on execution placement.
+Phase 8 adds a separate versioned validation catalogue over the Phase 1 transport replay. The API
+verifies the manifest and payload checksums before exposing any case, executes deterministic case
+timelines, and stores results in PostgreSQL when configured. A typed LPG pipeline reuses the same
+truth, evidence, fingerprint, checker, analysis, export, and monitoring boundaries without sending
+LPG into the crude simulator. The briefing assembler consumes only immutable audited plan context;
+failed audits cannot create plan exports. JSON/PDF bytes are stored with SHA-256 metadata and are
+verified again on download.

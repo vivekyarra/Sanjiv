@@ -146,3 +146,22 @@ Phase 4 adds `ProcurementDemand`, path-bound `ProcurementOption` segment capacit
 `NormalizedRiskFeature` represents each of the six structural components with explicit missingness, raw and normalized values, unit, `DERIVED` truth, source/freshness state, confidence, evidence IDs, effective/fetch times, baseline fingerprint, and transformation version. `CorridorRiskResult` requires all six features and contributions and seals the full calculation with a SHA-256 fingerprint. `RiskSeverity`, `EvidenceConfidence`, and `DataCompleteness` are separate bounded value objects.
 
 `AlertResult` carries corridor/assets, severity, confidence, completeness, contributions, evidence, effective time, status, model/rule versions, explanation, and analyst guidance with `autonomous_action=false`. `BacktestResult` binds the replay library ID, classification, checksum, per-case outputs, lead time, precision, false positives, completeness, failure behavior, stability, runtime, and a runtime-independent deterministic fingerprint. Stored calculations, alerts, timelines, transitions, and backtests are append-only and restart-readable.
+
+## Phase 8 replay, LPG, analysis, and briefing contracts
+
+`ReplayManifest` and `ReplayCase` bind every validation case to its classification, generator,
+original interval, SHA-256 checksum, license, redistribution status, assumptions, invariants, and
+expected detection/plan outcomes. `ReplayRun` stores the exact case and fixture fingerprints,
+timeline, no-action and response metrics, lead time, recommendation runtime, evidence coverage, and
+structured audit status. Synthetic fixtures can never validate as live or recorded history.
+
+`LpgNetwork` uses `tonne_per_day` throughout suppliers, terminals, routes, baseline flow, and demand.
+`LpgPlan` contains only compatible, non-sanctioned, capacity-bounded allocations; the checker must
+pass mass conservation, supplier/route/terminal limits, and unit consistency. Public reserve policy
+is explicitly `NOT_APPLICABLE` and cannot be converted into a reserve recommendation.
+
+`SensitivityResult` stores mode, seed, Latin-hypercube design version, input ranges/correlations,
+sample count, median, P10/P90, best/worst samples, ranked drivers, and a versioned stability score.
+It declares that deterministic sensitivity is not calibrated probability. `BriefingExport` binds
+kind, plan/audit fingerprints, content checksum, exact metric values, truth label, and media type.
+`PlanComment` and `PlanMonitoringRecord` are immutable, server-attributed, idempotent records.

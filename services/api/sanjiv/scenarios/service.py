@@ -285,6 +285,15 @@ class ScenarioService:
                 "An unconfirmed scenario cannot be simulated.",
                 status_code=409,
             )
+        if confirmed.candidate.parameters.commodity == "LPG":
+            raise ScenarioDomainError(
+                "LPG_PIPELINE_REQUIRED",
+                (
+                    "LPG scenarios use the typed Phase 8 LPG replay and optimisation "
+                    "pipeline; the crude-oil simulator will not substitute crude assets."
+                ),
+                status_code=422,
+            )
         snapshot = self.twin_service.get(confirmed.twin_snapshot.snapshot_id)
         if snapshot is None or snapshot.fingerprint != confirmed.twin_snapshot.fingerprint:
             raise ScenarioDomainError(

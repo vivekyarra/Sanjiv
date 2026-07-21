@@ -71,6 +71,19 @@ class AuditService:
     async def close(self) -> None:
         await self.repository.close()
 
+    async def export_context(self, plan_id: UUID) -> dict[str, object]:
+        """Return the immutable decision inputs used by audited export services."""
+        plan, kind = await self._plan(plan_id)
+        evidence, assumptions = await self._records(plan, kind)
+        confirmed = await self.scenario_service.confirmed(_scenario_id(plan))
+        return {
+            "plan": plan.model_dump(mode="json"),
+            "plan_kind": kind.value,
+            "scenario": confirmed.model_dump(mode="json"),
+            "assumptions": [item.model_dump(mode="json") for item in assumptions],
+            "evidence": [item.model_dump(mode="json") for item in evidence],
+        }
+
     async def audit_plan(self, plan_id: UUID, *, at: datetime | None = None) -> EvidenceAuditResult:
         plan, kind = await self._plan(plan_id)
         audited_at = (at or datetime.now(UTC)).astimezone(UTC)

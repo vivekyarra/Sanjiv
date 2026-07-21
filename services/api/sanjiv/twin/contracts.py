@@ -23,6 +23,7 @@ class AssetKind(StrEnum):
 
 class Commodity(StrEnum):
     CRUDE_OIL = "CRUDE_OIL"
+    LPG = "LPG"
 
 
 class CompatibilityClass(StrEnum):

@@ -25,6 +25,9 @@ from sanjiv.maritime.repository import InMemoryMaritimeRepository, PostgresMarit
 from sanjiv.maritime.routes import router as maritime_router
 from sanjiv.maritime.routes import websocket_router
 from sanjiv.maritime.service import MaritimeWatchService
+from sanjiv.phase8.repository import InMemoryPhase8Repository, PostgresPhase8Repository
+from sanjiv.phase8.routes import router as phase8_router
+from sanjiv.phase8.service import Phase8Service
 from sanjiv.procurement.openapi import add_procurement_contract_schemas
 from sanjiv.procurement.repository import (
     InMemoryProcurementRepository,
@@ -171,6 +174,18 @@ def create_app(
         reserve_service=reserve_service,
         repository=audit_repository,
     )
+    phase8_repository = (
+        PostgresPhase8Repository(resolved_settings.database_url)
+        if resolved_settings.sanjiv_phase8_storage == "postgres"
+        else InMemoryPhase8Repository()
+    )
+    phase8_service = Phase8Service(
+        audit_service=audit_service,
+        repository=phase8_repository,
+        replay_manifest=resolved_settings.sanjiv_phase8_replay_manifest,
+        lpg_manifest=resolved_settings.sanjiv_lpg_fixture_manifest,
+        risk_service=risk_service,
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -181,6 +196,7 @@ def create_app(
         await reserve_service.initialize()
         await risk_service.initialize()
         await audit_service.initialize()
+        await phase8_service.initialize()
         await service.initialize()
         if resolved_settings.sanjiv_maritime_autostart:
             service.start()
@@ -191,6 +207,7 @@ def create_app(
         await reserve_service.close()
         await risk_service.close()
         await audit_service.close()
+        await phase8_service.close()
         close = getattr(service.repository, "close", None)
         if close is not None:
             await close()
@@ -209,6 +226,7 @@ def create_app(
     application.state.reserve_service = reserve_service
     application.state.risk_service = risk_service
     application.state.audit_service = audit_service
+    application.state.phase8_service = phase8_service
     application.add_middleware(
         CORSMiddleware,
         allow_origins=resolved_settings.allowed_origins,
@@ -231,6 +249,7 @@ def create_app(
     application.include_router(reserve_router)
     application.include_router(risk_router)
     application.include_router(audit_router)
+    application.include_router(phase8_router)
 
     @application.exception_handler(HTTPException)
     async def typed_http_error(_: Request, error: HTTPException) -> JSONResponse:

@@ -99,3 +99,22 @@ End by explaining the human checkpoint: Sanjiv recommends and records approval; 
    role, or reused idempotency key with different content must return a canonical blocked error.
 8. End by stating that approval is a human decision record only: Sanjiv does not place procurement
    orders, charter vessels, release reserves, or call operational controls.
+
+# Phase 8 Historical Replay, LPG, and briefing path
+
+1. Open `http://localhost:3000/historical-replay`; confirm the permanent banner reads
+   `SYNTHETIC_FIXTURE` and never describe the catalogue as live or recorded history.
+2. Select two materially different replay cases, run each, and compare the timeline, no-action
+   shortage, modeled response, detection lead time, recommendation runtime, and evidence coverage.
+   A stale-evidence or infeasible-solver case must remain visibly blocked.
+3. Select LPG and show the typed network, explicit `tonne_per_day` unit, three candidate profiles,
+   checker status, assumptions, and `NOT_APPLICABLE` reserve policy. State that no commercial
+   availability or cargo is confirmed.
+4. Run fast sensitivity twice with the same seed and show identical quantiles/drivers/stability;
+   switch to deep only when time permits. State that sensitivity is not calibrated probability.
+5. For a passed audited crude plan, create JSON and PDF briefings and compare a displayed KPI with
+   the audit/API value. For LPG, create the fixture decision package. Failed audits must block the
+   affected plan export.
+6. Add a review comment and monitoring observation using a configured demo identity. Show immutable
+   history, deviation/stale-input warnings, and the absence of order-placement or reserve-execution
+   controls.

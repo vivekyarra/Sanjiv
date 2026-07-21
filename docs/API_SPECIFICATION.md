@@ -126,3 +126,23 @@ Phase 1 replay selection is startup configuration, not an unauthenticated mutati
 - LLM failure returns the structured form schema and extracted deterministic fields, not an invented scenario.
 - Solver infeasibility returns diagnostics and no operational plan. A cached plan is returned only for an exact input fingerprint and remains explicitly cached/stale.
 - All decision metrics use `MetricEnvelope`; evidence details can redact licensed raw payloads while retaining hash and provenance.
+
+## Phase 8 replay, LPG, sensitivity, export, and monitoring APIs
+
+- `GET /api/v1/replay-catalogue` returns the versioned, checksum-verified replay catalogue.
+- `POST /api/v1/replay-cases/{case_id}/runs` executes and stores a deterministic replay run;
+  `GET /api/v1/replay-runs` and `GET /api/v1/replay-runs/{run_id}` read stored results.
+- `GET /api/v1/lpg/network` returns the typed LPG fixture network and its immutable fingerprint;
+  `GET /api/v1/replay-runs/{run_id}/lpg-plans` returns the three checked LPG response profiles.
+- `POST /api/v1/plans/{plan_id}/sensitivity-runs` creates a deterministic fast or deep analysis;
+  `GET /api/v1/sensitivity-runs/{sensitivity_id}` reads it after restart.
+- `POST /api/v1/plans/{plan_id}/exports` and `POST /api/v1/lpg-plans/{plan_id}/exports` create
+  audited decision packages. `GET /api/v1/exports/{export_id}` returns immutable metadata and
+  `GET /api/v1/exports/{export_id}/download` returns the checksum-bound JSON or PDF bytes.
+- `POST|GET /api/v1/plans/{plan_id}/comments` records/reads immutable, server-attributed review
+  comments. `POST|GET /api/v1/plans/{plan_id}/monitoring` records/reads deviations and stale-input
+  warnings without any execution integration.
+
+All mutation endpoints require server-resolved governance identity and idempotency. Audited plan
+exports require a passed Evidence Auditor result and exact plan/audit/assumption fingerprints; LPG
+exports use the checked fixture plan fingerprint and remain explicitly synthetic decision support.
