@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
+import sys
 
 import psycopg
 
 
 def _run(*args: str) -> None:
-    subprocess.run(["uv", "run", "alembic", *args], check=True, env=os.environ.copy())
+    uv = [shutil.which("uv")] if shutil.which("uv") else [sys._base_executable, "-m", "uv"]
+    subprocess.run([*uv, "run", "alembic", *args], check=True, env=os.environ.copy())
 
 
 def test_phase7_migration_is_reversible_and_records_are_immutable() -> None:

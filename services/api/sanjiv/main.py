@@ -1,3 +1,4 @@
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
@@ -25,6 +26,10 @@ from sanjiv.maritime.repository import InMemoryMaritimeRepository, PostgresMarit
 from sanjiv.maritime.routes import router as maritime_router
 from sanjiv.maritime.routes import websocket_router
 from sanjiv.maritime.service import MaritimeWatchService
+from sanjiv.operations.dependencies import dependency_health
+from sanjiv.operations.routes import router as operations_router
+from sanjiv.operations.security import ProductionSecurityMiddleware
+from sanjiv.operations.telemetry import TelemetryMiddleware, TelemetryRegistry
 from sanjiv.phase8.repository import InMemoryPhase8Repository, PostgresPhase8Repository
 from sanjiv.phase8.routes import router as phase8_router
 from sanjiv.phase8.service import Phase8Service
@@ -227,6 +232,8 @@ def create_app(
     application.state.risk_service = risk_service
     application.state.audit_service = audit_service
     application.state.phase8_service = phase8_service
+    telemetry = TelemetryRegistry()
+    application.state.telemetry = telemetry
     application.add_middleware(
         CORSMiddleware,
         allow_origins=resolved_settings.allowed_origins,
@@ -239,7 +246,16 @@ def create_app(
             "X-Sanjiv-Scenario-Key",
             "X-Sanjiv-Demo-Identity",
             "X-Sanjiv-Governance-Key",
+            "X-Sanjiv-API-Key",
+            "X-Correlation-ID",
+            "X-Causation-ID",
         ],
+    )
+    application.add_middleware(ProductionSecurityMiddleware, settings=resolved_settings)
+    application.add_middleware(
+        TelemetryMiddleware,
+        registry=telemetry,
+        log_level=resolved_settings.sanjiv_log_level,
     )
     application.include_router(maritime_router)
     application.include_router(websocket_router)
@@ -250,6 +266,7 @@ def create_app(
     application.include_router(risk_router)
     application.include_router(audit_router)
     application.include_router(phase8_router)
+    application.include_router(operations_router)
 
     @application.exception_handler(HTTPException)
     async def typed_http_error(_: Request, error: HTTPException) -> JSONResponse:
@@ -257,12 +274,42 @@ def create_app(
             return JSONResponse(status_code=error.status_code, content=error.detail)
         return JSONResponse(status_code=error.status_code, content={"detail": error.detail})
 
+    @application.exception_handler(Exception)
+    async def redacted_internal_error(request: Request, error: Exception) -> JSONResponse:
+        correlation_id = getattr(request.state, "correlation_id", "unavailable")
+        logging.getLogger("sanjiv.error").error(
+            "unhandled_error type=%s correlation_id=%s",
+            type(error).__name__,
+            correlation_id,
+        )
+        return JSONResponse(
+            status_code=500,
+            content={
+                "code": "INTERNAL_ERROR",
+                "message": "The request failed safely; internal details were redacted.",
+                "correlation_id": correlation_id,
+            },
+        )
+
     @application.get("/health/live", response_model=HealthResponse, tags=["health"])
     async def liveness() -> HealthResponse:
         return HealthResponse(status="alive", checked_at=datetime.now(UTC))
 
     @application.get("/health/ready", response_model=HealthResponse, tags=["health"])
-    async def readiness() -> HealthResponse:
+    async def readiness() -> HealthResponse | JSONResponse:
+        if resolved_settings.sanjiv_dependency_checks_enabled:
+            dependencies = await dependency_health(resolved_settings)
+            unavailable = [item.component for item in dependencies if item.status != "HEALTHY"]
+            if unavailable:
+                return JSONResponse(
+                    status_code=503,
+                    content={
+                        "status": "degraded",
+                        "service": "sanjiv-api",
+                        "checked_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+                        "unavailable": unavailable,
+                    },
+                )
         return HealthResponse(status="ready", checked_at=datetime.now(UTC))
 
     @application.get(

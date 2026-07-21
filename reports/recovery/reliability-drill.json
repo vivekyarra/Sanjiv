@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "356715b7-96d2-4884-b03a-301ea54787fe",
+  "started_at": "2026-07-21T17:55:31.952994Z",
+  "commit_sha": "43d5837b30d2460a714f58cf9b7e697f803005bd",
+  "environment": "docker-compose app profile; local synthetic replay",
+  "classification": "SYNTHETIC_FIXTURE",
+  "checks": [
+    {
+      "service": "redis",
+      "expected_component": "cache:redis",
+      "outage_status": 503,
+      "outage_payload": {
+        "status": "degraded",
+        "service": "sanjiv-api",
+        "checked_at": "2026-07-21T17:55:33.716272Z",
+        "unavailable": [
+          "cache:redis"
+        ]
+      },
+      "detection_ms": 1030.028,
+      "recovery_ms": 30.933,
+      "recovered_status": "ready",
+      "result": "PASS"
+    },
+    {
+      "service": "minio",
+      "expected_component": "object-store:minio",
+      "outage_status": 503,
+      "outage_payload": {
+        "status": "degraded",
+        "service": "sanjiv-api",
+        "checked_at": "2026-07-21T17:55:35.848357Z",
+        "unavailable": [
+          "object-store:minio"
+        ]
+      },
+      "detection_ms": 1028.974,
+      "recovery_ms": 1487.67,
+      "recovered_status": "ready",
+      "result": "PASS"
+    },
+    {
+      "service": "postgres",
+      "expected_component": "database:postgres",
+      "outage_status": 503,
+      "outage_payload": {
+        "status": "degraded",
+        "service": "sanjiv-api",
+        "checked_at": "2026-07-21T17:55:39.297120Z",
+        "unavailable": [
+          "database:postgres"
+        ]
+      },
+      "detection_ms": 1028.329,
+      "recovery_ms": 1035.884,
+      "recovered_status": "ready",
+      "result": "PASS"
+    },
+    {
+      "service": "compute-worker",
+      "outage_status": 200,
+      "operations_status": "DEGRADED",
+      "detection_ms": 22427.376,
+      "recovery_ms": 1045.361,
+      "recovered_status": "READY",
+      "result": "PASS"
+    },
+    {
+      "service": "api",
+      "recovery_ms": 4754.407,
+      "recovered_status": "ready",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Offline verification uses credential-free local replay; the host network is not physically disconnected.",
+    "The drill stops one dependency at a time and does not measure multi-region failover."
+  ],
+  "result": "PASS",
+  "completed_at": "2026-07-21T17:56:11.038664Z"
+}

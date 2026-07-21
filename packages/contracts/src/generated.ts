@@ -157,6 +157,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/operations/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Operations Status */
+        get: operations["operations_status_api_v1_operations_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/plans/{plan_id}/approvals": {
         parameters: {
             query?: never;
@@ -1488,6 +1505,28 @@ export interface components {
              */
             twin_snapshot_id: string;
         };
+        /** ComponentHealth */
+        ComponentHealth: {
+            /**
+             * Checked At
+             * Format: date-time
+             */
+            checked_at: string;
+            /** Component */
+            component: string;
+            /** Detail */
+            detail: string;
+            /**
+             * Stale
+             * @default false
+             */
+            stale: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "HEALTHY" | "DEGRADED" | "UNAVAILABLE" | "NOT_CONFIGURED";
+        };
         /** ConfirmScenarioRequest */
         ConfirmScenarioRequest: {
             /** Confirming Identity */
@@ -2644,6 +2683,45 @@ export interface components {
             vessel_count?: components["schemas"]["MetricEnvelope_int_"] | null;
             /** Vessels */
             vessels: components["schemas"]["VesselOperationalView"][];
+        };
+        /** OperationsStatus */
+        OperationsStatus: {
+            /**
+             * Causation Ids Enabled
+             * @default true
+             * @constant
+             */
+            causation_ids_enabled: true;
+            /**
+             * Checked At
+             * Format: date-time
+             */
+            checked_at: string;
+            /** Commit Sha */
+            commit_sha: string;
+            /** Components */
+            components: components["schemas"]["ComponentHealth"][];
+            /**
+             * Correlation Ids Enabled
+             * @default true
+             * @constant
+             */
+            correlation_ids_enabled: true;
+            /** Environment */
+            environment: string;
+            /**
+             * Opentelemetry Compatible
+             * @default true
+             * @constant
+             */
+            opentelemetry_compatible: true;
+            /** Runtimes */
+            runtimes: components["schemas"]["RuntimeMetric"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "READY" | "DEGRADED";
         };
         /** PercentageQuantity */
         PercentageQuantity: {
@@ -4032,6 +4110,23 @@ export interface components {
             route_id: string;
             volume: components["schemas"]["MetricEnvelope_float_"];
         };
+        /** RuntimeMetric */
+        RuntimeMetric: {
+            /** Count */
+            count: number;
+            /** Failures */
+            failures: number;
+            /** Maximum Ms */
+            maximum_ms: number;
+            /** Median Ms */
+            median_ms: number;
+            /** Minimum Ms */
+            minimum_ms: number;
+            /** Operation */
+            operation: string;
+            /** P95 Ms */
+            p95_ms: number;
+        };
         /** SanctionsAssessment */
         SanctionsAssessment: {
             /** Confidence */
@@ -5366,6 +5461,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OperationsSnapshot"];
+                };
+            };
+        };
+    };
+    operations_status_api_v1_operations_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperationsStatus"];
                 };
             };
         };

@@ -138,6 +138,10 @@ decision screen. Crude behavior remains unchanged, LPG reserve handling is expli
 
 ## Phase 9 — Integration, performance, security, failure testing, and demo hardening (L)
 
+**Status:** complete. The full local repository, migration, browser, security, performance,
+recovery, offline and production-image gate passed on 2026-07-21. Submission/video work remains
+separate and has not been started.
+
 - **Goal:** demonstrate reliable behavior under realistic load and failure.
 - **Deliverables/modules:** full Compose profiles, observability, benchmark harness/reports, browser suite, security/secret/image scans, backup/restore, failure injection, offline demo package, rehearsed runbook.
 - **Dependencies/order:** production build → end-to-end dataset → performance profile → bottleneck fixes → security/failure/recovery → offline package → rehearsal.
@@ -146,6 +150,14 @@ decision screen. Crude behavior remains unchanged, LPG reserve handling is expli
 - **Demo result:** repeatable primary and judge-selected scenarios with honest degradation and measured signal-to-recommendation latency.
 - **Risks:** demo network/hardware variance and late integration. Freeze a release candidate and retain explicit recorded-real replay.
 - **Parallel:** security, performance, browser automation, and runbook rehearsal on the same release candidate.
+
+### Phase 9 implementation checkpoint
+
+The release candidate adds production middleware/readiness, structured telemetry and worker
+heartbeats, app/offline Compose profiles, cross-platform one-command operations, real Playwright
+decision-flow coverage, measured browser/domain/load benchmarks, repository/dependency/secret/
+license/image scanning, backup/restore verification and dependency/worker/API failure drills.
+Reports are repository-relative and retain explicit local-fixture limitations.
 
 ## Current implementation program
 

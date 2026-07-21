@@ -1205,6 +1205,47 @@
         "title": "CompileScenarioRequest",
         "type": "object"
       },
+      "ComponentHealth": {
+        "additionalProperties": false,
+        "properties": {
+          "checked_at": {
+            "format": "date-time",
+            "title": "Checked At",
+            "type": "string"
+          },
+          "component": {
+            "title": "Component",
+            "type": "string"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "stale": {
+            "default": false,
+            "title": "Stale",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "HEALTHY",
+              "DEGRADED",
+              "UNAVAILABLE",
+              "NOT_CONFIGURED"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "component",
+          "status",
+          "checked_at",
+          "detail"
+        ],
+        "title": "ComponentHealth",
+        "type": "object"
+      },
       "ConfirmScenarioRequest": {
         "additionalProperties": false,
         "properties": {
@@ -4099,6 +4140,74 @@
           "geofences"
         ],
         "title": "OperationsSnapshot",
+        "type": "object"
+      },
+      "OperationsStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "causation_ids_enabled": {
+            "const": true,
+            "default": true,
+            "title": "Causation Ids Enabled",
+            "type": "boolean"
+          },
+          "checked_at": {
+            "format": "date-time",
+            "title": "Checked At",
+            "type": "string"
+          },
+          "commit_sha": {
+            "title": "Commit Sha",
+            "type": "string"
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/ComponentHealth"
+            },
+            "title": "Components",
+            "type": "array"
+          },
+          "correlation_ids_enabled": {
+            "const": true,
+            "default": true,
+            "title": "Correlation Ids Enabled",
+            "type": "boolean"
+          },
+          "environment": {
+            "title": "Environment",
+            "type": "string"
+          },
+          "opentelemetry_compatible": {
+            "const": true,
+            "default": true,
+            "title": "Opentelemetry Compatible",
+            "type": "boolean"
+          },
+          "runtimes": {
+            "items": {
+              "$ref": "#/components/schemas/RuntimeMetric"
+            },
+            "title": "Runtimes",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "READY",
+              "DEGRADED"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "checked_at",
+          "commit_sha",
+          "environment",
+          "components",
+          "runtimes"
+        ],
+        "title": "OperationsStatus",
         "type": "object"
       },
       "PercentageQuantity": {
@@ -7545,6 +7654,56 @@
         "title": "RouteAllocation",
         "type": "object"
       },
+      "RuntimeMetric": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "minimum": 0.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "failures": {
+            "minimum": 0.0,
+            "title": "Failures",
+            "type": "integer"
+          },
+          "maximum_ms": {
+            "minimum": 0.0,
+            "title": "Maximum Ms",
+            "type": "number"
+          },
+          "median_ms": {
+            "minimum": 0.0,
+            "title": "Median Ms",
+            "type": "number"
+          },
+          "minimum_ms": {
+            "minimum": 0.0,
+            "title": "Minimum Ms",
+            "type": "number"
+          },
+          "operation": {
+            "title": "Operation",
+            "type": "string"
+          },
+          "p95_ms": {
+            "minimum": 0.0,
+            "title": "P95 Ms",
+            "type": "number"
+          }
+        },
+        "required": [
+          "operation",
+          "count",
+          "failures",
+          "minimum_ms",
+          "median_ms",
+          "p95_ms",
+          "maximum_ms"
+        ],
+        "title": "RuntimeMetric",
+        "type": "object"
+      },
       "SanctionsAssessment": {
         "additionalProperties": false,
         "properties": {
@@ -10718,6 +10877,27 @@
         "summary": "Operations Snapshot",
         "tags": [
           "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/operations/status": {
+      "get": {
+        "operationId": "operations_status_api_v1_operations_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationsStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Operations Status",
+        "tags": [
+          "operations"
         ]
       }
     },

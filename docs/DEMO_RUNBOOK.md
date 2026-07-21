@@ -3,7 +3,7 @@
 ## Preflight
 
 1. Run the full verification suite and record the commit, model versions, hardware, and benchmark report.
-2. Confirm source credentials without displaying them; inspect every source’s health, cadence, and latest evidence time.
+2. For the credential-free demo, confirm no live-source credential is required or visible; inspect every enabled source's health, cadence, truth mode, and latest evidence time.
 3. Validate the selected replay manifest and checksum. State whether it is `RECORDED_REAL_DATA` or `SYNTHETIC_FIXTURE`; keep the classifications separate.
 4. Confirm the main Hormuz scenario and two alternate supported scenarios are feasible with current data/assumptions.
 5. Open the command center with no stale approval or scenario state. Never prewrite a latency result.
@@ -24,9 +24,9 @@
 ## Exact demonstration path
 
 1. Open directly on the live tanker map. State “Sanjiv — India’s Energy Resilience Command Center” and “Keep India’s energy moving.”
-2. Point to the global `LIVE`/`REPLAY` mode and individual source freshness. If live data is unavailable, acknowledge and enter recorded-real replay before continuing.
-3. Enter exactly: **“The Strait of Hormuz loses 100% capacity for 72 hours.”**
-4. Show the validated, editable scenario object: canonical asset, 100% loss, 72 hours, start, horizon, reserve policy, uncertainty, and visible assumptions. Confirm it.
+2. Point to the global `LIVE`/`REPLAY` mode and individual source freshness. The committed demo uses checksummed `SYNTHETIC_FIXTURE` replay; never call it live or recorded history.
+3. Enter exactly: **“Close the Strait of Hormuz for 14 days.”**
+4. Show the validated, editable scenario object: canonical asset, closure, 14-day duration, start, horizon, reserve policy, sensitivity, fingerprints, and visible assumptions. Confirm it.
 5. On the map, show observed vessel positions separately from inferred India-bound candidates; open one confidence breakdown and state that cargo ownership and charter availability are unknown.
 6. Show the paired no-action impact: shortfall, arrivals/delay, refinery utilization, inventory cover, and uncertainty, each with truth labels.
 7. Generate **Lowest cost**, **Balanced**, and **Highest resilience** through the deterministic optimiser; show solver state and actual runtime.
@@ -36,6 +36,11 @@
 11. Open the evidence drawer for one major metric. Show source references, effective/fetch/compute times, freshness, truth class, transformation, confidence, evidence IDs, and model version.
 12. Show the measured signal-to-recommendation latency from the run record. If it exceeds 10 seconds, show the actual value and call 10 seconds a target.
 13. Ask for and run a second supported scenario. Unsupported assets produce a controlled refusal and supported choices, never invented data.
+
+The Phase 9 one-command path is `npm run demo`; reset deterministic fixtures with
+`npm run sanjiv -- seed`, verify them with `npm run demo:preflight`, and use
+`npm run demo:offline` only after the production images exist. Run `npm run release:verify` before
+calling a release candidate green.
 
 ## Phase 2 Digital Twin path
 

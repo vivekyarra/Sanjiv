@@ -2,7 +2,10 @@
   "name": "sanjiv",
   "version": "0.1.0",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "npm run dev --workspace @sanjiv/web",
     "dev:web": "npm run dev --workspace @sanjiv/web",
@@ -14,16 +17,24 @@
     "contracts:generate": "node scripts/contracts.mjs --write",
     "contracts:check": "node scripts/contracts.mjs --check",
     "db:upgrade": "uv run alembic upgrade head",
-    "db:downgrade": "uv run alembic downgrade -1"
+    "db:downgrade": "uv run alembic downgrade -1",
+    "sanjiv": "node scripts/sanjiv.mjs",
+    "verify": "node scripts/sanjiv.mjs verify",
+    "release:verify": "node scripts/sanjiv.mjs full",
+    "demo": "node scripts/sanjiv.mjs demo",
+    "demo:offline": "node scripts/sanjiv.mjs offline",
+    "demo:preflight": "node scripts/sanjiv.mjs preflight",
+    "test:e2e": "playwright test"
   },
   "engines": {
     "node": ">=24.0.0",
     "npm": ">=11.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "js-yaml": "4.3.0",
     "openapi-typescript": "^7.9.1",
-    "postcss": "8.5.20",
-    "js-yaml": "4.3.0"
+    "postcss": "8.5.20"
   },
   "overrides": {
     "next": {

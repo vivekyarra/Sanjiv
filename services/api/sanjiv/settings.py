@@ -1,8 +1,9 @@
 import json
 from functools import lru_cache
 from pathlib import Path
+from urllib.parse import urlparse
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -53,10 +54,30 @@ class Settings(BaseSettings):
         '"local-demo-approver":"approver","local-demo-administrator":"administrator"}'
     )
     sanjiv_governance_api_keys: str = "{}"
+    sanjiv_api_keys: str = "[]"
+    sanjiv_rate_limit_per_minute: int = Field(default=120, ge=10, le=10000)
+    sanjiv_max_request_bytes: int = Field(default=1_048_576, ge=1024, le=10_485_760)
+    sanjiv_worker_runtime_dir: Path = Path("data/runtime/workers")
+    sanjiv_dependency_checks_enabled: bool = False
     sanjiv_llm_provider: str = "disabled"
     sanjiv_llm_model: str | None = None
     sanjiv_llm_timeout_seconds: float = Field(default=10.0, gt=0, le=60)
     openai_api_key: str | None = None
+
+    @field_validator("sanjiv_aisstream_url")
+    @classmethod
+    def validate_aisstream_destination(cls, value: str) -> str:
+        parsed = urlparse(value)
+        if (
+            parsed.scheme != "wss"
+            or parsed.hostname != "stream.aisstream.io"
+            or parsed.username is not None
+            or parsed.password is not None
+            or parsed.query
+            or parsed.fragment
+        ):
+            raise ValueError("SANJIV_AISSTREAM_URL must use the documented AISStream WSS host")
+        return value
 
     @property
     def allowed_origins(self) -> list[str]:
@@ -86,6 +107,13 @@ class Settings(BaseSettings):
                 raise ValueError("governance identities require actor_id and role")
             result[key] = {"actor_id": actor, "role": role}
         return result
+
+    @property
+    def api_keys(self) -> list[str]:
+        value = json.loads(self.sanjiv_api_keys)
+        if not isinstance(value, list) or not all(isinstance(item, str) and item for item in value):
+            raise ValueError("SANJIV_API_KEYS must be a JSON array of non-empty strings")
+        return value
 
 
 @lru_cache

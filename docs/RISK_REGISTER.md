@@ -41,7 +41,7 @@ Risks are reviewed at each phase gate. A demo may proceed with degraded sources 
 | Structural weights and alert thresholds are uncalibrated | Open | Versions are explicit and contributions visible. Calibrate with domain owners and out-of-sample replay before changing defaults. |
 | Live provider licensing/schema/rate limits drift | Open | Official documentation and terms are registered; live fetchers are optional, injected, bounded, and fail visibly. Reverify before enabling each provider. |
 | Source disagreement or ambiguous media/thermal signal creates false escalation | Mitigated in Phase 6 | Critical/high alerting requires independent operational corroboration; stale, incomplete, single-source and disagreeing cases are suppressed or downgraded. |
-| Read-only risk APIs lack deployment-level user authorization | Open | Endpoints contain no mutation or credentials. Production gateway authentication, authorization, rate limiting, and tenant policy remain deployment prerequisites. |
+| Read-only risk APIs lack deployment-level user authorization | Mitigated in Phase 9 | Production `/api/v1` perimeter authentication now fails closed and origin/rate policies apply. A deployment IdP, TLS edge and tenant/session policy remain operator responsibilities. |
 
 # Phase 7 residual risks
 
@@ -61,3 +61,13 @@ Risks are reviewed at each phase gate. A demo may proceed with degraded sources 
 | Sensitivity percentiles interpreted as calibrated probability | Mitigated in Phase 8 | API/UI/export language identifies deterministic seeded sensitivity and forbids probability/confidence-interval claims. |
 | Export corruption or value drift | Mitigated in Phase 8 | Exports are built from immutable audited context, exact values are contract-tested, and content is SHA-256 verified on readback/download. |
 | Review comment identity forgery or idempotency abuse | Mitigated in Phase 8 | Actor/role are server-resolved, production fails closed, immutable IDs derive from plan and idempotency key, and payload conflicts return `409`. |
+
+# Phase 9 residual risks
+
+| Risk | State | Mitigation / remaining work |
+|---|---|---|
+| Single-host or multi-replica failure | Open | Local drills cover individual dependencies, worker and API. Managed HA and Redis WebSocket fan-out remain deployment work. |
+| Demo authentication mistaken for enterprise identity | Open | Production API/governance fails closed. Integrate an operator IdP, TLS, rotation and session policy before real multi-user use. |
+| Local benchmark interpreted as an SLA | Mitigated in Phase 9 | Reports retain hardware, dataset, timestamp, run ID and measured distributions and explicitly deny SLA/accuracy claims. |
+| Backup confidentiality or restore drift | Mitigated in Phase 9 | The local drill restricts permissions, verifies migration/corruption rejection and deletes the artifact. Production KMS, retention and off-site drills remain operator-owned. |
+| Dependency or image vulnerability drift | Open | Locked installs and repository/dependency/image/secret scans gate release; rebuild and rescan on lock/base-image changes. |

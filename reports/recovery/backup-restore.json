@@ -1,0 +1,11 @@
+{
+  "backup_bytes": 2673646,
+  "backup_sha256": "87617ca34b86b12c35edbe5333dc7dc71f4ceab4605dee53db3169e29250bc1e",
+  "completed_at": "2026-07-21T18:06:16.670251Z",
+  "confidentiality": "Temporary backup permission 0600; deleted immediately after verification.",
+  "corrupt_artifact_rejected": true,
+  "restore_exit_code": 0,
+  "restored_migration": "20260721_0009",
+  "schema_version": "1.0",
+  "status": "PASS"
+}

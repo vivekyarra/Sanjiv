@@ -219,7 +219,24 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 
 ## Phase 9 - Integration, security, performance, failure, and demo hardening
 
-- Status: not started; blocked on the Phase 8 green gate.
+- Status: complete locally; checkpoint commit and push pending.
+- Added production fail-closed authentication, origin/JSON/size/rate controls, bounded hashed
+  rate-limit identities, SSRF-safe configuration, redacted errors, structured telemetry,
+  correlation/causation/trace IDs, dependency readiness and worker/source health.
+- Added production images, app/offline Compose profiles, heartbeat workers, cross-platform commands,
+  real Playwright Observe-to-Monitor/LPG/export coverage, measured benchmarks, scanner evidence,
+  backup/restore and dependency/worker/API recovery drills.
+- A leaked integration-test vessel discovered in the real UI was removed and its PostgreSQL test
+  fixed; the test passed twice with zero residue and the UI returned to three REPLAY vessels.
+- No Phase 9 completion, demo-recording plan, merge, tag or release is claimed before the final gate.
+- Final local gate: locked npm/uv installs; `0009 -> 0008 -> 0009`; 186 Python, 23 web,
+  1 contract-package and 2 real Playwright tests; Ruff; strict mypy across 102 modules; ESLint;
+  strict TypeScript; contract drift; production Next.js and rebuilt Docker images; app/offline
+  profiles; backup/restore; failure/recovery; dependency/secret/license/filesystem/API-image/web-image
+  scans; `git diff --check`; no focused/skipped critical tests. All passed.
+- Measured local synthetic-fixture median/p95 signal-to-recommendation was 568.141/754.707 ms;
+  64/64 status requests succeeded at declared concurrency 8; browser measurement at 1920x1080 was
+  39.48 FPS with 129.459 ms interaction latency. These values are not SLAs or accuracy claims.
 
 ## Final pull request and CI
 

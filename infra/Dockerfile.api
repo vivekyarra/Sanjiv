@@ -1,0 +1,24 @@
+FROM ghcr.io/astral-sh/uv:python3.11-bookworm-slim
+
+WORKDIR /app
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy PYTHONUNBUFFERED=1
+
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
+RUN uv pip uninstall --system pip setuptools wheel
+ENV UV_NO_SYNC=1
+COPY services/api ./services/api
+COPY workers ./workers
+COPY data ./data
+COPY alembic.ini ./
+RUN useradd --create-home --uid 10001 sanjiv \
+    && mkdir -p /app/data/runtime \
+    && chown -R sanjiv:sanjiv /app/data/runtime
+
+EXPOSE 8000
+USER sanjiv
+CMD ["uv", "run", "uvicorn", "--app-dir", "services/api", "sanjiv.main:app", "--host", "0.0.0.0", "--port", "8000"]

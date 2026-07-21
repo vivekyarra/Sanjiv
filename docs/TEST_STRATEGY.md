@@ -90,3 +90,17 @@ remain in the API and UI with its reason and cannot be approved or exported.
   monitoring exposes deviations/staleness without execution controls.
 - Exercise the Historical Replay UI's replay, crude/LPG, sensitivity, export, comment, monitoring,
   truth-label, keyboard, responsive, empty/loading/error, and no-autonomous-execution paths.
+
+## Phase 9 release gate
+
+- Clean locked npm/uv installs; Compose infrastructure, `app`, and credential-free `offline`
+  profiles; migration downgrade/re-upgrade; all Python/web/contract tests; Ruff; strict mypy;
+  ESLint; TypeScript; contract drift; and production Next.js/Docker builds.
+- Playwright drives the real 1920x1080 Observe-to-Monitor journey, risk, reserve, evidence,
+  replay, LPG and audited export, captures actual screenshots and forbids focused-only tests.
+- Stored benchmarks cover ingest-to-map, WebSocket resync, browser FPS/interaction, all decision
+  engines, audit/export, end-to-end flow and declared concurrent load; measurements are not SLAs.
+- Security covers fail-closed auth/roles, origin/rate/size/type, idempotency, SSRF, redaction,
+  bounded solver/LLM behavior, injection review, secrets, dependencies, licenses and both images.
+- Recovery covers database/Redis/MinIO interruption, worker staleness, API restart, backup/restore,
+  corrupted artifacts, migration cycles and offline preflight.
