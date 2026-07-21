@@ -162,6 +162,7 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 - Official documentation and usage conditions for GDELT, IMF PortWatch, EIA, FRED, and NASA FIRMS are recorded in `docs/SOURCE_REGISTRY.md`. Live network acquisition was not enabled; CI and the primary demo remain credential-free.
 - Remaining risks: structural weights, source reliability, normalization, and alert thresholds require authorised calibration against licensed recorded history; provider schemas/terms/rate limits can drift; the synthetic library cannot establish production accuracy; and production gateway authn/authz, load/concurrency, monitoring, and operational incident procedures remain prerequisites.
 - Phase 7 status: not started. No evidence-auditor, approval, or autonomous operational behavior was implemented.
+- CI follow-up: the first Phase 6 push exposed a stale workflow assertion that still expected migration head `20260721_0004`; the migration cycle itself reached `20260721_0007` successfully. The workflow assertion was updated to the actual Phase 6 head in a narrow CI-fix commit and the complete GitHub verification was rerun.
 
 ## Phase 7 - Evidence auditor, approval, and explainability
 
