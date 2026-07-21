@@ -8,6 +8,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from sanjiv.audit.repository import InMemoryAuditRepository, PostgresAuditRepository
+from sanjiv.audit.routes import router as audit_router
+from sanjiv.audit.service import AuditService
 from sanjiv.contracts import (
     Assumption,
     AuditEvent,
@@ -157,6 +160,17 @@ def create_app(
         repository=risk_repository,
         adapter=FixtureRiskAdapter(resolved_settings.sanjiv_risk_replay_manifest),
     )
+    audit_repository = (
+        PostgresAuditRepository(resolved_settings.database_url)
+        if resolved_settings.sanjiv_audit_storage == "postgres"
+        else InMemoryAuditRepository()
+    )
+    audit_service = AuditService(
+        scenario_service=scenario_service,
+        procurement_service=procurement_service,
+        reserve_service=reserve_service,
+        repository=audit_repository,
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -166,6 +180,7 @@ def create_app(
         await procurement_service.initialize()
         await reserve_service.initialize()
         await risk_service.initialize()
+        await audit_service.initialize()
         await service.initialize()
         if resolved_settings.sanjiv_maritime_autostart:
             service.start()
@@ -175,6 +190,7 @@ def create_app(
         await procurement_service.close()
         await reserve_service.close()
         await risk_service.close()
+        await audit_service.close()
         close = getattr(service.repository, "close", None)
         if close is not None:
             await close()
@@ -192,6 +208,7 @@ def create_app(
     application.state.procurement_service = procurement_service
     application.state.reserve_service = reserve_service
     application.state.risk_service = risk_service
+    application.state.audit_service = audit_service
     application.add_middleware(
         CORSMiddleware,
         allow_origins=resolved_settings.allowed_origins,
@@ -202,6 +219,8 @@ def create_app(
             "Content-Type",
             "Idempotency-Key",
             "X-Sanjiv-Scenario-Key",
+            "X-Sanjiv-Demo-Identity",
+            "X-Sanjiv-Governance-Key",
         ],
     )
     application.include_router(maritime_router)
@@ -211,6 +230,7 @@ def create_app(
     application.include_router(procurement_router)
     application.include_router(reserve_router)
     application.include_router(risk_router)
+    application.include_router(audit_router)
 
     @application.exception_handler(HTTPException)
     async def typed_http_error(_: Request, error: HTTPException) -> JSONResponse:

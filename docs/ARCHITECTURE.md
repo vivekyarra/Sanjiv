@@ -84,6 +84,20 @@ The primary demo and CI select a checksummed offline replay adapter. Optional GD
 
 The evidence auditor verifies schema completeness, allowed truth transitions, evidence existence, freshness policy, assumption visibility, model versions, claim policy, and metric recomputation hashes. Failed metrics are blocked, not silently omitted. Narrative generation receives only audited structured results and evidence summaries. Every run, mode transition, edit, approval, export, and failure creates an append-only audit event.
 
+Phase 7 implements this boundary in `sanjiv/audit`. Coverage walks every `MetricEnvelope` in the
+immutable procurement or reserve plan. Policies validate evidence hashes and parent links,
+approved/unexpired/scenario-scoped assumptions, freshness, truth transitions, source and
+transformation fields, versions, exact fingerprints, solver state, independent-check results,
+sanctions/compatibility exclusions, and objective/fingerprint recomputation. The deterministic
+explanation builder reads only a passed or explicitly blocked structured audit. Lifecycle state is
+derived from append-only records rather than mutating the optimizer plan. PostgreSQL advisory
+locking serializes concurrent actions; database triggers reject updates and deletes.
+
+Development identities are an explicit configured map. Production governance has no default
+identity: API keys map server-side to actor and role, and absent configuration fails closed. An
+approval is a human decision record only; there is no adapter for purchasing, chartering, reserve
+release, pipeline control, or other operational execution.
+
 ### Replay and fallback
 
 Phase 1 replay datasets have checksummed manifests, classification, source attribution, original source interval, transformation, and license/redistribution metadata. If the live adapter is absent or exhausts bounded retries, the service automatically records an audit-linked `DEGRADED→REPLAY` transition so the demonstration remains available. This is never silent: REST, WebSocket, source-health UI, and the persistent banner identify replay and explain the reason. Original source timestamps are preserved and fixture positions are `ASSUMPTION` with `REPLAY` freshness. A future authenticated operator-control phase may add manual replay sessions; Phase 1 exposes no administrative mutation endpoint.

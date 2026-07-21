@@ -85,6 +85,17 @@ a { color: inherit; }
 .truth-note { color: #facc15; }
 .error-text { color: #fda4af; }
 .allocation-group { border-top: 1px solid #29483a; }
+.governance-panel { margin: 14px; }
+.governance-heading { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+.audit-badge { padding: 7px 10px; border: 1px solid #44725e; border-radius: 999px; font-size: 11px; }
+.audit-badge.passed { color: #86efac; border-color: #2f855a; }.audit-badge.failed, .blocked-claim { color: #fecaca; border-color: #9f4242; }
+.blocked-claim { padding: 10px; border: 1px solid #9f4242; border-radius: 6px; background: #351515; }
+.evidence-link { display: block; margin: 6px 0; border: 0; background: transparent; color: #6ee7a4; text-decoration: underline; cursor: pointer; overflow-wrap: anywhere; text-align: left; }
+.review-workflow { margin-top: 16px; padding-top: 12px; border-top: 1px solid #29483a; display: grid; gap: 10px; }
+.review-workflow label { display: grid; gap: 5px; color: #8faf9d; font-size: 11px; }
+.review-workflow select, .review-workflow textarea { padding: 9px; border: 1px solid #365b49; border-radius: 5px; background: #07130e; color: #ecfdf5; }
+.workflow-actions { display: flex; gap: 8px; flex-wrap: wrap; }.workflow-actions button { padding: 9px 12px; border: 1px solid #4ade80; border-radius: 5px; background: #123b26; color: #dcfce7; cursor: pointer; }.workflow-actions button:disabled { opacity: .45; }
+.immutable-record { color: #91ad9e; font: 10px ui-monospace, monospace; overflow-wrap: anywhere; }
 @media (max-width: 900px) { .profile-grid, .planner-two-column { grid-template-columns: 1fr; } }
 .twin-grid { display: grid; grid-template-columns: minmax(0, 1fr) 410px; min-height: calc(100vh - 225px); }
 .network-board { padding: 18px; border-right: 1px solid #19352b; overflow: auto; }

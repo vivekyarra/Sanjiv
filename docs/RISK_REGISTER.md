@@ -28,6 +28,9 @@
 | Secret exposure | Medium | Critical | Server-side keys, `.env` ignore, redaction tests, secret scanning | Revoke/rotate, purge artifact, incident review | Security lead |
 | Supply-chain dependency compromise | Low | High | Locks, audit, minimal dependencies, image scanning | Pin/replace package and rebuild artifacts | Platform lead |
 | Unauthorized approval | Low | Critical | Server-enforced roles and immutable audit record | Revoke approval and supersede plan | Security lead |
+| Evidence-audit bypass or stale approval | Medium | Critical | Server-enforced audit on immutable plan/evidence/assumption fingerprints; approval binds the exact audit and checker | Block review/approval/export and create a newly audited plan | Evidence lead |
+| Caller-forged actor or role | Medium | Critical | Demo identities are allowlisted; production credentials resolve actor/role server-side and fail closed without configuration | Reject mutation, rotate credential, review immutable lifecycle history | Security lead |
+| Narrative embellishment | Medium | High | Deterministic explanation by default; provider-neutral narrative may consume only audited structure; claim and figure guard | Block narrative while retaining structured failed metrics and reasons | Evidence lead |
 
 Risks are reviewed at each phase gate. A demo may proceed with degraded sources only when the mode, timestamp, and consequences are visible to the operator and audience.
 # Phase 6 residual risks
@@ -39,3 +42,11 @@ Risks are reviewed at each phase gate. A demo may proceed with degraded sources 
 | Live provider licensing/schema/rate limits drift | Open | Official documentation and terms are registered; live fetchers are optional, injected, bounded, and fail visibly. Reverify before enabling each provider. |
 | Source disagreement or ambiguous media/thermal signal creates false escalation | Mitigated in Phase 6 | Critical/high alerting requires independent operational corroboration; stale, incomplete, single-source and disagreeing cases are suppressed or downgraded. |
 | Read-only risk APIs lack deployment-level user authorization | Open | Endpoints contain no mutation or credentials. Production gateway authentication, authorization, rate limiting, and tenant policy remain deployment prerequisites. |
+
+# Phase 7 residual risks
+
+| Risk | State | Mitigation / remaining work |
+|---|---|---|
+| Demo identity selector mistaken for production authentication | Open | It works only with the development/test identity map. Production governance fails closed until server-side API-key/identity-role mapping exists; replace with the deployment IdP before real use. |
+| Structural fixture assumptions remain decision inputs | Open | The auditor proves visibility, approval, expiry, scope, and integrity, not real-world accuracy. Replace synthetic commercial and reserve inputs with verified operator records. |
+| Optional future narrative provider invents unsupported content | Mitigated in Phase 7 | Deterministic explanation is complete and default. Any provider output must pass the audited-figure and claim-language guard before presentation. |

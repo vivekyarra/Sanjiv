@@ -35,6 +35,41 @@ from sanjiv.twin.contracts import AssetKind, TwinSnapshot, canonical_uuid
 FIXTURE_PATH = Path("data/fixtures/reserve/reserve-inputs-v1.json")
 
 
+def load_reserve_fixture_assumptions(
+    *, at: datetime, fixture_path: Path = FIXTURE_PATH
+) -> list[Assumption]:
+    """Rehydrate the immutable reserve assumption records used by the input builder."""
+    raw = json.loads(fixture_path.read_text(encoding="utf-8"))
+    if raw.get("classification") != "SYNTHETIC_FIXTURE":
+        raise ValueError("reserve fixture must be classified SYNTHETIC_FIXTURE")
+    effective = _utc(raw["effective_at"])
+    expires = _utc(raw["expires_at"])
+    if expires <= at:
+        raise ValueError("reserve opening-inventory assumptions are expired")
+    return [
+        Assumption(
+            id=UUID(item["assumption_id"]),
+            key=f"reserve:{item['site']}:operational-inputs",
+            value={
+                key: value
+                for key, value in item.items()
+                if key not in {"assumption_id", "site", "refinery", "route"}
+            },
+            unit="reserve_operational_bundle",
+            rationale=raw["rationale"],
+            source_gap=raw["source_gap"],
+            owner=raw["owner"],
+            entered_at=effective,
+            effective_at=effective,
+            expires_at=expires,
+            approved_at=effective,
+            approved_by=raw["approved_by"],
+            status=AssumptionStatus.APPROVED,
+        )
+        for item in raw["sites"]
+    ]
+
+
 def build_reserve_input(
     procurement_plan: ProcurementPlan,
     snapshot: TwinSnapshot,
@@ -145,7 +180,7 @@ def build_reserve_input(
                     TruthClass.OBSERVED,
                     effective,
                     checked_at,
-                    evidence_ids,
+                    node.evidence_ids,
                     "reserve.capacity-normalisation.v1",
                 ),
                 opening_inventory=_metric(

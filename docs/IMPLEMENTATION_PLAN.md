@@ -92,6 +92,18 @@ Status: complete. Canonical contracts, an expiring offline operational-input fix
 
 ## Phase 7 — Evidence Auditor and explainability (L)
 
+Status: complete. The server audits every procurement
+and reserve decision metric, evidence/assumption integrity and freshness, truth transitions,
+versions, exact fingerprints, recomputation, solver/checker state, sanctions/compatibility
+exclusions, and claim language. Failed metrics remain visible and block usable presentation,
+approval, export, and definitive narrative. Deterministic explanations, server-owned roles,
+append-only review/approval/rejection/supersession, migration `20260721_0008`, restart-readable
+APIs, and the `/evidence-approval` UI are implemented without any operational execution path.
+The Phase 7 gate passed with 100% provenance on the seeded procurement and reserve plans,
+reversible migration `0008 -> 0007 -> 0008`, 166 Python tests, 19 web tests, the generated-contract
+test, strict lint/type checks, production build, dependency audits, persistence readback, and
+immutable-record enforcement.
+
 - **Goal:** make unsupported decision outputs structurally impossible to present as approved.
 - **Deliverables/modules:** `audit/{coverage,claims,recompute,policies}`, formula/version registry, audit trail, explanation input builder, Evidence/Assumptions UI.
 - **Dependencies/order:** all decision contracts → coverage/truth validation → claim policy → recomputation/hash → narrative guard → approval enforcement.

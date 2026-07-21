@@ -65,14 +65,37 @@ GET  /api/v1/procurement-plans/{plan_id}
 POST /api/v1/scenario-runs/{run_id}/reserve-plans
 GET  /api/v1/reserve-plans/{plan_id}
 GET  /api/v1/evidence/{evidence_id}
+GET  /api/v1/plans/{plan_id}/assumptions
+GET  /api/v1/plans/{plan_id}/audit
+GET  /api/v1/plans/{plan_id}/explanation
+GET  /api/v1/plans/{plan_id}/governance
+GET  /api/v1/plans/{plan_id}/reviews
 GET  /api/v1/scenarios/{scenario_id}/assumptions
 GET  /api/v1/scenarios/{scenario_id}/audit-events
 POST /api/v1/plans/{plan_id}/reviews
 POST /api/v1/plans/{plan_id}/approvals
 POST /api/v1/plans/{plan_id}/rejections
+POST /api/v1/plans/{plan_id}/supersessions
 ```
 
-Plan generation requests explicit profiles; the standard request is all of `LOWEST_COST`, `BALANCED`, and `HIGHEST_RESILIENCE`. Responses include solver status/version, input hash, objective breakdown, actions, rejected options, constraint report, metric envelopes, audit status, and lifecycle state. Approval requires an unchanged plan/assumption hash, successful audit, feasible solution, authenticated approver, and optional comment.
+Plan generation requests explicit profiles; the standard request is all of `LOWEST_COST`, `BALANCED`, and `HIGHEST_RESILIENCE`. Responses include solver status/version, input hash, objective breakdown, actions, rejected options, constraint report, metric envelopes, audit status, and lifecycle state. Approval requires an unchanged plan/assumption hash, successful audit, feasible solution, authenticated approver, and a policy-required comment.
+
+Phase 7 implements these paths for both procurement and reserve plans. `audit` returns every
+decision metric, including blocked metrics, plus structured failures, coverage, exact
+scenario/simulation/twin/procurement/reserve fingerprints, evidence and assumption-set hashes,
+solver/checker/model/formula versions, and a content fingerprint for the audit itself. A failed
+audit sets `usable`, `approval_allowed`, `export_allowed`, and
+`definitive_narrative_allowed` to false. `explanation` is deterministic and consumes the latest
+persisted audit; it exposes constraints, objective contributions and weights, allocations,
+rejected alternatives, assumptions, evidence, sensitivity drivers, residual shortage, and the
+no-action difference without operational execution language.
+
+Review actions require `Idempotency-Key` and the exact unchanged plan, assumption, and audit
+fingerprints. In development/test, `X-Sanjiv-Demo-Identity` may select only a server-configured
+identity/role. Outside those modes, `X-Sanjiv-Governance-Key` must resolve through
+`SANJIV_GOVERNANCE_API_KEYS`; missing configuration fails closed. Caller-supplied actor or role
+fields are not accepted. Operator, reviewer, approver, and administrator permissions are
+server-enforced, and lifecycle records are append-only with immutable UTC actor attribution.
 
 Phase 4 registers both procurement paths. POST requires `Idempotency-Key`, a completed exact scenario run, server-owned operator identity, canonical profile ordering, and valid unexpired provenance. The server builds the immutable input from the checked run and synthetic commercial assumptions, executes each profile sequentially through bounded HiGHS, independently verifies every usable result, persists it at migration `20260721_0005`, and reuses only an exact request fingerprint. GET rehydrates the immutable plan after restart. `INFEASIBLE` and `ERROR` have no plan; a timeout is usable only when its incumbent passes the same checker.
 

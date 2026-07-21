@@ -247,6 +247,40 @@
         "title": "AnomalyBaseline",
         "type": "object"
       },
+      "ApprovalRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Assumption Fingerprint",
+            "type": "string"
+          },
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "comment": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Comment",
+            "type": "string"
+          },
+          "plan_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Plan Fingerprint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan_fingerprint",
+          "assumption_fingerprint",
+          "audit_fingerprint",
+          "comment"
+        ],
+        "title": "ApprovalRequest",
+        "type": "object"
+      },
       "AssetKind": {
         "enum": [
           "SUPPLIER",
@@ -540,6 +574,136 @@
         "title": "AuditEvent",
         "type": "object"
       },
+      "AuditFailure": {
+        "additionalProperties": false,
+        "properties": {
+          "blocking": {
+            "const": true,
+            "default": true,
+            "title": "Blocking",
+            "type": "boolean"
+          },
+          "code": {
+            "$ref": "#/components/schemas/AuditFailureCode"
+          },
+          "message": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "path": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "path",
+          "message"
+        ],
+        "title": "AuditFailure",
+        "type": "object"
+      },
+      "AuditFailureCode": {
+        "enum": [
+          "EVIDENCE_MISSING",
+          "EVIDENCE_HASH_MISMATCH",
+          "EVIDENCE_PARENT_MISSING",
+          "ASSUMPTION_MISSING",
+          "ASSUMPTION_HASH_MISMATCH",
+          "ASSUMPTION_NOT_APPROVED",
+          "ASSUMPTION_EXPIRED",
+          "ASSUMPTION_SUPERSEDED",
+          "ASSUMPTION_SCOPE_MISMATCH",
+          "METRIC_PROVENANCE_MISSING",
+          "METRIC_STALE",
+          "TRUTH_TRANSITION_INVALID",
+          "SOURCE_INCOMPLETE",
+          "TRANSFORMATION_INCOMPLETE",
+          "VERSION_MISSING",
+          "FINGERPRINT_MISMATCH",
+          "RECOMPUTATION_MISMATCH",
+          "SOLVER_NOT_USABLE",
+          "CHECKER_FAILED",
+          "SANCTIONS_EXCLUSION_FAILED",
+          "COMPATIBILITY_EXCLUSION_FAILED",
+          "CLAIM_POLICY_FAILED"
+        ],
+        "title": "AuditFailureCode",
+        "type": "string"
+      },
+      "AuditFingerprintSet": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Assumptions",
+            "type": "string"
+          },
+          "evidence": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Evidence",
+            "type": "string"
+          },
+          "plan": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Plan",
+            "type": "string"
+          },
+          "procurement": {
+            "anyOf": [
+              {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Procurement"
+          },
+          "reserve": {
+            "anyOf": [
+              {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserve"
+          },
+          "scenario": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Scenario",
+            "type": "string"
+          },
+          "simulation": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Simulation",
+            "type": "string"
+          },
+          "twin": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Twin",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan",
+          "assumptions",
+          "evidence",
+          "scenario",
+          "simulation",
+          "twin"
+        ],
+        "title": "AuditFingerprintSet",
+        "type": "object"
+      },
       "AuditOutcome": {
         "enum": [
           "SUCCEEDED",
@@ -548,6 +712,104 @@
         ],
         "title": "AuditOutcome",
         "type": "string"
+      },
+      "AuditedMetric": {
+        "additionalProperties": false,
+        "properties": {
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "failures": {
+            "items": {
+              "$ref": "#/components/schemas/AuditFailure"
+            },
+            "title": "Failures",
+            "type": "array"
+          },
+          "freshness_status": {
+            "title": "Freshness Status",
+            "type": "string"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "path": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Path",
+            "type": "string"
+          },
+          "recomputation_hash": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Recomputation Hash",
+            "type": "string"
+          },
+          "source_count": {
+            "minimum": 0.0,
+            "title": "Source Count",
+            "type": "integer"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EvidenceAuditStatus"
+          },
+          "transformation": {
+            "title": "Transformation",
+            "type": "string"
+          },
+          "truth_class": {
+            "title": "Truth Class",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "path",
+          "value",
+          "unit",
+          "truth_class",
+          "freshness_status",
+          "confidence",
+          "evidence_ids",
+          "source_count",
+          "transformation",
+          "model_version",
+          "recomputation_hash",
+          "status"
+        ],
+        "title": "AuditedMetric",
+        "type": "object"
       },
       "BacktestCaseResult": {
         "additionalProperties": false,
@@ -1507,6 +1769,189 @@
         "title": "DurationUnit",
         "type": "string"
       },
+      "EvidenceAuditResult": {
+        "additionalProperties": false,
+        "properties": {
+          "approval_allowed": {
+            "title": "Approval Allowed",
+            "type": "boolean"
+          },
+          "assumption_count": {
+            "minimum": 0.0,
+            "title": "Assumption Count",
+            "type": "integer"
+          },
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "audit_id": {
+            "format": "uuid",
+            "title": "Audit Id",
+            "type": "string"
+          },
+          "audited_at": {
+            "format": "date-time",
+            "title": "Audited At",
+            "type": "string"
+          },
+          "auditor_version": {
+            "const": "evidence-auditor-v1",
+            "default": "evidence-auditor-v1",
+            "title": "Auditor Version",
+            "type": "string"
+          },
+          "checker_passed": {
+            "title": "Checker Passed",
+            "type": "boolean"
+          },
+          "checker_version": {
+            "title": "Checker Version",
+            "type": "string"
+          },
+          "claim_language_passed": {
+            "title": "Claim Language Passed",
+            "type": "boolean"
+          },
+          "claim_policy_version": {
+            "const": "claim-language-policy-v1",
+            "default": "claim-language-policy-v1",
+            "title": "Claim Policy Version",
+            "type": "string"
+          },
+          "compatibility_exclusion_passed": {
+            "title": "Compatibility Exclusion Passed",
+            "type": "boolean"
+          },
+          "covered_metric_count": {
+            "minimum": 0.0,
+            "title": "Covered Metric Count",
+            "type": "integer"
+          },
+          "definitive_narrative_allowed": {
+            "title": "Definitive Narrative Allowed",
+            "type": "boolean"
+          },
+          "evidence_count": {
+            "minimum": 0.0,
+            "title": "Evidence Count",
+            "type": "integer"
+          },
+          "evidence_coverage_percentage": {
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Evidence Coverage Percentage",
+            "type": "number"
+          },
+          "export_allowed": {
+            "title": "Export Allowed",
+            "type": "boolean"
+          },
+          "failures": {
+            "items": {
+              "$ref": "#/components/schemas/AuditFailure"
+            },
+            "title": "Failures",
+            "type": "array"
+          },
+          "fingerprints": {
+            "$ref": "#/components/schemas/AuditFingerprintSet"
+          },
+          "formula_registry_version": {
+            "const": "decision-formulas-v1",
+            "default": "decision-formulas-v1",
+            "title": "Formula Registry Version",
+            "type": "string"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/AuditedMetric"
+            },
+            "title": "Metrics",
+            "type": "array"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "plan_kind": {
+            "$ref": "#/components/schemas/PlanKind"
+          },
+          "recomputation_passed": {
+            "title": "Recomputation Passed",
+            "type": "boolean"
+          },
+          "sanctions_exclusion_passed": {
+            "title": "Sanctions Exclusion Passed",
+            "type": "boolean"
+          },
+          "solver_status": {
+            "title": "Solver Status",
+            "type": "string"
+          },
+          "solver_version": {
+            "title": "Solver Version",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EvidenceAuditStatus"
+          },
+          "total_metric_count": {
+            "minimum": 0.0,
+            "title": "Total Metric Count",
+            "type": "integer"
+          },
+          "usable": {
+            "title": "Usable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "audit_id",
+          "plan_id",
+          "plan_kind",
+          "status",
+          "audited_at",
+          "fingerprints",
+          "metrics",
+          "failures",
+          "evidence_count",
+          "assumption_count",
+          "covered_metric_count",
+          "total_metric_count",
+          "evidence_coverage_percentage",
+          "solver_status",
+          "solver_version",
+          "model_version",
+          "checker_version",
+          "checker_passed",
+          "sanctions_exclusion_passed",
+          "compatibility_exclusion_passed",
+          "recomputation_passed",
+          "claim_language_passed",
+          "usable",
+          "approval_allowed",
+          "export_allowed",
+          "definitive_narrative_allowed",
+          "audit_fingerprint"
+        ],
+        "title": "EvidenceAuditResult",
+        "type": "object"
+      },
+      "EvidenceAuditStatus": {
+        "enum": [
+          "PASSED",
+          "FAILED"
+        ],
+        "title": "EvidenceAuditStatus",
+        "type": "string"
+      },
       "EvidenceConfidence": {
         "additionalProperties": false,
         "properties": {
@@ -1670,6 +2115,58 @@
           "license"
         ],
         "title": "EvidenceRecord",
+        "type": "object"
+      },
+      "ExplanationAlternative": {
+        "additionalProperties": false,
+        "properties": {
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "reason_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reason Codes",
+            "type": "array"
+          },
+          "subject_id": {
+            "format": "uuid",
+            "title": "Subject Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject_id",
+          "reason_codes",
+          "explanation"
+        ],
+        "title": "ExplanationAlternative",
+        "type": "object"
+      },
+      "ExplanationConstraint": {
+        "additionalProperties": false,
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "satisfied": {
+            "title": "Satisfied",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "satisfied",
+          "detail"
+        ],
+        "title": "ExplanationConstraint",
         "type": "object"
       },
       "FeatureContribution": {
@@ -1962,6 +2459,16 @@
         ],
         "title": "Geofence",
         "type": "object"
+      },
+      "GovernanceRole": {
+        "enum": [
+          "operator",
+          "reviewer",
+          "approver",
+          "administrator"
+        ],
+        "title": "GovernanceRole",
+        "type": "string"
       },
       "HTTPValidationError": {
         "properties": {
@@ -2456,6 +2963,17 @@
         ],
         "title": "LandedCostBreakdown",
         "type": "object"
+      },
+      "LifecycleAction": {
+        "enum": [
+          "SUBMIT_FOR_REVIEW",
+          "REVIEW",
+          "APPROVE",
+          "REJECT",
+          "SUPERSEDE"
+        ],
+        "title": "LifecycleAction",
+        "type": "string"
       },
       "MassBalanceReport": {
         "additionalProperties": false,
@@ -3180,6 +3698,363 @@
         ],
         "title": "PhysicalInvariantReport",
         "type": "object"
+      },
+      "PlanExplanation": {
+        "additionalProperties": false,
+        "properties": {
+          "allocation_rationale": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Allocation Rationale",
+            "type": "array"
+          },
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "audit_id": {
+            "format": "uuid",
+            "title": "Audit Id",
+            "type": "string"
+          },
+          "auditor_version": {
+            "title": "Auditor Version",
+            "type": "string"
+          },
+          "blocked_reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Blocked Reasons",
+            "type": "array"
+          },
+          "checker_version": {
+            "title": "Checker Version",
+            "type": "string"
+          },
+          "deterministic": {
+            "const": true,
+            "default": true,
+            "title": "Deterministic",
+            "type": "boolean"
+          },
+          "difference_from_no_action": {
+            "title": "Difference From No Action",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "hard_constraints": {
+            "items": {
+              "$ref": "#/components/schemas/ExplanationConstraint"
+            },
+            "title": "Hard Constraints",
+            "type": "array"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "no_execution_notice": {
+            "default": "Decision support only: Sanjiv does not place orders, charter vessels, release reserves, or control operations.",
+            "title": "No Execution Notice",
+            "type": "string"
+          },
+          "objective_components": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Objective Components",
+            "type": "object"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "plan_kind": {
+            "$ref": "#/components/schemas/PlanKind"
+          },
+          "primary_tradeoffs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Primary Tradeoffs",
+            "type": "array"
+          },
+          "profile_weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Profile Weights",
+            "type": "object"
+          },
+          "rejected_alternatives": {
+            "items": {
+              "$ref": "#/components/schemas/ExplanationAlternative"
+            },
+            "title": "Rejected Alternatives",
+            "type": "array"
+          },
+          "residual_shortage": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Residual Shortage"
+          },
+          "residual_shortage_unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Residual Shortage Unit"
+          },
+          "sensitivity_drivers": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Sensitivity Drivers",
+            "type": "array"
+          },
+          "solver_version": {
+            "title": "Solver Version",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "usable": {
+            "title": "Usable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "plan_id",
+          "plan_kind",
+          "audit_id",
+          "audit_fingerprint",
+          "usable",
+          "blocked_reasons",
+          "summary",
+          "hard_constraints",
+          "objective_components",
+          "profile_weights",
+          "primary_tradeoffs",
+          "allocation_rationale",
+          "rejected_alternatives",
+          "evidence_ids",
+          "assumption_ids",
+          "sensitivity_drivers",
+          "residual_shortage",
+          "residual_shortage_unit",
+          "difference_from_no_action",
+          "model_version",
+          "solver_version",
+          "checker_version",
+          "auditor_version",
+          "generated_at"
+        ],
+        "title": "PlanExplanation",
+        "type": "object"
+      },
+      "PlanGovernanceState": {
+        "additionalProperties": false,
+        "properties": {
+          "latest_audit": {
+            "$ref": "#/components/schemas/EvidenceAuditResult"
+          },
+          "no_execution_notice": {
+            "default": "Approval records a human decision only; it does not execute procurement or reserve actions.",
+            "title": "No Execution Notice",
+            "type": "string"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "records": {
+            "items": {
+              "$ref": "#/components/schemas/PlanLifecycleRecord"
+            },
+            "title": "Records",
+            "type": "array"
+          },
+          "state": {
+            "$ref": "#/components/schemas/PlanReviewState"
+          },
+          "superseded_warning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Superseded Warning"
+          }
+        },
+        "required": [
+          "plan_id",
+          "state",
+          "records",
+          "latest_audit"
+        ],
+        "title": "PlanGovernanceState",
+        "type": "object"
+      },
+      "PlanKind": {
+        "enum": [
+          "PROCUREMENT",
+          "RESERVE"
+        ],
+        "title": "PlanKind",
+        "type": "string"
+      },
+      "PlanLifecycleRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/LifecycleAction"
+          },
+          "actor_id": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Actor Id",
+            "type": "string"
+          },
+          "actor_role": {
+            "$ref": "#/components/schemas/GovernanceRole"
+          },
+          "assumption_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Assumption Fingerprint",
+            "type": "string"
+          },
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "idempotency_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Idempotency Fingerprint",
+            "type": "string"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "plan_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Plan Fingerprint",
+            "type": "string"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "plan_kind": {
+            "$ref": "#/components/schemas/PlanKind"
+          },
+          "previous_state": {
+            "$ref": "#/components/schemas/PlanReviewState"
+          },
+          "record_id": {
+            "format": "uuid",
+            "title": "Record Id",
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/PlanReviewState"
+          },
+          "superseding_plan_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Superseding Plan Id"
+          }
+        },
+        "required": [
+          "record_id",
+          "plan_id",
+          "plan_kind",
+          "action",
+          "previous_state",
+          "state",
+          "actor_id",
+          "actor_role",
+          "occurred_at",
+          "plan_fingerprint",
+          "assumption_fingerprint",
+          "audit_fingerprint",
+          "idempotency_fingerprint"
+        ],
+        "title": "PlanLifecycleRecord",
+        "type": "object"
+      },
+      "PlanReviewState": {
+        "enum": [
+          "RECOMMENDED",
+          "UNDER_REVIEW",
+          "APPROVED",
+          "REJECTED",
+          "SUPERSEDED"
+        ],
+        "title": "PlanReviewState",
+        "type": "string"
       },
       "ProcurementAction": {
         "additionalProperties": false,
@@ -4227,6 +5102,40 @@
         "title": "RejectedOptionReasonCode",
         "type": "string"
       },
+      "RejectionRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Assumption Fingerprint",
+            "type": "string"
+          },
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "comment": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Comment",
+            "type": "string"
+          },
+          "plan_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Plan Fingerprint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan_fingerprint",
+          "assumption_fingerprint",
+          "audit_fingerprint",
+          "comment"
+        ],
+        "title": "RejectionRequest",
+        "type": "object"
+      },
       "ReserveAction": {
         "additionalProperties": false,
         "properties": {
@@ -5271,6 +6180,54 @@
           "display_name"
         ],
         "title": "ResolvedDisruptionTarget",
+        "type": "object"
+      },
+      "ReviewRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "SUBMIT_FOR_REVIEW",
+              "REVIEW"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "assumption_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Assumption Fingerprint",
+            "type": "string"
+          },
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "plan_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Plan Fingerprint",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan_fingerprint",
+          "assumption_fingerprint",
+          "audit_fingerprint",
+          "action"
+        ],
+        "title": "ReviewRequest",
         "type": "object"
       },
       "RiskAlertResponse": {
@@ -7089,6 +8046,46 @@
         "title": "StructuredScenarioInput",
         "type": "object"
       },
+      "SupersedeRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Assumption Fingerprint",
+            "type": "string"
+          },
+          "audit_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Audit Fingerprint",
+            "type": "string"
+          },
+          "comment": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Comment",
+            "type": "string"
+          },
+          "plan_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Plan Fingerprint",
+            "type": "string"
+          },
+          "superseding_plan_id": {
+            "format": "uuid",
+            "title": "Superseding Plan Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan_fingerprint",
+          "assumption_fingerprint",
+          "audit_fingerprint",
+          "comment",
+          "superseding_plan_id"
+        ],
+        "title": "SupersedeRequest",
+        "type": "object"
+      },
       "SupplierAllocation": {
         "additionalProperties": false,
         "properties": {
@@ -8120,6 +9117,49 @@
         ]
       }
     },
+    "/api/v1/evidence/{evidence_id}": {
+      "get": {
+        "operationId": "evidence_api_v1_evidence__evidence_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "evidence_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Evidence Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceRecord"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Evidence",
+        "tags": [
+          "evidence-auditor"
+        ]
+      }
+    },
     "/api/v1/geofences": {
       "get": {
         "operationId": "geofences_api_v1_geofences_get",
@@ -8188,6 +9228,611 @@
         "summary": "Operations Snapshot",
         "tags": [
           "maritime-watch"
+        ]
+      }
+    },
+    "/api/v1/plans/{plan_id}/approvals": {
+      "post": {
+        "operationId": "approve_api_v1_plans__plan_id__approvals_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Demo-Identity",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Demo-Identity"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Governance-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Governance-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApprovalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanLifecycleRecord"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Approve",
+        "tags": [
+          "evidence-auditor"
+        ]
+      }
+    },
+    "/api/v1/plans/{plan_id}/assumptions": {
+      "get": {
+        "operationId": "assumptions_api_v1_plans__plan_id__assumptions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Assumption"
+                  },
+                  "title": "Response Assumptions Api V1 Plans  Plan Id  Assumptions Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Assumptions",
+        "tags": [
+          "evidence-auditor"
+        ]
+      }
+    },
+    "/api/v1/plans/{plan_id}/audit": {
+      "get": {
+        "operationId": "audit_api_v1_plans__plan_id__audit_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceAuditResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Audit",
+        "tags": [
+          "evidence-auditor"
+        ]
+      }
+    },
+    "/api/v1/plans/{plan_id}/explanation": {
+      "get": {
+        "operationId": "explanation_api_v1_plans__plan_id__explanation_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanExplanation"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Explanation",
+        "tags": [
+          "evidence-auditor"
+        ]
+      }
+    },
+    "/api/v1/plans/{plan_id}/governance": {
+      "get": {
+        "operationId": "governance_api_v1_plans__plan_id__governance_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanGovernanceState"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Governance",
+        "tags": [
+          "evidence-auditor"
+        ]
+      }
+    },
+    "/api/v1/plans/{plan_id}/rejections": {
+      "post": {
+        "operationId": "reject_api_v1_plans__plan_id__rejections_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Demo-Identity",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Demo-Identity"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Governance-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Governance-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanLifecycleRecord"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reject",
+        "tags": [
+          "evidence-auditor"
+        ]
+      }
+    },
+    "/api/v1/plans/{plan_id}/reviews": {
+      "get": {
+        "operationId": "reviews_api_v1_plans__plan_id__reviews_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PlanLifecycleRecord"
+                  },
+                  "title": "Response Reviews Api V1 Plans  Plan Id  Reviews Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reviews",
+        "tags": [
+          "evidence-auditor"
+        ]
+      },
+      "post": {
+        "operationId": "create_review_api_v1_plans__plan_id__reviews_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Demo-Identity",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Demo-Identity"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Governance-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Governance-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanLifecycleRecord"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Review",
+        "tags": [
+          "evidence-auditor"
+        ]
+      }
+    },
+    "/api/v1/plans/{plan_id}/supersessions": {
+      "post": {
+        "operationId": "supersede_api_v1_plans__plan_id__supersessions_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Demo-Identity",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Demo-Identity"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Governance-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Governance-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupersedeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanLifecycleRecord"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Supersede",
+        "tags": [
+          "evidence-auditor"
         ]
       }
     },

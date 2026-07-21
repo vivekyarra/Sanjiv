@@ -222,7 +222,6 @@ def build_procurement_input(
                 )
             )
             continue
-        assert route is not None and grade is not None
         commercial = commercial_inputs.get((flow.supplier_id, grade.id, route.id, refinery_id))
         if commercial is None:
             excluded.append(
@@ -433,6 +432,8 @@ def build_procurement_input(
         hard_constraints.corridor_concentration_limit,
     ):
         used_evidence.update(constraint_metric.evidence_ids)
+    for refinery in result.refinery_throughput:
+        used_evidence.update(refinery.shortfall.evidence_ids)
     used_evidence.update(reserve_policy.evidence_ids)
     used_assumptions.update(reserve_policy.assumption_ids)
     refs = [item for item in refs if item.evidence_id in used_evidence]

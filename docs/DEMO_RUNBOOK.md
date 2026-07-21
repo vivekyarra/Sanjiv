@@ -78,3 +78,24 @@ End by explaining the human checkpoint: Sanjiv recommends and records approval; 
 4. Show the degraded source-outage corridor: missing features must read `UNAVAILABLE`/`MISSING`, not zero.
 5. Review alerts and emphasize that the only output is recommended analyst review with autonomous action disabled.
 6. Review the ten-case checksummed replay results and state explicitly that the metrics are fixture/replay evidence, not production accuracy.
+
+# Phase 7 Evidence and Approval path
+
+1. Generate the three procurement profiles and open the Balanced plan's embedded **Evidence,
+   assumptions & approval** panel, or open `http://localhost:3000/evidence-approval` and paste an
+   immutable procurement/reserve plan ID.
+2. Run the Evidence Audit. Show `PASSED`, 100% coverage, solver/checker/recomputation status, and
+   the exact audit fingerprint. If any result is `FAILED`, stop: the candidate remains visibly
+   blocked and approval/export/definitive narrative are unavailable.
+3. Open **Why this plan?** Show objective contributions, profile trade-offs, hard constraints,
+   allocation rationale, no-action difference, sensitivity drivers, and one rejected alternative.
+4. Open a shortage KPI evidence drawer, then an immutable evidence record. Show truth/freshness,
+   source, transformation/model version, confidence, evidence ID, and payload hash.
+5. Open the assumption drawer. Show approval status, owner/rationale, expiry, and that synthetic
+   commercial or reserve values do not prove availability or current fill.
+6. Select the configured operator and submit for review; select reviewer and record a review; select
+   approver and approve with a comment. Show immutable server-owned actor, role, and UTC timestamp.
+7. Attempting approval with a stale plan/assumption/audit fingerprint, failed checker/audit, wrong
+   role, or reused idempotency key with different content must return a canonical blocked error.
+8. End by stating that approval is a human decision record only: Sanjiv does not place procurement
+   orders, charter vessels, release reserves, or call operational controls.

@@ -1,3 +1,4 @@
+import json
 from functools import lru_cache
 from pathlib import Path
 
@@ -42,6 +43,13 @@ class Settings(BaseSettings):
     sanjiv_reserve_storage: str = "postgres"
     sanjiv_risk_storage: str = "postgres"
     sanjiv_risk_replay_manifest: Path = Path("data/replay/risk-intelligence-v1/manifest.json")
+    sanjiv_audit_storage: str = "postgres"
+    sanjiv_demo_identity: str = "local-demo-approver"
+    sanjiv_demo_identities: str = (
+        '{"local-demo-operator":"operator","local-demo-reviewer":"reviewer",'
+        '"local-demo-approver":"approver","local-demo-administrator":"administrator"}'
+    )
+    sanjiv_governance_api_keys: str = "{}"
     sanjiv_llm_provider: str = "disabled"
     sanjiv_llm_model: str | None = None
     sanjiv_llm_timeout_seconds: float = Field(default=10.0, gt=0, le=60)
@@ -50,6 +58,31 @@ class Settings(BaseSettings):
     @property
     def allowed_origins(self) -> list[str]:
         return [item.strip() for item in self.sanjiv_allowed_origins.split(",") if item.strip()]
+
+    @property
+    def demo_identities(self) -> dict[str, str]:
+        value = json.loads(self.sanjiv_demo_identities)
+        if not isinstance(value, dict) or not all(
+            isinstance(key, str) and isinstance(role, str) for key, role in value.items()
+        ):
+            raise ValueError("SANJIV_DEMO_IDENTITIES must be a JSON object")
+        return value
+
+    @property
+    def governance_api_keys(self) -> dict[str, dict[str, str]]:
+        value = json.loads(self.sanjiv_governance_api_keys)
+        if not isinstance(value, dict):
+            raise ValueError("SANJIV_GOVERNANCE_API_KEYS must be a JSON object")
+        result: dict[str, dict[str, str]] = {}
+        for key, identity in value.items():
+            if not isinstance(key, str) or not isinstance(identity, dict):
+                raise ValueError("governance API keys must map secrets to identity objects")
+            actor = identity.get("actor_id")
+            role = identity.get("role")
+            if not isinstance(actor, str) or not isinstance(role, str):
+                raise ValueError("governance identities require actor_id and role")
+            result[key] = {"actor_id": actor, "role": role}
+        return result
 
 
 @lru_cache

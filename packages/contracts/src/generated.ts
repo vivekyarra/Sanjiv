@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/evidence/{evidence_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Evidence */
+        get: operations["evidence_api_v1_evidence__evidence_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/geofences": {
         parameters: {
             query?: never;
@@ -66,6 +83,143 @@ export interface paths {
         get: operations["operations_snapshot_api_v1_operations_snapshot_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plans/{plan_id}/approvals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve */
+        post: operations["approve_api_v1_plans__plan_id__approvals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plans/{plan_id}/assumptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Assumptions */
+        get: operations["assumptions_api_v1_plans__plan_id__assumptions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plans/{plan_id}/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Audit */
+        get: operations["audit_api_v1_plans__plan_id__audit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plans/{plan_id}/explanation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Explanation */
+        get: operations["explanation_api_v1_plans__plan_id__explanation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plans/{plan_id}/governance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Governance */
+        get: operations["governance_api_v1_plans__plan_id__governance_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plans/{plan_id}/rejections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject */
+        post: operations["reject_api_v1_plans__plan_id__rejections_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plans/{plan_id}/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Reviews */
+        get: operations["reviews_api_v1_plans__plan_id__reviews_get"];
+        put?: never;
+        /** Create Review */
+        post: operations["create_review_api_v1_plans__plan_id__reviews_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/plans/{plan_id}/supersessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Supersede */
+        post: operations["supersede_api_v1_plans__plan_id__supersessions_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -745,6 +899,17 @@ export interface components {
              */
             window_starts_at: string;
         };
+        /** ApprovalRequest */
+        ApprovalRequest: {
+            /** Assumption Fingerprint */
+            assumption_fingerprint: string;
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            /** Comment */
+            comment: string;
+            /** Plan Fingerprint */
+            plan_fingerprint: string;
+        };
         /**
          * AssetKind
          * @enum {string}
@@ -847,11 +1012,77 @@ export interface components {
             /** Resource Type */
             resource_type: string;
         };
+        /** AuditFailure */
+        AuditFailure: {
+            /**
+             * Blocking
+             * @default true
+             * @constant
+             */
+            blocking: true;
+            code: components["schemas"]["AuditFailureCode"];
+            /** Message */
+            message: string;
+            /** Path */
+            path: string;
+        };
+        /**
+         * AuditFailureCode
+         * @enum {string}
+         */
+        AuditFailureCode: "EVIDENCE_MISSING" | "EVIDENCE_HASH_MISMATCH" | "EVIDENCE_PARENT_MISSING" | "ASSUMPTION_MISSING" | "ASSUMPTION_HASH_MISMATCH" | "ASSUMPTION_NOT_APPROVED" | "ASSUMPTION_EXPIRED" | "ASSUMPTION_SUPERSEDED" | "ASSUMPTION_SCOPE_MISMATCH" | "METRIC_PROVENANCE_MISSING" | "METRIC_STALE" | "TRUTH_TRANSITION_INVALID" | "SOURCE_INCOMPLETE" | "TRANSFORMATION_INCOMPLETE" | "VERSION_MISSING" | "FINGERPRINT_MISMATCH" | "RECOMPUTATION_MISMATCH" | "SOLVER_NOT_USABLE" | "CHECKER_FAILED" | "SANCTIONS_EXCLUSION_FAILED" | "COMPATIBILITY_EXCLUSION_FAILED" | "CLAIM_POLICY_FAILED";
+        /** AuditFingerprintSet */
+        AuditFingerprintSet: {
+            /** Assumptions */
+            assumptions: string;
+            /** Evidence */
+            evidence: string;
+            /** Plan */
+            plan: string;
+            /** Procurement */
+            procurement?: string | null;
+            /** Reserve */
+            reserve?: string | null;
+            /** Scenario */
+            scenario: string;
+            /** Simulation */
+            simulation: string;
+            /** Twin */
+            twin: string;
+        };
         /**
          * AuditOutcome
          * @enum {string}
          */
         AuditOutcome: "SUCCEEDED" | "FAILED" | "BLOCKED";
+        /** AuditedMetric */
+        AuditedMetric: {
+            /** Confidence */
+            confidence: number;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /** Failures */
+            failures?: components["schemas"]["AuditFailure"][];
+            /** Freshness Status */
+            freshness_status: string;
+            /** Model Version */
+            model_version: string;
+            /** Path */
+            path: string;
+            /** Recomputation Hash */
+            recomputation_hash: string;
+            /** Source Count */
+            source_count: number;
+            status: components["schemas"]["EvidenceAuditStatus"];
+            /** Transformation */
+            transformation: string;
+            /** Truth Class */
+            truth_class: string;
+            /** Unit */
+            unit: string;
+            /** Value */
+            value: number | string | boolean;
+        };
         /** BacktestCaseResult */
         BacktestCaseResult: {
             /** Actual Alert */
@@ -1205,6 +1436,92 @@ export interface components {
          * @enum {string}
          */
         DurationUnit: "hour" | "day";
+        /** EvidenceAuditResult */
+        EvidenceAuditResult: {
+            /** Approval Allowed */
+            approval_allowed: boolean;
+            /** Assumption Count */
+            assumption_count: number;
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            /**
+             * Audit Id
+             * Format: uuid
+             */
+            audit_id: string;
+            /**
+             * Audited At
+             * Format: date-time
+             */
+            audited_at: string;
+            /**
+             * Auditor Version
+             * @default evidence-auditor-v1
+             * @constant
+             */
+            auditor_version: "evidence-auditor-v1";
+            /** Checker Passed */
+            checker_passed: boolean;
+            /** Checker Version */
+            checker_version: string;
+            /** Claim Language Passed */
+            claim_language_passed: boolean;
+            /**
+             * Claim Policy Version
+             * @default claim-language-policy-v1
+             * @constant
+             */
+            claim_policy_version: "claim-language-policy-v1";
+            /** Compatibility Exclusion Passed */
+            compatibility_exclusion_passed: boolean;
+            /** Covered Metric Count */
+            covered_metric_count: number;
+            /** Definitive Narrative Allowed */
+            definitive_narrative_allowed: boolean;
+            /** Evidence Count */
+            evidence_count: number;
+            /** Evidence Coverage Percentage */
+            evidence_coverage_percentage: number;
+            /** Export Allowed */
+            export_allowed: boolean;
+            /** Failures */
+            failures: components["schemas"]["AuditFailure"][];
+            fingerprints: components["schemas"]["AuditFingerprintSet"];
+            /**
+             * Formula Registry Version
+             * @default decision-formulas-v1
+             * @constant
+             */
+            formula_registry_version: "decision-formulas-v1";
+            /** Metrics */
+            metrics: components["schemas"]["AuditedMetric"][];
+            /** Model Version */
+            model_version: string;
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            plan_kind: components["schemas"]["PlanKind"];
+            /** Recomputation Passed */
+            recomputation_passed: boolean;
+            /** Sanctions Exclusion Passed */
+            sanctions_exclusion_passed: boolean;
+            /** Solver Status */
+            solver_status: string;
+            /** Solver Version */
+            solver_version: string;
+            status: components["schemas"]["EvidenceAuditStatus"];
+            /** Total Metric Count */
+            total_metric_count: number;
+            /** Usable */
+            usable: boolean;
+        };
+        /**
+         * EvidenceAuditStatus
+         * @enum {string}
+         */
+        EvidenceAuditStatus: "PASSED" | "FAILED";
         /** EvidenceConfidence */
         EvidenceConfidence: {
             /**
@@ -1267,6 +1584,27 @@ export interface components {
             /** Transformation */
             transformation: string;
             truth_class: components["schemas"]["TruthClass"];
+        };
+        /** ExplanationAlternative */
+        ExplanationAlternative: {
+            /** Explanation */
+            explanation: string;
+            /** Reason Codes */
+            reason_codes: string[];
+            /**
+             * Subject Id
+             * Format: uuid
+             */
+            subject_id: string;
+        };
+        /** ExplanationConstraint */
+        ExplanationConstraint: {
+            /** Detail */
+            detail: string;
+            /** Name */
+            name: string;
+            /** Satisfied */
+            satisfied: boolean;
         };
         /** FeatureContribution */
         FeatureContribution: {
@@ -1389,6 +1727,11 @@ export interface components {
             /** Version */
             version: string;
         };
+        /**
+         * GovernanceRole
+         * @enum {string}
+         */
+        GovernanceRole: "operator" | "reviewer" | "approver" | "administrator";
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -1606,6 +1949,11 @@ export interface components {
             route_fees: components["schemas"]["MetricEnvelope_float_"];
             total: components["schemas"]["MetricEnvelope_float_"];
         };
+        /**
+         * LifecycleAction
+         * @enum {string}
+         */
+        LifecycleAction: "SUBMIT_FOR_REVIEW" | "REVIEW" | "APPROVE" | "REJECT" | "SUPERSEDE";
         /** MassBalanceReport */
         MassBalanceReport: {
             absolute_residual: components["schemas"]["MetricEnvelope_float_"];
@@ -1887,6 +2235,146 @@ export interface components {
             /** Tolerance */
             tolerance: number;
         };
+        /** PlanExplanation */
+        PlanExplanation: {
+            /** Allocation Rationale */
+            allocation_rationale: string[];
+            /** Assumption Ids */
+            assumption_ids: string[];
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            /**
+             * Audit Id
+             * Format: uuid
+             */
+            audit_id: string;
+            /** Auditor Version */
+            auditor_version: string;
+            /** Blocked Reasons */
+            blocked_reasons: string[];
+            /** Checker Version */
+            checker_version: string;
+            /**
+             * Deterministic
+             * @default true
+             * @constant
+             */
+            deterministic: true;
+            /** Difference From No Action */
+            difference_from_no_action: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Hard Constraints */
+            hard_constraints: components["schemas"]["ExplanationConstraint"][];
+            /** Model Version */
+            model_version: string;
+            /**
+             * No Execution Notice
+             * @default Decision support only: Sanjiv does not place orders, charter vessels, release reserves, or control operations.
+             */
+            no_execution_notice: string;
+            /** Objective Components */
+            objective_components: {
+                [key: string]: number;
+            };
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            plan_kind: components["schemas"]["PlanKind"];
+            /** Primary Tradeoffs */
+            primary_tradeoffs: string[];
+            /** Profile Weights */
+            profile_weights: {
+                [key: string]: number;
+            };
+            /** Rejected Alternatives */
+            rejected_alternatives: components["schemas"]["ExplanationAlternative"][];
+            /** Residual Shortage */
+            residual_shortage: number | null;
+            /** Residual Shortage Unit */
+            residual_shortage_unit: string | null;
+            /** Sensitivity Drivers */
+            sensitivity_drivers: string[];
+            /** Solver Version */
+            solver_version: string;
+            /** Summary */
+            summary: string;
+            /** Usable */
+            usable: boolean;
+        };
+        /** PlanGovernanceState */
+        PlanGovernanceState: {
+            latest_audit: components["schemas"]["EvidenceAuditResult"];
+            /**
+             * No Execution Notice
+             * @default Approval records a human decision only; it does not execute procurement or reserve actions.
+             */
+            no_execution_notice: string;
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            /** Records */
+            records: components["schemas"]["PlanLifecycleRecord"][];
+            state: components["schemas"]["PlanReviewState"];
+            /** Superseded Warning */
+            superseded_warning?: string | null;
+        };
+        /**
+         * PlanKind
+         * @enum {string}
+         */
+        PlanKind: "PROCUREMENT" | "RESERVE";
+        /** PlanLifecycleRecord */
+        PlanLifecycleRecord: {
+            action: components["schemas"]["LifecycleAction"];
+            /** Actor Id */
+            actor_id: string;
+            actor_role: components["schemas"]["GovernanceRole"];
+            /** Assumption Fingerprint */
+            assumption_fingerprint: string;
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            /** Comment */
+            comment?: string | null;
+            /** Idempotency Fingerprint */
+            idempotency_fingerprint: string;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Plan Fingerprint */
+            plan_fingerprint: string;
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            plan_kind: components["schemas"]["PlanKind"];
+            previous_state: components["schemas"]["PlanReviewState"];
+            /**
+             * Record Id
+             * Format: uuid
+             */
+            record_id: string;
+            state: components["schemas"]["PlanReviewState"];
+            /** Superseding Plan Id */
+            superseding_plan_id?: string | null;
+        };
+        /**
+         * PlanReviewState
+         * @enum {string}
+         */
+        PlanReviewState: "RECOMMENDED" | "UNDER_REVIEW" | "APPROVED" | "REJECTED" | "SUPERSEDED";
         /** ProcurementAction */
         ProcurementAction: {
             /**
@@ -2280,6 +2768,17 @@ export interface components {
          * @enum {string}
          */
         RejectedOptionReasonCode: "SANCTIONED" | "HARD_INCOMPATIBLE" | "DISCONNECTED" | "ROUTE_CLOSED" | "CAPACITY_EXHAUSTED" | "SUPPLIER_LIMIT" | "PORT_LIMIT" | "DELIVERY_TOO_LATE" | "BUDGET_LIMIT" | "CONCENTRATION_LIMIT" | "HIGHER_OBJECTIVE" | "MISSING_COMMERCIAL_INPUT" | "EXPIRED_ASSUMPTION" | "INVALID_PROVENANCE" | "SANCTIONS_EXCLUSION" | "GRADE_INCOMPATIBLE" | "SUPPLIER_CAPACITY_EXCEEDED" | "ROUTE_CAPACITY_EXCEEDED" | "REFINERY_CAPACITY_EXCEEDED" | "DELIVERY_WINDOW_MISSED" | "BUDGET_EXCEEDED" | "CONCENTRATION_LIMIT_EXCEEDED" | "COMMERCIAL_AVAILABILITY_UNVERIFIED" | "TRANSPORT_AVAILABILITY_UNVERIFIED" | "POLICY_EXCLUSION" | "DOMINATED";
+        /** RejectionRequest */
+        RejectionRequest: {
+            /** Assumption Fingerprint */
+            assumption_fingerprint: string;
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            /** Comment */
+            comment: string;
+            /** Plan Fingerprint */
+            plan_fingerprint: string;
+        };
         /** ReserveAction */
         ReserveAction: {
             /**
@@ -2728,6 +3227,22 @@ export interface components {
             /** Requested Identifier */
             requested_identifier: string;
             target_type: components["schemas"]["DisruptionTargetType"];
+        };
+        /** ReviewRequest */
+        ReviewRequest: {
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "SUBMIT_FOR_REVIEW" | "REVIEW";
+            /** Assumption Fingerprint */
+            assumption_fingerprint: string;
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            /** Comment */
+            comment?: string | null;
+            /** Plan Fingerprint */
+            plan_fingerprint: string;
         };
         /** RiskAlertResponse */
         RiskAlertResponse: {
@@ -3447,6 +3962,22 @@ export interface components {
              */
             twin_snapshot_id: string;
         };
+        /** SupersedeRequest */
+        SupersedeRequest: {
+            /** Assumption Fingerprint */
+            assumption_fingerprint: string;
+            /** Audit Fingerprint */
+            audit_fingerprint: string;
+            /** Comment */
+            comment: string;
+            /** Plan Fingerprint */
+            plan_fingerprint: string;
+            /**
+             * Superseding Plan Id
+             * Format: uuid
+             */
+            superseding_plan_id: string;
+        };
         /** SupplierAllocation */
         SupplierAllocation: {
             /**
@@ -3846,6 +4377,37 @@ export interface operations {
             };
         };
     };
+    evidence_api_v1_evidence__evidence_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                evidence_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvidenceRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     geofences_api_v1_geofences_get: {
         parameters: {
             query?: never;
@@ -3902,6 +4464,317 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OperationsSnapshot"];
+                };
+            };
+        };
+    };
+    approve_api_v1_plans__plan_id__approvals_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Demo-Identity"?: string | null;
+                "X-Sanjiv-Governance-Key"?: string | null;
+            };
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApprovalRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanLifecycleRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    assumptions_api_v1_plans__plan_id__assumptions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Assumption"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    audit_api_v1_plans__plan_id__audit_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvidenceAuditResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    explanation_api_v1_plans__plan_id__explanation_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanExplanation"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    governance_api_v1_plans__plan_id__governance_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanGovernanceState"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_api_v1_plans__plan_id__rejections_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Demo-Identity"?: string | null;
+                "X-Sanjiv-Governance-Key"?: string | null;
+            };
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanLifecycleRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reviews_api_v1_plans__plan_id__reviews_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanLifecycleRecord"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_review_api_v1_plans__plan_id__reviews_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Demo-Identity"?: string | null;
+                "X-Sanjiv-Governance-Key"?: string | null;
+            };
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanLifecycleRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    supersede_api_v1_plans__plan_id__supersessions_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Demo-Identity"?: string | null;
+                "X-Sanjiv-Governance-Key"?: string | null;
+            };
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SupersedeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanLifecycleRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

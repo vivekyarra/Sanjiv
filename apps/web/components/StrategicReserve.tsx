@@ -3,6 +3,7 @@
 import type { components } from "@sanjiv/contracts";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { GovernancePanel } from "./GovernancePanel";
 
 type Response = components["schemas"]["ReservePlanResponse"];
 type Result = components["schemas"]["ReserveSolverResult"];
@@ -42,7 +43,7 @@ export function StrategicReserve() {
       <span className="mode-badge">MODELED · ASSUMPTION-DEPENDENT OPENING FILL</span>
     </header>
     <nav className="product-nav" aria-label="Product modules">
-      <Link href="/">Live Maritime Watch</Link><Link href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link href="/response-planner">Response Planner</Link><Link className="active" href="/strategic-reserve">Strategic Reserve</Link><Link href="/risk-intelligence">Risk Intelligence</Link>
+      <Link href="/">Live Maritime Watch</Link><Link href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link href="/response-planner">Response Planner</Link><Link className="active" href="/strategic-reserve">Strategic Reserve</Link><Link href="/risk-intelligence">Risk Intelligence</Link><Link href="/evidence-approval">Evidence &amp; Approval</Link>
     </nav>
     <section className="scenario-card">
       <h2>Generate policy guidance</h2>
@@ -58,7 +59,7 @@ export function StrategicReserve() {
     <section className="profile-grid" aria-label="Reserve policy profiles">
       {profiles.map((profile) => <Profile key={profile} profile={profile} result={response?.results.find((item) => item.profile === profile)} />)}
     </section>
-    {response && <Details response={response} />}
+    {response && <><Details response={response} /><GovernancePanel compact initialPlanId={response.plans.find((plan) => plan.profile === "BALANCED")?.plan_id ?? response.plans[0]?.plan_id ?? ""} /></>}
   </main>;
 }
 

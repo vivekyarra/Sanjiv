@@ -88,6 +88,27 @@ Canonical contracts are Pydantic v2 models exposed through OpenAPI and generated
 Phase 3 reuses `MetricEnvelope`, `EvidenceRef`, `Assumption`, `AuditEvent`, freshness, confidence, and truth-class contracts. Baseline facts retain their existing classification; simulator outputs are `MODELED`. Missing private inventory is not converted into a number.
 - A plan cannot become `APPROVED` when audit status is failed, evidence is missing, solver status is not feasible/optimal, or the plan hash differs from the reviewed hash.
 
+## Phase 7 audit and approval contracts
+
+`EvidenceAuditResult` binds one procurement or reserve plan to the exact plan, evidence-set,
+assumption-set, scenario, simulation, twin, procurement, and reserve fingerprints. It contains one
+`AuditedMetric` for every decision `MetricEnvelope`; failed metrics remain present with structured
+`AuditFailure` reason codes. Coverage, formula, claim-policy, model, solver, checker, and auditor
+versions are explicit. `PASSED` is valid only with zero structured failures and 100% metric
+coverage; otherwise usable presentation, approval, export, and definitive narrative flags are all
+false.
+
+`PlanExplanation` is deterministic, references the audit ID/fingerprint, and exposes hard
+constraints, objective components/weights, trade-offs, allocation rationale, rejected alternatives,
+evidence, assumptions, sensitivity drivers, residual shortage, and no-action difference. It always
+carries the no-execution boundary.
+
+`PlanLifecycleRecord` is append-only and records the server-resolved actor/role, UTC time, action,
+previous/resulting state, exact plan/assumption/audit fingerprints, comment, optional superseding
+plan, and idempotency fingerprint. State is derived as `RECOMMENDED -> UNDER_REVIEW -> APPROVED |
+REJECTED`, with `APPROVED -> SUPERSEDED`; a review note remains `UNDER_REVIEW`. Approval and
+rejection comments are mandatory. Terminal records are never updated.
+
 ## Phase 4 procurement contract checkpoint
 
 The first Phase 4 checkpoint freezes contracts only. `ProcurementOptimisationInput` binds one exact `SimulationRunReference`, `SimulationResultReference`, confirmed-scenario fingerprint, and immutable `TwinSnapshotReference`. It also contains one versioned hard-constraint configuration, a fixed reserve-policy fingerprint with `decision_variables_enabled=false`, bounded candidate options, and the exact SHA-256 hashes of every referenced evidence and approved assumption record. Evidence and assumption fingerprint sets must exactly match the input references; commercial availability, supplier capacity, commodity price, freight, route capacity, and refinery receiving capacity cannot be omitted or hidden outside that set.

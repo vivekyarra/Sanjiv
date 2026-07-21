@@ -62,3 +62,14 @@ Focused tests cover all four policy profiles, public-capacity/opening-fill separ
 # Phase 6 risk gate
 
 The focused Phase 6 suite covers deterministic baseline/scoring fingerprints, finite-value validation, explicit missingness, stale source degradation, severity/confidence/completeness separation, false-news and thermal ambiguity suppression, source disagreement, source outage/rate-limit failures, lifecycle validation, alert corroboration, replay checksums and ten required cases, fixture-only metrics, API schemas, PostgreSQL restart readback, migration reversibility/immutability, and UI truth/freshness/no-execution wording. The release gate then runs the full repository lint, strict typing, tests, generated-contract drift, production build, Docker config, migration cycle, dependency/license, secret, skipped-test, and focused security/data/model reviews.
+
+## Phase 7 evidence and approval gate
+
+Focused tests cover procurement and reserve plans at 100% decision-metric provenance; missing,
+tampered, stale, expired, and superseded inputs; truth transitions; objective and fingerprint
+recomputation; solver/checker/auditor failure; sanctions and compatibility exclusions; unsupported
+claim and unaudited-figure blocking; caller-forged actor/role/status; production fail-closed identity;
+stale plan/assumption/audit hashes; lifecycle ordering, concurrency and idempotency abuse; immutable
+approval records; PostgreSQL restart readback; migration downgrade/re-upgrade; canonical APIs;
+generated-contract drift; and every evidence/assumption/audit/review UI path. A failed metric must
+remain in the API and UI with its reason and cannot be approved or exported.

@@ -459,6 +459,8 @@ class ProcurementOptimisationInput(BaseModel):
             self.hard_constraints.corridor_concentration_limit,
         ):
             referenced_evidence.update(metric.evidence_ids)
+        for demand in self.demands:
+            referenced_evidence.update(demand.required_volume.evidence_ids)
         hard_constraint_metrics = (
             self.hard_constraints.budget_limit,
             self.hard_constraints.supplier_concentration_limit,
