@@ -11,9 +11,9 @@ type Result = components["schemas"]["ReserveSolverResult"];
 const API_URL = process.env.NEXT_PUBLIC_SANJIV_API_URL ?? "http://localhost:8000";
 const profiles = ["CONSERVATIVE", "BALANCED", "AGGRESSIVE_CONTINUITY", "NO_RESERVE_USE"] as const;
 
-export function StrategicReserve() {
-  const [runId, setRunId] = useState("");
-  const [procurementPlanId, setProcurementPlanId] = useState("");
+export function StrategicReserve({ initialRunId = "", initialPlanId = "" }: { initialRunId?: string; initialPlanId?: string }) {
+  const [runId, setRunId] = useState(initialRunId);
+  const [procurementPlanId, setProcurementPlanId] = useState(initialPlanId);
   const [response, setResponse] = useState<Response | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,6 +59,7 @@ export function StrategicReserve() {
     <section className="profile-grid" aria-label="Reserve policy profiles">
       {profiles.map((profile) => <Profile key={profile} profile={profile} result={response?.results.find((item) => item.profile === profile)} />)}
     </section>
+    {response && <section className="scenario-card"><h2>Human authority handoff</h2><p className="truth-note">The checked procurement plan remains the approval subject; reserve guidance is modeled and does not execute a release.</p><Link className="primary-action" href={`/evidence-approval?plan=${encodeURIComponent(procurementPlanId)}`}>Continue to Evidence &amp; Approval</Link></section>}
     {response && <><Details response={response} /><GovernancePanel compact initialPlanId={response.plans.find((plan) => plan.profile === "BALANCED")?.plan_id ?? response.plans[0]?.plan_id ?? ""} /></>}
   </main>;
 }
@@ -70,7 +71,7 @@ function Profile({ profile, result }: { profile: string; result?: Result }) {
 function Details({ response }: { response: Response }) {
   return <>
     <section className="scenario-card"><h2>Three reserve sites: capacity and opening-fill truth</h2>{response.plans.map((plan) => <div key={plan.plan_id} className="allocation-group"><h3>{plan.profile}</h3>{plan.input.sites.map((site) => <p key={site.site_id}>{site.site_name}: capacity {metric(site.capacity)} ({site.capacity.truth_class}) · opening {metric(site.opening_inventory)} ({site.opening_inventory_status}) · floor {metric(site.minimum_policy_floor)}</p>)}</div>)}</section>
-    <section className="planner-two-column"><article className="scenario-card"><h2>Release schedule, path and receiving refinery</h2>{response.plans.flatMap((plan) => (plan.result.actions ?? []).map((action) => <p key={`${plan.plan_id}-${action.action_id}`}>{plan.profile}: {metric(action.dispatch)} guidance · site {action.site_id.slice(0, 8)} → route {action.route_id.slice(0, 8)} → refinery {action.refinery_id.slice(0, 8)} · receipt {new Date(action.receipt_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>))}</article><article className="scenario-card"><h2>Remaining inventory and cover</h2>{response.plans.flatMap((plan) => (plan.result.timeline ?? []).map((point) => <p key={`${plan.plan_id}-${point.site_id}`}>{plan.profile}: {metric(point.inventory)} · {metric(point.cover)}</p>))}</article></section>
+    <section className="planner-two-column"><article className="scenario-card"><h2>Release schedule, path and receiving refinery</h2>{response.plans.flatMap((plan) => (plan.result.actions ?? []).map((action) => <p key={`${plan.plan_id}-${action.action_id}`}>{plan.profile}: {metric(action.dispatch)} guidance · site {action.site_id.slice(0, 8)} → route {action.route_id.slice(0, 8)} → refinery {action.refinery_id.slice(0, 8)} · receipt {new Date(action.receipt_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>))}</article><article className="scenario-card"><h2>Remaining inventory and cover after modeled releases</h2>{response.plans.flatMap((plan) => (plan.result.actions ?? []).map((action) => <p key={`${plan.plan_id}-${action.action_id}`}>{plan.profile}: {metric(action.remaining_inventory)} · {metric(action.remaining_cover)}</p>))}</article></section>
     <section className="planner-two-column"><article className="scenario-card"><h2>Procurement coordination</h2>{response.plans.map((plan) => <p key={plan.plan_id}>{plan.profile}: procurement {plan.input.provenance.procurement_plan_fingerprint} · shared capacities independently checked</p>)}</article><article className="scenario-card"><h2>Replenishment guidance</h2><p>No replenishment input was supplied, so the model creates no hidden replenishment. Any future guidance requires verified input and a new fingerprint.</p></article></section>
     <section className="scenario-card"><h2>Evidence, assumptions and immutable fingerprints</h2>{response.plans.map((plan) => <div key={plan.plan_id}><h3>{plan.profile}</h3><p>Input {plan.input_fingerprint}</p><p>Plan {plan.plan_fingerprint}</p><p>{plan.input.provenance.evidence.length} evidence records · {plan.input.provenance.assumptions.length} expiring assumptions</p></div>)}</section>
   </>;

@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 const component = readFileSync(new URL("../components/ResponsePlanner.tsx", import.meta.url), "utf8");
 
 test("response planner exposes all profiles, checker state, provenance and truth labels", () => {
-  for (const text of ["LOWEST_COST", "BALANCED", "HIGHEST_RESILIENCE", "MODELED", "assumption-dependent", "Independent", "fingerprint", "Rejected options"]) assert.match(component, new RegExp(text, "i"));
+  for (const text of ["LOWEST_COST", "BALANCED", "HIGHEST_RESILIENCE", "MODELED", "assumption-dependent", "Independent", "fingerprint", "Rejected options", "Selected planning profile: BALANCED"]) assert.match(component, new RegExp(text, "i"));
 });
 
 test("response planner contains no purchasing or reserve execution control", () => {

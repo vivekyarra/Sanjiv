@@ -11,8 +11,8 @@ type Result = components["schemas"]["SolverResult"];
 const API_URL = process.env.NEXT_PUBLIC_SANJIV_API_URL ?? "http://localhost:8000";
 const profiles = ["LOWEST_COST", "BALANCED", "HIGHEST_RESILIENCE"] as const;
 
-export function ResponsePlanner() {
-  const [runId, setRunId] = useState("");
+export function ResponsePlanner({ initialRunId = "" }: { initialRunId?: string }) {
+  const [runId, setRunId] = useState(initialRunId);
   const [response, setResponse] = useState<Response | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,6 +54,7 @@ export function ResponsePlanner() {
     <section className="profile-grid" aria-label="Procurement profiles">
       {profiles.map((profile) => <Profile key={profile} profile={profile} result={response?.results.find((item) => item.profile === profile)} />)}
     </section>
+    {response && <section className="scenario-card"><h2>Selected planning profile: BALANCED</h2><p className="truth-note">Balanced is the governance handoff for this comparison; it remains decision support and is not an order or booking.</p><label>Selected BALANCED plan ID<input readOnly value={(response.plans ?? []).find((plan) => plan.profile === "BALANCED")?.plan_id ?? ""} /></label><Link className="primary-action" href={`/strategic-reserve?run=${encodeURIComponent(runId)}&plan=${encodeURIComponent((response.plans ?? []).find((plan) => plan.profile === "BALANCED")?.plan_id ?? "")}`}>Continue to Strategic Reserve</Link></section>}
     {response && <><Details response={response} /><GovernancePanel compact initialPlanId={(response.plans ?? []).find((plan) => plan.profile === "BALANCED")?.plan_id ?? (response.plans ?? [])[0]?.plan_id ?? ""} /></>}
   </main>;
 }

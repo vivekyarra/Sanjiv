@@ -46,6 +46,7 @@ from sanjiv.reserve.routes import router as reserve_router
 from sanjiv.reserve.service import ReserveService
 from sanjiv.risk.adapters import FixtureRiskAdapter
 from sanjiv.risk.openapi import add_risk_contract_schemas
+from sanjiv.risk.portwatch import PortWatchService
 from sanjiv.risk.repository import InMemoryRiskRepository, PostgresRiskRepository
 from sanjiv.risk.routes import router as risk_router
 from sanjiv.risk.service import RiskService
@@ -168,6 +169,7 @@ def create_app(
         repository=risk_repository,
         adapter=FixtureRiskAdapter(resolved_settings.sanjiv_risk_replay_manifest),
     )
+    portwatch_service = PortWatchService()
     audit_repository = (
         PostgresAuditRepository(resolved_settings.database_url)
         if resolved_settings.sanjiv_audit_storage == "postgres"
@@ -230,6 +232,7 @@ def create_app(
     application.state.procurement_service = procurement_service
     application.state.reserve_service = reserve_service
     application.state.risk_service = risk_service
+    application.state.portwatch_service = portwatch_service
     application.state.audit_service = audit_service
     application.state.phase8_service = phase8_service
     telemetry = TelemetryRegistry()

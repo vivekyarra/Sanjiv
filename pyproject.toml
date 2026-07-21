@@ -10,6 +10,7 @@ dependencies = [
   "geoalchemy2>=0.18,<1",
   "networkx>=3.5,<4",
   "highspy>=1.11,<2",
+  "httpx>=0.28,<1",
   "pyomo>=6.9,<7",
   "pydantic>=2.11,<3",
   "pydantic-settings>=2.10,<3",
@@ -22,7 +23,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "httpx>=0.28,<1",
   "httpx2>=2.7,<3",
   "mypy>=1.17,<2",
   "pytest>=9.0.3,<10",

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import date
 from enum import StrEnum
 from typing import Any, Literal, Self
 from uuid import UUID
@@ -306,6 +307,28 @@ class RiskBacktestResponse(BaseModel):
     results: list[BacktestResult]
 
 
+class PortWatchHormuzObservation(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    source_id: Literal["IMF_PORTWATCH"]
+    source_record_id: str = Field(min_length=1)
+    mode: Literal["LIVE"]
+    freshness_status: FreshnessStatus
+    truth_class: TruthClass
+    corridor_name: Literal["Strait of Hormuz"]
+    effective_date: date
+    fetched_at: AwareDatetime
+    source_modified_at: AwareDatetime
+    source_age_hours: float = Field(ge=0, allow_inf_nan=False)
+    tanker_transits: int = Field(ge=0)
+    total_transits: int = Field(ge=0)
+    estimated_tanker_tonnage: int = Field(ge=0)
+    estimated_total_tonnage: int = Field(ge=0)
+    evidence_id: str = Field(pattern=SHA256_PATTERN)
+    source_url: str = Field(pattern=r"^https://")
+    documentation_url: str = Field(pattern=r"^https://")
+    methodology_note: str = Field(min_length=1)
+
+
 def corridor_risk_fingerprint(value: CorridorRiskResult | dict[str, Any]) -> str:
     payload = (
         value.model_dump(mode="json")
@@ -358,4 +381,5 @@ RISK_OPENAPI_MODELS: tuple[type[BaseModel], ...] = (
     RiskAlertResponse,
     RiskBacktestResponse,
     RiskTimelinePoint,
+    PortWatchHormuzObservation,
 )

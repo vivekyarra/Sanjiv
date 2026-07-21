@@ -9,6 +9,7 @@ test("shell uses final product branding", () => {
   assert.match(renderedShell, /Sanjiv/);
   assert.match(renderedShell, /Keep India’s energy moving\./);
   assert.match(renderedShell, /REPLAY — NOT LIVE DATA/);
+  assert.match(renderedShell, /Server credential → validated AIS message → audited LIVE transition/);
   const forbidden = ["JA" + "NUS", "Sanjiv" + "GPT", "Sanjiv" + " AI"];
   for (const name of forbidden) assert.doesNotMatch(renderedShell, new RegExp(name));
 });

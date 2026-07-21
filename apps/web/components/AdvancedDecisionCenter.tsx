@@ -16,14 +16,14 @@ type PlanComment = components["schemas"]["PlanComment"];
 
 const API_URL = process.env.NEXT_PUBLIC_SANJIV_API_URL ?? "http://localhost:8000";
 
-export function AdvancedDecisionCenter() {
+export function AdvancedDecisionCenter({ initialPlanId = "" }: { initialPlanId?: string }) {
   const [catalogue, setCatalogue] = useState<Catalogue | null>(null);
   const [network, setNetwork] = useState<LpgNetwork | null>(null);
   const [commodity, setCommodity] = useState<"CRUDE_OIL" | "LPG">("CRUDE_OIL");
   const [caseId, setCaseId] = useState("");
   const [run, setRun] = useState<ReplayRun | null>(null);
   const [lpgPlans, setLpgPlans] = useState<LpgPlan[]>([]);
-  const [planId, setPlanId] = useState("");
+  const [planId, setPlanId] = useState(initialPlanId);
   const [sensitivityMode, setSensitivityMode] = useState<"FAST" | "DEEP">("FAST");
   const [sensitivity, setSensitivity] = useState<Sensitivity | null>(null);
   const [createdExport, setCreatedExport] = useState<Export | null>(null);

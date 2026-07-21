@@ -4793,6 +4793,119 @@
         "title": "PlanReviewState",
         "type": "string"
       },
+      "PortWatchHormuzObservation": {
+        "additionalProperties": false,
+        "properties": {
+          "corridor_name": {
+            "const": "Strait of Hormuz",
+            "title": "Corridor Name",
+            "type": "string"
+          },
+          "documentation_url": {
+            "pattern": "^https://",
+            "title": "Documentation Url",
+            "type": "string"
+          },
+          "effective_date": {
+            "format": "date",
+            "title": "Effective Date",
+            "type": "string"
+          },
+          "estimated_tanker_tonnage": {
+            "minimum": 0,
+            "title": "Estimated Tanker Tonnage",
+            "type": "integer"
+          },
+          "estimated_total_tonnage": {
+            "minimum": 0,
+            "title": "Estimated Total Tonnage",
+            "type": "integer"
+          },
+          "evidence_id": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Evidence Id",
+            "type": "string"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "freshness_status": {
+            "$ref": "#/components/schemas/FreshnessStatus"
+          },
+          "methodology_note": {
+            "minLength": 1,
+            "title": "Methodology Note",
+            "type": "string"
+          },
+          "mode": {
+            "const": "LIVE",
+            "title": "Mode",
+            "type": "string"
+          },
+          "source_age_hours": {
+            "minimum": 0,
+            "title": "Source Age Hours",
+            "type": "number"
+          },
+          "source_id": {
+            "const": "IMF_PORTWATCH",
+            "title": "Source Id",
+            "type": "string"
+          },
+          "source_modified_at": {
+            "format": "date-time",
+            "title": "Source Modified At",
+            "type": "string"
+          },
+          "source_record_id": {
+            "minLength": 1,
+            "title": "Source Record Id",
+            "type": "string"
+          },
+          "source_url": {
+            "pattern": "^https://",
+            "title": "Source Url",
+            "type": "string"
+          },
+          "tanker_transits": {
+            "minimum": 0,
+            "title": "Tanker Transits",
+            "type": "integer"
+          },
+          "total_transits": {
+            "minimum": 0,
+            "title": "Total Transits",
+            "type": "integer"
+          },
+          "truth_class": {
+            "$ref": "#/components/schemas/TruthClass"
+          }
+        },
+        "required": [
+          "source_id",
+          "source_record_id",
+          "mode",
+          "freshness_status",
+          "truth_class",
+          "corridor_name",
+          "effective_date",
+          "fetched_at",
+          "source_modified_at",
+          "source_age_hours",
+          "tanker_transits",
+          "total_transits",
+          "estimated_tanker_tonnage",
+          "estimated_total_tonnage",
+          "evidence_id",
+          "source_url",
+          "documentation_url",
+          "methodology_note"
+        ],
+        "title": "PortWatchHormuzObservation",
+        "type": "object"
+      },
       "ProcurementAction": {
         "additionalProperties": false,
         "properties": {
@@ -12307,6 +12420,27 @@
           }
         },
         "summary": "Corridor Risk",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/v1/risk/portwatch/hormuz": {
+      "get": {
+        "operationId": "portwatch_hormuz_api_v1_risk_portwatch_hormuz_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortWatchHormuzObservation"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Portwatch Hormuz",
         "tags": [
           "risk-intelligence"
         ]

@@ -27,6 +27,7 @@ test("Scenario Lab exposes truthful simulation states and no-action output", () 
     "CANCELLED",
     "SIMULATION FAILED",
     "Baseline versus no-action",
+    "Completed scenario run ID",
     "Disruption timeline",
     "Affected routes and flows",
     "Refinery throughput impact",

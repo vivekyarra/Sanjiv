@@ -56,6 +56,7 @@ def test_openapi_exposes_phase_six_routes_and_contracts(tmp_path: Path) -> None:
         "/api/v1/risk/corridors/{corridor_id}/timeline",
         "/api/v1/risk/alerts",
         "/api/v1/risk/backtests",
+        "/api/v1/risk/portwatch/hormuz",
     ):
         assert route in schema["paths"]
     for contract in (
@@ -64,5 +65,6 @@ def test_openapi_exposes_phase_six_routes_and_contracts(tmp_path: Path) -> None:
         "CorridorRiskResult",
         "AlertResult",
         "BacktestResult",
+        "PortWatchHormuzObservation",
     ):
         assert contract in schema["components"]["schemas"]

@@ -585,6 +585,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/risk/portwatch/hormuz": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Portwatch Hormuz */
+        get: operations["portwatch_hormuz_api_v1_risk_portwatch_hormuz_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/scenario-runs": {
         parameters: {
             query?: never;
@@ -2978,6 +2995,61 @@ export interface components {
          * @enum {string}
          */
         PlanReviewState: "RECOMMENDED" | "UNDER_REVIEW" | "APPROVED" | "REJECTED" | "SUPERSEDED";
+        /** PortWatchHormuzObservation */
+        PortWatchHormuzObservation: {
+            /**
+             * Corridor Name
+             * @constant
+             */
+            corridor_name: "Strait of Hormuz";
+            /** Documentation Url */
+            documentation_url: string;
+            /**
+             * Effective Date
+             * Format: date
+             */
+            effective_date: string;
+            /** Estimated Tanker Tonnage */
+            estimated_tanker_tonnage: number;
+            /** Estimated Total Tonnage */
+            estimated_total_tonnage: number;
+            /** Evidence Id */
+            evidence_id: string;
+            /**
+             * Fetched At
+             * Format: date-time
+             */
+            fetched_at: string;
+            freshness_status: components["schemas"]["FreshnessStatus"];
+            /** Methodology Note */
+            methodology_note: string;
+            /**
+             * Mode
+             * @constant
+             */
+            mode: "LIVE";
+            /** Source Age Hours */
+            source_age_hours: number;
+            /**
+             * Source Id
+             * @constant
+             */
+            source_id: "IMF_PORTWATCH";
+            /**
+             * Source Modified At
+             * Format: date-time
+             */
+            source_modified_at: string;
+            /** Source Record Id */
+            source_record_id: string;
+            /** Source Url */
+            source_url: string;
+            /** Tanker Transits */
+            tanker_transits: number;
+            /** Total Transits */
+            total_transits: number;
+            truth_class: components["schemas"]["TruthClass"];
+        };
         /** ProcurementAction */
         ProcurementAction: {
             /**
@@ -6323,6 +6395,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    portwatch_hormuz_api_v1_risk_portwatch_hormuz_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PortWatchHormuzObservation"];
                 };
             };
         };

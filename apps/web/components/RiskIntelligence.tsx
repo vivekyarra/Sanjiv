@@ -8,6 +8,21 @@ type Overview = components["schemas"]["RiskOverviewResponse"];
 type Risk = components["schemas"]["CorridorRiskResult"];
 type Alerts = components["schemas"]["RiskAlertResponse"];
 type Backtests = components["schemas"]["RiskBacktestResponse"];
+type PortWatchObservation = {
+  source_id: "IMF_PORTWATCH";
+  mode: "LIVE";
+  freshness_status: string;
+  truth_class: "OBSERVED";
+  corridor_name: string;
+  effective_date: string;
+  fetched_at: string;
+  tanker_transits: number;
+  total_transits: number;
+  estimated_tanker_tonnage: number;
+  estimated_total_tonnage: number;
+  evidence_id: string;
+  methodology_note: string;
+};
 
 const API_URL = process.env.NEXT_PUBLIC_SANJIV_API_URL ?? "http://localhost:8000";
 
@@ -15,6 +30,7 @@ export function RiskIntelligence() {
   const [overview, setOverview] = useState<Overview | null>(null);
   const [alerts, setAlerts] = useState<Alerts | null>(null);
   const [backtests, setBacktests] = useState<Backtests | null>(null);
+  const [portwatch, setPortwatch] = useState<PortWatchObservation | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -22,10 +38,12 @@ export function RiskIntelligence() {
       fetchJson<Overview>("/api/v1/risk/corridors"),
       fetchJson<Alerts>("/api/v1/risk/alerts"),
       fetchJson<Backtests>("/api/v1/risk/backtests"),
-    ]).then(([nextOverview, nextAlerts, nextBacktests]) => {
+      fetchJson<PortWatchObservation>("/api/v1/risk/portwatch/hormuz").catch(() => null),
+    ]).then(([nextOverview, nextAlerts, nextBacktests, nextPortwatch]) => {
       setOverview(nextOverview);
       setAlerts(nextAlerts);
       setBacktests(nextBacktests);
+      setPortwatch(nextPortwatch);
     }).catch((reason: unknown) => {
       setError(reason instanceof Error ? reason.message : "Risk intelligence is unavailable");
     });
@@ -34,13 +52,23 @@ export function RiskIntelligence() {
   return <main className="command-shell response-planner">
     <header className="command-header">
       <div><p className="eyebrow">India&apos;s Energy Resilience Command Center</p><h1>Risk Intelligence</h1><p>Evidence-backed structural corridor severity for analyst review.</p></div>
-      <span className="mode-badge">{overview?.mode ?? "LOADING"} · SEVERITY IS NOT DISRUPTION PROBABILITY</span>
+      <span className="mode-badge">{portwatch ? "CURRENT PORTWATCH + FIXTURE MODEL" : overview?.mode ?? "LOADING"} · SEVERITY IS NOT DISRUPTION PROBABILITY</span>
     </header>
     <nav className="product-nav" aria-label="Product modules">
       <Link href="/">Live Maritime Watch</Link><Link href="/digital-twin">Digital Twin</Link><Link href="/scenario-lab">Scenario Lab</Link><Link href="/response-planner">Response Planner</Link><Link href="/strategic-reserve">Strategic Reserve</Link><Link className="active" href="/risk-intelligence">Risk Intelligence</Link><Link href="/evidence-approval">Evidence &amp; Approval</Link><Link href="/historical-replay">Historical Replay</Link>
     </nav>
     {error && <section className="scenario-card" role="alert"><h2>Unavailable</h2><p>{error}</p><p>Source and model failures remain explicit; missing features never silently become zero.</p></section>}
     {!overview && !error && <section className="scenario-card"><p>Loading ranked corridors, source freshness and replay evidence…</p></section>}
+    {portwatch && <section className="scenario-card live-evidence-card" aria-label="Current IMF PortWatch observation">
+      <div className="governance-heading"><div><p className="eyebrow">Live-fetched public source · {portwatch.truth_class}</p><h2>{portwatch.corridor_name}</h2></div><span className="audit-badge passed">{portwatch.freshness_status} · IMF PORTWATCH</span></div>
+      <div className="metric-strip">
+        <Fact label="Tanker transits" value={String(portwatch.tanker_transits)} />
+        <Fact label="Total transits" value={String(portwatch.total_transits)} />
+        <Fact label="Estimated tanker tonnage" value={`${portwatch.estimated_tanker_tonnage.toLocaleString("en-IN")} t`} />
+        <Fact label="Effective date" value={new Date(`${portwatch.effective_date}T00:00:00Z`).toLocaleDateString("en-IN", { dateStyle: "medium", timeZone: "UTC" })} />
+      </div>
+      <p>{portwatch.methodology_note}</p><p className="fingerprint">Evidence {portwatch.evidence_id} · fetched {formatIst(portwatch.fetched_at)}</p>
+    </section>}
     <section className="profile-grid" aria-label="Ranked corridor risks">
       {overview?.risks.map((risk, rank) => <RiskCard key={risk.risk_id} risk={risk} rank={rank + 1} />)}
     </section>

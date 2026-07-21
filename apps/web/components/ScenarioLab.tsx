@@ -291,7 +291,7 @@ export function ScenarioLab() {
 
           {run && <section className="scenario-card progress-card"><div className="section-heading"><p>Simulation progress</p><span>{run.status}</span></div><div className="progress-track"><i style={{ width: `${progress.at(-1)?.progress_percent ?? 0}%` }} /></div>{progress.map((item) => <div className="progress-row" key={item.sequence}><strong>{item.phase}</strong><span>{item.progress_percent}% · {item.message}</span></div>)}{!TERMINAL.has(run.status) && <button className="danger-action" onClick={() => void cancel()}>Cancel simulation</button>}{run.status === "CANCELLED" && <Notice tone="warning" title="CANCELLED" text="No result was fabricated. Create a new confirmed scenario to run again." />}{run.status === "FAILED" && <Notice tone="error" title={run.failure?.code ?? "SIMULATION FAILED"} text={run.failure?.message ?? "Typed simulation failure."} />}</section>}
 
-          {result && <Results run={run} />}
+          {result && <><section className="scenario-card"><div className="section-heading"><p>Planner handoff</p><span>VISIBLE UI STATE</span></div><label>Completed scenario run ID<input readOnly value={run.run_id} /></label><Link className="primary-action" href={`/response-planner?run=${encodeURIComponent(run.run_id)}`}>Continue to Response Planner</Link></section><Results run={run} /></>}
         </div>
 
         <aside className="scenario-sidebar">

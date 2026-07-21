@@ -32,6 +32,24 @@ from sanjiv.twin.service import build_default_twin_service
 SAMPLES = 5
 
 
+def _clean_commit() -> str:
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True
+    ).stdout.strip()
+    status = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=all"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    if status:
+        raise RuntimeError(
+            "Benchmark provenance requires a clean committed worktree; "
+            "commit or remove all changes first."
+        )
+    return commit
+
+
 def _stats(values: list[float], unit: str = "ms") -> dict[str, object]:
     ordered = sorted(round(value, 3) for value in values)
     p95_index = min(len(ordered) - 1, max(0, round(0.95 * (len(ordered) - 1))))
@@ -79,6 +97,7 @@ async def _risk_benchmark(manifest: Path) -> float:
 
 
 def main() -> None:
+    commit = _clean_commit()
     settings = Settings(
         sanjiv_maritime_storage="memory",
         sanjiv_maritime_autostart=True,
@@ -196,15 +215,12 @@ def main() -> None:
     risk_values = [
         asyncio.run(_risk_benchmark(settings.sanjiv_risk_replay_manifest)) for _ in range(SAMPLES)
     ]
-    commit = subprocess.run(
-        ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True
-    ).stdout.strip()
     report = {
         "schema_version": "1.0",
         "run_id": str(uuid4()),
         "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "commit": commit,
-        "source_state": "DIRTY_UNCOMMITTED_PHASE9",
+        "source_state": "CLEAN_COMMITTED",
         "hardware": {
             "platform": platform.platform(),
             "machine": platform.machine(),
@@ -238,8 +254,8 @@ def main() -> None:
         },
         "browser_metrics_file": "reports/performance/browser-benchmark.json",
         "notice": (
-            "Targets are not claims. Values are actual local fixture measurements for this run; "
-            "the commit is the Phase 8 parent of the uncommitted Phase 9 working tree."
+            "Targets are not claims. Values are actual local fixture measurements produced from "
+            "the clean committed source identified in this report."
         ),
     }
     target = Path("reports/performance/phase9-benchmark.json")

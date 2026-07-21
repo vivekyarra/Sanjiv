@@ -56,7 +56,9 @@ services:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sanjiv}:${POSTGRES_PASSWORD:-change-me-local-only}@postgres:5432/${POSTGRES_DB:-sanjiv}
       REDIS_URL: redis://redis:6379/0
       MINIO_ENDPOINT: http://minio:9000
-      SANJIV_AIS_ENABLED: "false"
+      SANJIV_AIS_ENABLED: ${SANJIV_AIS_ENABLED:-false}
+      AISSTREAM_API_KEY: ${AISSTREAM_API_KEY:-}
+      SANJIV_AIS_BOUNDING_BOXES: '${SANJIV_AIS_BOUNDING_BOXES:-[[[1.0,40.0],[32.0,104.0]]]}'
       SANJIV_MARITIME_AUTOSTART: "true"
       SANJIV_ALLOWED_ORIGINS: http://localhost:3000
       SANJIV_WORKER_RUNTIME_DIR: /app/data/runtime/workers

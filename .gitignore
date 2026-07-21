@@ -20,3 +20,4 @@ data/runtime/
 postgres-data/
 reports/e2e/html/
 reports/e2e/results/
+tmp/pdfs/sanjiv_submission/

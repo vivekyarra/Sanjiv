@@ -19,6 +19,20 @@ import {
 
 type Snapshot = components["schemas"]["OperationsSnapshot"];
 type Vessel = components["schemas"]["VesselOperationalView"];
+type PortWatchObservation = {
+  source_id: "IMF_PORTWATCH";
+  mode: "LIVE";
+  freshness_status: "LIVE" | "RECENT" | "CURRENT" | "STALE" | "REPLAY" | "UNAVAILABLE";
+  truth_class: "OBSERVED";
+  corridor_name: "Strait of Hormuz";
+  effective_date: string;
+  fetched_at: string;
+  tanker_transits: number;
+  total_transits: number;
+  estimated_tanker_tonnage: number;
+  estimated_total_tonnage: number;
+  methodology_note: string;
+};
 
 const API_URL = process.env.NEXT_PUBLIC_SANJIV_API_URL ?? "http://localhost:8000";
 const WS_URL = process.env.NEXT_PUBLIC_SANJIV_WS_URL ?? "ws://localhost:8000";
@@ -51,6 +65,7 @@ export function MaritimeWatch() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [socketState, setSocketState] = useState<SocketState>("CONNECTING");
   const [error, setError] = useState<string | null>(null);
+  const [portwatch, setPortwatch] = useState<PortWatchObservation | null>(null);
 
   const loadSnapshot = useCallback(async () => {
     const response = await fetch(`${API_URL}/api/v1/operations/snapshot`, { cache: "no-store" });
@@ -70,6 +85,18 @@ export function MaritimeWatch() {
     }, 0);
     return () => window.clearTimeout(timer);
   }, [loadSnapshot]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch(`${API_URL}/api/v1/risk/portwatch/hormuz`, {
+      cache: "no-store",
+      signal: controller.signal,
+    }).then(async (response) => {
+      if (!response.ok) return;
+      setPortwatch(await response.json() as PortWatchObservation);
+    }).catch(() => undefined);
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     let disposed = false;
@@ -187,10 +214,27 @@ export function MaritimeWatch() {
 
   return (
     <main className="watch-shell">
-      {snapshot?.operating_mode === "REPLAY" && (
+      {portwatch ? (
+        <div className="live-source-banner" role="status">
+          <div className="replay-banner-state">
+            <strong>CURRENT PORTWATCH · REAL OBSERVATION</strong>
+            <span>{portwatch.corridor_name} · {formatSourceDate(portwatch.effective_date)} · fetched directly from the public IMF service</span>
+          </div>
+          <div className="replay-live-path" aria-label="Truth and freshness of current source">
+            <span>{portwatch.truth_class} · {portwatch.freshness_status}</span>
+            <b>Live source connection · AIS position layer remains REPLAY</b>
+          </div>
+        </div>
+      ) : snapshot?.operating_mode === "REPLAY" && (
         <div className="replay-banner" role="alert">
-          <strong>REPLAY — NOT LIVE DATA</strong>
-          <span>{snapshot.mode_explanation}</span>
+          <div className="replay-banner-state">
+            <strong>REPLAY — NOT LIVE DATA</strong>
+            <span>{snapshot.mode_explanation}</span>
+          </div>
+          <div className="replay-live-path" aria-label="How verified live mode activates">
+            <span>LIVE MODE PATH</span>
+            <b>Server credential → validated AIS message → audited LIVE transition</b>
+          </div>
         </div>
       )}
       <header className="command-header">
@@ -210,17 +254,24 @@ export function MaritimeWatch() {
           <Link className="module-link" href="/risk-intelligence">Risk Intelligence</Link>
           <Link className="module-link" href="/evidence-approval">Evidence &amp; Approval</Link>
           <Link className="module-link" href="/historical-replay">Historical Replay</Link>
-          <span className={`mode-chip ${mode.tone}`}>{mode.label}</span>
+          <span className={`mode-chip ${portwatch ? "live" : mode.tone}`}>{portwatch ? "PORTWATCH CURRENT" : mode.label}</span>
           <span className={`connection-chip ${socketState.toLowerCase()}`}><i />{connectionLabel(socketState)}</span>
           <time>{snapshot ? formatTime(snapshot.as_of) : "Waiting for source"}</time>
         </div>
       </header>
 
       <section className="metric-strip" aria-label="Operational metrics">
-        <Metric label="Vessels monitored" value={snapshot?.vessel_count?.value ?? "—"} truth={snapshot?.vessel_count?.truth_class} />
-        <Metric label="Messages / minute" value={snapshot?.messages_per_minute?.value ?? "—"} truth={snapshot?.messages_per_minute?.truth_class} />
-        <Metric label="Source" value={snapshot?.source_health.source_id ?? "Connecting"} truth={snapshot?.source_health.mode} />
-        <Metric label="Freshness" value={snapshot?.source_health.freshness_status ?? "UNAVAILABLE"} truth={snapshot?.source_health.state} />
+        {portwatch ? <>
+          <Metric label="Hormuz tanker transits" value={portwatch.tanker_transits} truth="OBSERVED · DAILY" />
+          <Metric label="Total vessel transits" value={portwatch.total_transits} truth="OBSERVED · DAILY" />
+          <Metric label="Estimated tanker tonnage" value={formatTonnage(portwatch.estimated_tanker_tonnage)} truth="OBSERVED SOURCE ESTIMATE" />
+          <Metric label="Source freshness" value={portwatch.freshness_status} truth="IMF PORTWATCH · LIVE FETCH" />
+        </> : <>
+          <Metric label="Vessels monitored" value={snapshot?.vessel_count?.value ?? "—"} truth={snapshot?.vessel_count?.truth_class} />
+          <Metric label="Messages / minute" value={snapshot?.messages_per_minute?.value ?? "—"} truth={snapshot?.messages_per_minute?.truth_class} />
+          <Metric label="Source" value={snapshot?.source_health.source_id ?? "Connecting"} truth={snapshot?.source_health.mode} />
+          <Metric label="Freshness" value={snapshot?.source_health.freshness_status ?? "UNAVAILABLE"} truth={snapshot?.source_health.state} />
+        </>}
       </section>
 
       {(error || stale || snapshot?.operating_mode === "DEGRADED") && (
@@ -321,4 +372,12 @@ function updateSources(instance: MapLibreMap, data: ReturnType<typeof toMapData>
 
 function formatTime(value: string) {
   return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "medium", timeZone: "Asia/Kolkata" }).format(new Date(value));
+}
+
+function formatSourceDate(value: string) {
+  return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${value}T00:00:00Z`));
+}
+
+function formatTonnage(value: number) {
+  return `${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 1, notation: "compact" }).format(value)} t`;
 }
