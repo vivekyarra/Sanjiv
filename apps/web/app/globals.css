@@ -72,6 +72,20 @@ a { color: inherit; }
 .assumption-banner { padding: 9px 24px; text-align: center; background: #793b13; color: #ffdfb5; font: 700 12px ui-monospace, monospace; letter-spacing: .06em; }
 .twin-header { min-height: 90px; }
 .product-nav { display: flex; gap: 8px; font-size: 12px; }
+.planner-form { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+.planner-form label { display: grid; gap: 6px; min-width: min(520px, 100%); }
+.planner-form input { padding: 10px; border: 1px solid #365b49; background: #07130e; color: #ecfdf5; border-radius: 5px; }
+.planner-form button { padding: 10px 14px; border: 1px solid #4ade80; background: #123b26; color: #dcfce7; border-radius: 5px; }
+.profile-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.profile-card dl { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.profile-card dl div { border-top: 1px solid #29483a; padding-top: 6px; }
+.profile-card dt { color: #8faf9d; font-size: 12px; }
+.profile-card dd { margin: 2px 0; }
+.planner-two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.truth-note { color: #facc15; }
+.error-text { color: #fda4af; }
+.allocation-group { border-top: 1px solid #29483a; }
+@media (max-width: 900px) { .profile-grid, .planner-two-column { grid-template-columns: 1fr; } }
 .twin-grid { display: grid; grid-template-columns: minmax(0, 1fr) 410px; min-height: calc(100vh - 225px); }
 .network-board { padding: 18px; border-right: 1px solid #19352b; overflow: auto; }
 .network-lanes { display: grid; grid-template-columns: repeat(6, minmax(150px, 1fr)); gap: 9px; min-width: 1020px; }

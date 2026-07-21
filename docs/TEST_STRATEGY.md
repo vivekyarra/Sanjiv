@@ -51,3 +51,7 @@ Phase 2 additionally fixes the snapshot twice and requires identical fingerprint
 - Decision release: zero unsupported definitive claims, zero hard solver violations, 100% evidence coverage for decision KPIs, and migrations upgrade/downgrade cleanly.
 - Performance numbers are labeled targets until produced by a stored benchmark report including hardware, dataset size, run ID, percentile, and timestamp.
 - Security gate: dependency and image scan, secret scan, authorization tests, upload limits, log-redaction test, and no browser-visible server keys.
+
+## Phase 4 coverage
+
+Focused tests cover commercial-fixture classification/expiry, canonical units and non-finite rejection, option/input/plan fingerprints, deterministic profile ordering, real Pyomo/HiGHS solves, every hard-constraint family, objective reconstruction, checker forgery, closed routes, infeasible/error contracts, exact-fingerprint reuse, PostgreSQL restart readback, production mutation security, idempotency, reversible `0005` migration, generated OpenAPI/TypeScript, and Response Planner truth/no-execution labels. The full gate retains credential-free operation and exercises Compose PostgreSQL, Redis, and MinIO.

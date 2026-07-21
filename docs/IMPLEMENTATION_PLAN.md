@@ -122,9 +122,6 @@ Phases are dependency ordered. Complexity is relative: S/M/L/XL. A phase closes 
 ## Current implementation program
 
 Phase 0 and Phase 1 are merged. The active program implements Phases 2-9 in dependency order with a hard full-repository gate and pushed checkpoint after every phase. No later phase may start while the preceding gate is failing.
-### Phase 4 checkpoint: deterministic procurement inputs
+### Phase 4 completion: deterministic procurement optimiser
 
-Status: implemented checkpoint. Deterministic candidate construction,
-structured exclusion, demand shortfall linkage, and landed-cost reconciliation
-are available as reusable domain services. Optimisation and persistence remain
-out of scope.
+Status: complete. The deterministic input and landed-cost boundary now feeds a bounded Pyomo/HiGHS model for all three profiles, an independent constraint/objective/fingerprint checker, immutable PostgreSQL persistence and exact-fingerprint reuse, documented POST/GET APIs, and the Response Planner. Commercial values remain expiring assumptions from a credential-free `SYNTHETIC_FIXTURE`; no order, tanker, commercial availability, or reserve action is claimed.

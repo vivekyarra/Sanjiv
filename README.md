@@ -5,7 +5,11 @@
 
 Sanjiv is a decision-intelligence system for observing threats to India’s energy-supply corridors, compiling validated disruption scenarios, simulating no-action consequences, and producing deterministic, evidence-backed procurement and strategic-reserve response plans.
 
-The repository includes the Phase 0 truth foundation, Phase 1 Live Maritime Watch, the Phase 2 India energy-network digital twin, and the Phase 3 Scenario Lab. All three operational screens work without credentials: maritime replay is explicitly synthetic, the energy twin is an assumption-driven content-addressed reference snapshot, and Phase 3 compiles, validates, confirms, and simulates deterministic no-action scenarios against that frozen snapshot. Procurement and reserve optimisation remain gated behind Phase 4 and later.
+The repository includes the Phase 0 truth foundation, Phase 1 Live Maritime Watch, the Phase 2 India energy-network digital twin, Phase 3 Scenario Lab, and the Phase 4 Response Planner. All operational screens work without credentials: Phase 4 uses an explicitly synthetic, expiring commercial-assumption fixture, Pyomo with HiGHS, and an independent checker to produce three immutable modeled procurement plans. Strategic-reserve optimisation remains gated behind Phase 5.
+
+## Phase 4 Response Planner
+
+Open `http://localhost:3000/response-planner` and supply a completed scenario-run UUID. Sanjiv sequentially generates `LOWEST_COST`, `BALANCED`, and `HIGHEST_RESILIENCE` plans with identical hard constraints, persists exact-fingerprint results, and exposes solver/checker state, allocations, shortage, costs, objective contributions, constraints, rejected options, provenance, and fingerprints. The commercial fixture is `SYNTHETIC_FIXTURE`; it is not a quote or confirmation, and the UI has no purchasing, tanker-booking, approval, or reserve-release action.
 
 ## Phase 3 Scenario Lab
 
@@ -24,7 +28,7 @@ Natural-language LLM interpretation is optional. Set `SANJIV_LLM_PROVIDER=openai
 ## Stack
 
 - Next.js, React, TypeScript, Tailwind CSS
-- FastAPI, Pydantic, Python 3.11
+- FastAPI, Pydantic, Pyomo, HiGHS, Python 3.11
 - PostgreSQL with PostGIS and TimescaleDB, Redis, MinIO
 - npm workspaces and uv
 

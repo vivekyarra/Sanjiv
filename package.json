@@ -21,12 +21,15 @@
     "npm": ">=11.0.0"
   },
   "devDependencies": {
-    "openapi-typescript": "^7.9.1"
+    "openapi-typescript": "^7.9.1",
+    "postcss": "8.5.20",
+    "js-yaml": "4.3.0"
   },
   "overrides": {
     "next": {
-      "postcss": "8.5.20"
+      "postcss": "$postcss"
     },
-    "postcss": "8.5.20"
+    "postcss": "8.5.20",
+    "js-yaml": "4.3.0"
   }
 }

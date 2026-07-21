@@ -65,7 +65,7 @@ Currency and unit conversion use effective-dated evidence. Unavailable commercia
 
 ## Procurement model
 
-The first Phase 4 checkpoint freezes only the optimiser boundary: typed inputs, profile weights, solver/check results, constraints, actions/allocations, landed-cost and objective breakdowns, failures, lifecycle states, and canonical fingerprints. It does not implement these equations, construct a Pyomo model, invoke HiGHS, generate a plan, or expose procurement routes. All three profiles share the same versioned hard constraints and differ only in versioned objective weights.
+Phase 4 implements the frozen optimiser boundary with Pyomo `procurement-pyomo-highs-v1` and HiGHS. The nonnegative decision is horizon-total delivered `ktonne` per exact supplier/grade/load-port/route-segment/receiving-port/refinery/delivery option; explicit refinery shortage reconciles horizon demand. Segment, port, supplier, refinery, budget, sanctions, compatibility, timing, and concentration constraints are hard. All three profiles share those inputs and constraints and differ only through `procurement-objectives-v1` weights. `procurement-independent-checker-v1` reconstructs quantities, landed cost, objective, mass balance, concentration, timing, capacity, sanctions/compatibility, and fingerprints before a plan is usable.
 
 Decision `x[s,g,r,p,t] >= 0` is delivered volume. Auxiliary variables represent shortage, concentration, delay, and soft-policy violations.
 

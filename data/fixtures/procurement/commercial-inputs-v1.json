@@ -1,0 +1,26 @@
+{
+  "dataset_id": "sanjiv-procurement-commercial-demo",
+  "version": "commercial-fixture-v1",
+  "classification": "SYNTHETIC_FIXTURE",
+  "redistribution_rights": "Repository test and demonstration use; contains no vendor quotes or private commercial data.",
+  "effective_at": "2026-07-21T00:00:00Z",
+  "expires_at": "2027-07-21T00:00:00Z",
+  "owner": "Sanjiv demo data steward",
+  "approved_by": "Sanjiv demo data steward",
+  "rationale": "Explicit synthetic commercial assumptions for deterministic offline procurement alternatives; not live, quoted, confirmed, secured, or charterable.",
+  "source_gap": "Live supplier availability, freight quotes, insurance, financing, route fees, and commercial terms are intentionally unavailable in the credential-free demo.",
+  "options": [
+    {"assumption_id":"30927bce-d8c7-5a44-8cb2-4d3e6a2ad39e","key":"saudi-jamnagar","supplier":"supplier:saudi-arabia","grade":"grade:arab-light","route":"route:jamnagar-port-to-refinery","refinery":"refinery:jamnagar","unit":"commercial_option_bundle","values":{"capacity_ktonne":2500,"available_ktonne":2000,"commodity_price":548,"quality_differential":4,"freight":27,"insurance_and_risk_premium":7,"port_and_handling":5,"route_fees":4,"financing":3,"emissions":2,"compatibility_penalty":1}},
+    {"assumption_id":"6060ad8c-00cd-53d0-8003-8cb594215b77","key":"saudi-vadinar","supplier":"supplier:saudi-arabia","grade":"grade:arab-light","route":"route:vadinar-port-to-refinery","refinery":"refinery:vadinar","unit":"commercial_option_bundle","values":{"capacity_ktonne":2500,"available_ktonne":1800,"commodity_price":548,"quality_differential":3,"freight":29,"insurance_and_risk_premium":8,"port_and_handling":6,"route_fees":4,"financing":3,"emissions":2,"compatibility_penalty":1}},
+    {"assumption_id":"61bf7818-e916-5356-8cda-f37b9037b7af","key":"iraq-vadinar","supplier":"supplier:iraq","grade":"grade:basrah-medium","route":"route:vadinar-port-to-refinery","refinery":"refinery:vadinar","unit":"commercial_option_bundle","values":{"capacity_ktonne":2500,"available_ktonne":1800,"commodity_price":535,"quality_differential":9,"freight":30,"insurance_and_risk_premium":9,"port_and_handling":6,"route_fees":4,"financing":4,"emissions":2,"compatibility_penalty":5}},
+    {"assumption_id":"7a87100f-c46c-5654-b128-78d4d71133a9","key":"iraq-paradip","supplier":"supplier:iraq","grade":"grade:basrah-medium","route":"route:paradip-port-to-refinery","refinery":"refinery:paradip","unit":"commercial_option_bundle","values":{"capacity_ktonne":2500,"available_ktonne":1800,"commodity_price":535,"quality_differential":10,"freight":39,"insurance_and_risk_premium":10,"port_and_handling":7,"route_fees":5,"financing":4,"emissions":3,"compatibility_penalty":6}},
+    {"assumption_id":"76bd2bee-a69a-5bc4-b0ec-774b4ce78a41","key":"uae-jamnagar","supplier":"supplier:uae","grade":"grade:murban","route":"route:jamnagar-port-to-refinery","refinery":"refinery:jamnagar","unit":"commercial_option_bundle","values":{"capacity_ktonne":3000,"available_ktonne":2800,"commodity_price":559,"quality_differential":1,"freight":22,"insurance_and_risk_premium":4,"port_and_handling":5,"route_fees":1,"financing":3,"emissions":1,"compatibility_penalty":0}},
+    {"assumption_id":"4ab67766-10d4-5ee8-b6a6-e795ee53c7fd","key":"nigeria-paradip","supplier":"supplier:nigeria","grade":"grade:bonny-light","route":"route:paradip-port-to-refinery","refinery":"refinery:paradip","unit":"commercial_option_bundle","values":{"capacity_ktonne":2500,"available_ktonne":2200,"commodity_price":566,"quality_differential":0,"freight":51,"insurance_and_risk_premium":5,"port_and_handling":7,"route_fees":2,"financing":5,"emissions":5,"compatibility_penalty":0}}
+  ],
+  "policies": [
+    {"assumption_id":"8f8d193e-7a58-56bf-88e8-d708590defda","key":"budget","value":4000000000,"unit":"USD"},
+    {"assumption_id":"ad4963d1-028a-50e1-a950-5ded2a022044","key":"supplier_concentration","value":0.70,"unit":"fraction"},
+    {"assumption_id":"8e7e2a26-dfec-50b6-8b95-ddb116aa03d1","key":"corridor_concentration","value":0.75,"unit":"fraction"},
+    {"assumption_id":"a5616e0f-3bf1-5a7e-bafb-3db61696049c","key":"reserve_fixed","value":true,"unit":"boolean"}
+  ]
+}

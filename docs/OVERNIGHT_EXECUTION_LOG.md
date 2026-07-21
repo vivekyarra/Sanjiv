@@ -116,9 +116,21 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 - No source defect was found and no product-code change was required for the gate closure. Secret and dependency-change reviews found no issues.
 - Phase 4 remains incomplete beyond this contract checkpoint; optimisation, persistence, endpoints, recommendations, reserve optimisation, and approvals remain out of scope.
 
+### Phase 4 completion gate (2026-07-21)
+
+- Starting HEAD: `063daa6bb99c7ef0b9bd9bb2f18041aa38faafb2`; branch and remote were equal and the working tree was clean. Pull request #2 was open and draft.
+- Implemented the explicit `SYNTHETIC_FIXTURE` commercial input with ten stable, approved, expiring assumptions; deterministic path/segment/time-grid normalization; Pyomo `procurement-pyomo-highs-v1`; HiGHS `1.15.1`; versioned profile weights; `procurement-independent-checker-v1`; structured rejections; immutable request/plan/action/rejection persistence; exact-fingerprint reuse; POST/GET APIs; generated contracts; and `/response-planner`.
+- Migration `20260721_0005_procurement_optimiser.py` upgraded from `0004`, downgraded exactly to `0004`, and re-upgraded to `0005`; a fresh PostgreSQL repository rehydrated a checked terminal plan after service restart.
+- Focused Phase 4 suite: 36 tests. Full Python suite: 129 tests. Web suite: 11 tests. Contract package test: 1 test. No critical test is skipped or disabled.
+- Local 30-day full-Hormuz fixture measurement: all profiles `OPTIMAL`, 3,750 ktonne delivered, 2,250 ktonne explicit shortage, and two modeled actions. Warm profile solves measured about 0.017-0.020 second; first-process HiGHS initialization measured about 0.205 second. These are local fixture measurements, not production SLAs.
+- Truth/security/model review: fixed a horizon-unit capacity mismatch and a shared-port/closed-route capacity coupling defect before the gate. Production mutation fails closed without the server key; caller identity is ignored; errors are redacted; secrets never enter solver inputs; non-finite values, expired assumptions, missing provenance, invalid transitions, and fingerprint mismatches are blocked. No purchasing, tanker booking, approval, reserve release, or fabricated availability was added.
+- Dependency review: Pyomo `6.10.1` is BSD-3-Clause and highspy `1.15.1` is MIT. The gate also removed the open PostCSS and js-yaml advisories by pinning the first patched Next canary carrying PostCSS `8.5.10` and overriding js-yaml to `4.3.0`; both full and production-only `npm audit` now report zero vulnerabilities. The exact canary is locked and passed lint, types, tests, and production build; return to stable Next after a patched stable release is available.
+- Fixture values are assumption-dependent and explicitly not live, observed, quoted, commercially confirmed, secured, or charterable. Missing commercial values continue to exclude options.
+- Remaining risk: the demo alternatives are intentionally small and synthetic; production use requires verified commercial inputs, deployment authn/authz, concurrency/load evidence, and calibrated profile weights. Phase 5 must bind one exact checked Phase 4 plan.
+
 ## Phase 5 - Strategic reserve optimiser
 
-- Status: not started; blocked on the Phase 4 green gate.
+- Status: not started; may begin only after the Phase 4 completion commit is pushed and local/remote HEAD equality is verified.
 
 ## Phase 6 - Risk intelligence and alerting
 

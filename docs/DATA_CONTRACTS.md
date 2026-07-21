@@ -111,3 +111,5 @@ The future POST and GET procurement API request/response schemas are present in 
 Phase 4 input construction preserves exact simulation/twin identities,
 evidence-backed commercial values, visible approved assumptions, and stable
 option fingerprints. Missing or stale commercial provenance blocks an input.
+
+Phase 4 adds `ProcurementDemand`, path-bound `ProcurementOption` segment capacities/fingerprints, versioned objective weights with raw and weighted contributions, solver/checker metadata, complete modeled actions, structured rejected options, terminal plan fingerprints, and exact-fingerprint response reuse. Horizon totals use `ktonne`; source daily capacities are explicitly normalized to the same time grid. Every action remains `MODELED` and assumption-dependent.

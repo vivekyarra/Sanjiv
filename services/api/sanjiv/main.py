@@ -23,6 +23,12 @@ from sanjiv.maritime.routes import router as maritime_router
 from sanjiv.maritime.routes import websocket_router
 from sanjiv.maritime.service import MaritimeWatchService
 from sanjiv.procurement.openapi import add_procurement_contract_schemas
+from sanjiv.procurement.repository import (
+    InMemoryProcurementRepository,
+    PostgresProcurementRepository,
+)
+from sanjiv.procurement.routes import router as procurement_router
+from sanjiv.procurement.service import ProcurementService
 from sanjiv.scenarios.compiler import (
     DisabledScenarioProvider,
     OpenAIResponsesScenarioProvider,
@@ -114,18 +120,29 @@ def create_app(
         repository=scenario_repository,
         provider=provider,
     )
+    procurement_repository = (
+        PostgresProcurementRepository(resolved_settings.database_url)
+        if resolved_settings.sanjiv_procurement_storage == "postgres"
+        else InMemoryProcurementRepository()
+    )
+    procurement_service = ProcurementService(
+        scenario_service=scenario_service,
+        repository=procurement_repository,
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         geofences = load_geofences(resolved_settings.sanjiv_geofence_fixture)
         await service.repository.initialize(geofences)
         await scenario_service.initialize()
+        await procurement_service.initialize()
         await service.initialize()
         if resolved_settings.sanjiv_maritime_autostart:
             service.start()
         yield
         await service.stop()
         await scenario_service.close()
+        await procurement_service.close()
         close = getattr(service.repository, "close", None)
         if close is not None:
             await close()
@@ -140,6 +157,7 @@ def create_app(
     application.state.settings = resolved_settings
     application.state.maritime_service = service
     application.state.scenario_service = scenario_service
+    application.state.procurement_service = procurement_service
     application.add_middleware(
         CORSMiddleware,
         allow_origins=resolved_settings.allowed_origins,
@@ -156,6 +174,7 @@ def create_app(
     application.include_router(websocket_router)
     application.include_router(twin_router)
     application.include_router(scenario_router)
+    application.include_router(procurement_router)
 
     @application.exception_handler(HTTPException)
     async def typed_http_error(_: Request, error: HTTPException) -> JSONResponse:

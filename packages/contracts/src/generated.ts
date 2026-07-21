@@ -72,6 +72,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/procurement-plans/{plan_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Procurement Plan */
+        get: operations["procurement_plan_api_v1_procurement_plans__plan_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/scenario-runs": {
         parameters: {
             query?: never;
@@ -117,6 +134,23 @@ export interface paths {
         put?: never;
         /** Cancel Simulation */
         post: operations["cancel_simulation_api_v1_scenario_runs__run_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenario-runs/{run_id}/procurement-plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Procurement Plans */
+        post: operations["create_procurement_plans_api_v1_scenario_runs__run_id__procurement_plans_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1053,10 +1087,35 @@ export interface components {
             checker_version: string;
             /** Compatibility Exclusion Passed */
             compatibility_exclusion_passed: boolean;
+            /**
+             * Concentration Recalculated
+             * @default true
+             */
+            concentration_recalculated: boolean;
+            /**
+             * Delivery Timing Recalculated
+             * @default true
+             */
+            delivery_timing_recalculated: boolean;
             /** Failure Codes */
             failure_codes?: string[];
             /** Fingerprint Reproduction Passed */
             fingerprint_reproduction_passed: boolean;
+            /**
+             * Hard Constraints Recalculated
+             * @default true
+             */
+            hard_constraints_recalculated: boolean;
+            /**
+             * Inventory Balance Recalculated
+             * @default true
+             */
+            inventory_balance_recalculated: boolean;
+            /**
+             * Landed Cost Recalculated
+             * @default true
+             */
+            landed_cost_recalculated: boolean;
             /** Mass Balance Passed */
             mass_balance_passed: boolean;
             /** Objective Reconstruction Passed */
@@ -1249,10 +1308,22 @@ export interface components {
             delay_penalty: components["schemas"]["MetricEnvelope_float_"];
             emissions_penalty: components["schemas"]["MetricEnvelope_float_"];
             landed_cost: components["schemas"]["MetricEnvelope_float_"];
+            /** Raw Metrics */
+            raw_metrics?: {
+                [key: string]: number;
+            };
             route_risk_penalty: components["schemas"]["MetricEnvelope_float_"];
             shortfall_penalty: components["schemas"]["MetricEnvelope_float_"];
             supplier_concentration_penalty: components["schemas"]["MetricEnvelope_float_"];
             total: components["schemas"]["MetricEnvelope_float_"];
+            /** Weighted Contributions */
+            weighted_contributions?: {
+                [key: string]: number;
+            };
+            /** Weights */
+            weights?: {
+                [key: string]: number;
+            };
         };
         /** ObjectiveWeight */
         ObjectiveWeight: {
@@ -1407,13 +1478,59 @@ export interface components {
             evidence_ids: string[];
             landed_cost: components["schemas"]["LandedCostBreakdown"];
             /**
+             * Load Port Id
+             * @default null
+             */
+            load_port_id: string | null;
+            /**
+             * Option Fingerprint
+             * @default null
+             */
+            option_fingerprint: string | null;
+            /**
              * Option Id
              * Format: uuid
              */
             option_id: string;
+            /**
+             * Receiving Port Id
+             * @default null
+             */
+            receiving_port_id: string | null;
             refinery: components["schemas"]["RefineryAllocation"];
             route: components["schemas"]["RouteAllocation"];
+            /** Route Segment Ids */
+            route_segment_ids?: string[];
             supplier: components["schemas"]["SupplierAllocation"];
+        };
+        /** ProcurementDemand */
+        ProcurementDemand: {
+            /**
+             * Interval End
+             * Format: date-time
+             */
+            interval_end: string;
+            /**
+             * Interval Start
+             * Format: date-time
+             */
+            interval_start: string;
+            /**
+             * Refinery Id
+             * Format: uuid
+             */
+            refinery_id: string;
+            required_volume: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** ProcurementExecutionRequest */
+        ProcurementExecutionRequest: {
+            /** Profiles */
+            profiles?: components["schemas"]["ProcurementProfile"][];
+            /**
+             * Time Limit Seconds
+             * @default 10
+             */
+            time_limit_seconds: number;
         };
         /** ProcurementFailure */
         ProcurementFailure: {
@@ -1444,6 +1561,8 @@ export interface components {
         };
         /** ProcurementOptimisationInput */
         ProcurementOptimisationInput: {
+            /** Demands */
+            demands?: components["schemas"]["ProcurementDemand"][];
             hard_constraints: components["schemas"]["HardConstraintConfiguration"];
             /** Input Fingerprint */
             input_fingerprint: string;
@@ -1489,10 +1608,25 @@ export interface components {
             /** @default null */
             landed_cost: components["schemas"]["LandedCostBreakdown"] | null;
             /**
+             * Load Port Id
+             * @default null
+             */
+            load_port_id: string | null;
+            /**
+             * Option Fingerprint
+             * @default null
+             */
+            option_fingerprint: string | null;
+            /**
              * Option Id
              * Format: uuid
              */
             option_id: string;
+            /**
+             * Receiving Port Id
+             * @default null
+             */
+            receiving_port_id: string | null;
             /**
              * Refinery Id
              * Format: uuid
@@ -1507,6 +1641,12 @@ export interface components {
              * Format: uuid
              */
             route_id: string;
+            /** Route Segment Capacities */
+            route_segment_capacities?: {
+                [key: string]: number;
+            };
+            /** Route Segment Ids */
+            route_segment_ids?: string[];
             /** Sanctions Permitted */
             sanctions_permitted: boolean;
             supplier_capacity: components["schemas"]["MetricEnvelope_float_"];
@@ -1602,6 +1742,11 @@ export interface components {
             /** Results */
             results: components["schemas"]["SolverResult"][];
             /**
+             * Reused
+             * @default false
+             */
+            reused: boolean;
+            /**
              * Run Id
              * Format: uuid
              */
@@ -1696,7 +1841,7 @@ export interface components {
          * RejectedOptionReasonCode
          * @enum {string}
          */
-        RejectedOptionReasonCode: "SANCTIONS_EXCLUSION" | "GRADE_INCOMPATIBLE" | "SUPPLIER_CAPACITY_EXCEEDED" | "ROUTE_CAPACITY_EXCEEDED" | "REFINERY_CAPACITY_EXCEEDED" | "DELIVERY_WINDOW_MISSED" | "BUDGET_EXCEEDED" | "CONCENTRATION_LIMIT_EXCEEDED" | "COMMERCIAL_AVAILABILITY_UNVERIFIED" | "TRANSPORT_AVAILABILITY_UNVERIFIED" | "POLICY_EXCLUSION" | "DOMINATED";
+        RejectedOptionReasonCode: "SANCTIONED" | "HARD_INCOMPATIBLE" | "DISCONNECTED" | "ROUTE_CLOSED" | "CAPACITY_EXHAUSTED" | "SUPPLIER_LIMIT" | "PORT_LIMIT" | "DELIVERY_TOO_LATE" | "BUDGET_LIMIT" | "CONCENTRATION_LIMIT" | "HIGHER_OBJECTIVE" | "MISSING_COMMERCIAL_INPUT" | "EXPIRED_ASSUMPTION" | "INVALID_PROVENANCE" | "SANCTIONS_EXCLUSION" | "GRADE_INCOMPATIBLE" | "SUPPLIER_CAPACITY_EXCEEDED" | "ROUTE_CAPACITY_EXCEEDED" | "REFINERY_CAPACITY_EXCEEDED" | "DELIVERY_WINDOW_MISSED" | "BUDGET_EXCEEDED" | "CONCENTRATION_LIMIT_EXCEEDED" | "COMMERCIAL_AVAILABILITY_UNVERIFIED" | "TRANSPORT_AVAILABILITY_UNVERIFIED" | "POLICY_EXCLUSION" | "DOMINATED";
         /** ResolvedDisruptionTarget */
         ResolvedDisruptionTarget: {
             /**
@@ -2216,6 +2361,8 @@ export interface components {
             /** @default null */
             constraints: components["schemas"]["ConstraintReport"] | null;
             /** @default null */
+            delivered_volume: components["schemas"]["MetricEnvelope_float_"] | null;
+            /** @default null */
             failure: components["schemas"]["ProcurementFailure"] | null;
             /** @default null */
             independent_check: components["schemas"]["IndependentCheckResult"] | null;
@@ -2234,6 +2381,8 @@ export interface components {
             result_id: string;
             /** Route Allocations */
             route_allocations?: components["schemas"]["RouteAllocation"][];
+            /** @default null */
+            shortage: components["schemas"]["MetricEnvelope_float_"] | null;
             status: components["schemas"]["SolverStatus"];
             /** Supplier Allocations */
             supplier_allocations?: components["schemas"]["SupplierAllocation"][];
@@ -2242,7 +2391,7 @@ export interface components {
          * SolverStatus
          * @enum {string}
          */
-        SolverStatus: "OPTIMAL" | "FEASIBLE" | "INFEASIBLE" | "TIMEOUT" | "ERROR" | "NOT_RUN";
+        SolverStatus: "OPTIMAL" | "FEASIBLE" | "INFEASIBLE" | "TIMEOUT" | "ERROR" | "CANCELLED" | "NOT_RUN";
         /** SourceHealthRecord */
         SourceHealthRecord: {
             /**
@@ -2784,6 +2933,37 @@ export interface operations {
             };
         };
     };
+    procurement_plan_api_v1_procurement_plans__plan_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProcurementPlan"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     start_simulation_api_v1_scenario_runs_post: {
         parameters: {
             query?: never;
@@ -2872,6 +3052,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SimulationRun"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_procurement_plans_api_v1_scenario_runs__run_id__procurement_plans_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Scenario-Key"?: string | null;
+            };
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProcurementExecutionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProcurementPlanResponse"];
                 };
             };
             /** @description Validation Error */

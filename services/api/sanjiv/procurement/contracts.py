@@ -38,6 +38,7 @@ class SolverStatus(StrEnum):
     INFEASIBLE = "INFEASIBLE"
     TIMEOUT = "TIMEOUT"
     ERROR = "ERROR"
+    CANCELLED = "CANCELLED"
     NOT_RUN = "NOT_RUN"
 
 
@@ -67,6 +68,20 @@ class ConstraintFamily(StrEnum):
 
 
 class RejectedOptionReasonCode(StrEnum):
+    SANCTIONED = "SANCTIONED"
+    HARD_INCOMPATIBLE = "HARD_INCOMPATIBLE"
+    DISCONNECTED = "DISCONNECTED"
+    ROUTE_CLOSED = "ROUTE_CLOSED"
+    CAPACITY_EXHAUSTED = "CAPACITY_EXHAUSTED"
+    SUPPLIER_LIMIT = "SUPPLIER_LIMIT"
+    PORT_LIMIT = "PORT_LIMIT"
+    DELIVERY_TOO_LATE = "DELIVERY_TOO_LATE"
+    BUDGET_LIMIT = "BUDGET_LIMIT"
+    CONCENTRATION_LIMIT = "CONCENTRATION_LIMIT"
+    HIGHER_OBJECTIVE = "HIGHER_OBJECTIVE"
+    MISSING_COMMERCIAL_INPUT = "MISSING_COMMERCIAL_INPUT"
+    EXPIRED_ASSUMPTION = "EXPIRED_ASSUMPTION"
+    INVALID_PROVENANCE = "INVALID_PROVENANCE"
     SANCTIONS_EXCLUSION = "SANCTIONS_EXCLUSION"
     GRADE_INCOMPATIBLE = "GRADE_INCOMPATIBLE"
     SUPPLIER_CAPACITY_EXCEEDED = "SUPPLIER_CAPACITY_EXCEEDED"
@@ -275,6 +290,22 @@ class TransportAvailability(BaseModel):
         return self
 
 
+class ProcurementDemand(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    refinery_id: UUID
+    interval_start: datetime
+    interval_end: datetime
+    required_volume: MetricEnvelope[float]
+
+    @model_validator(mode="after")
+    def validate_demand(self) -> Self:
+        if self.interval_end <= self.interval_start:
+            raise ValueError("procurement demand interval is invalid")
+        _validate_non_negative_metric(self.required_volume, {"ktonne"}, "required_volume")
+        return self
+
+
 class ProcurementOption(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
@@ -300,6 +331,11 @@ class ProcurementOption(BaseModel):
     route_distance: MetricEnvelope[float] | None = None
     transit_time: MetricEnvelope[float] | None = None
     chokepoint_ids: list[UUID] = Field(default_factory=list, max_length=100)
+    load_port_id: UUID | None = None
+    receiving_port_id: UUID | None = None
+    route_segment_ids: list[UUID] = Field(default_factory=list, max_length=100)
+    route_segment_capacities: dict[UUID, float] = Field(default_factory=dict, max_length=100)
+    option_fingerprint: str | None = Field(default=None, pattern=SHA256_PATTERN)
 
     @model_validator(mode="after")
     def validate_option(self) -> Self:
@@ -327,6 +363,18 @@ class ProcurementOption(BaseModel):
             self.assumption_ids
         ):
             raise ValueError("assumption-backed commercial values require visible assumptions")
+        _require_unique(self.route_segment_ids, "route segments")
+        if set(self.route_segment_capacities) != set(self.route_segment_ids):
+            raise ValueError("every route segment requires an exact capacity")
+        if any(
+            not math.isfinite(value) or value < 0
+            for value in self.route_segment_capacities.values()
+        ):
+            raise ValueError("route segment capacities must be finite and nonnegative")
+        if self.option_fingerprint is not None:
+            payload = self.model_dump(mode="json", exclude={"option_fingerprint"})
+            if self.option_fingerprint != _sha256(payload):
+                raise ValueError("option fingerprint does not match canonical option inputs")
         return self
 
 
@@ -385,11 +433,16 @@ class ProcurementOptimisationInput(BaseModel):
     hard_constraints: HardConstraintConfiguration
     reserve_policy: FixedReservePolicyInput
     options: list[ProcurementOption] = Field(min_length=1, max_length=MAX_OPTIONS)
+    demands: list[ProcurementDemand] = Field(default_factory=list, max_length=MAX_OPTIONS)
     input_fingerprint: str = Field(pattern=SHA256_PATTERN)
 
     @model_validator(mode="after")
     def validate_input(self) -> Self:
         _require_unique([item.option_id for item in self.options], "procurement options")
+        _require_unique(
+            [(item.refinery_id, item.interval_start) for item in self.demands],
+            "procurement demands",
+        )
         evidence_ids = {item.evidence_id for item in self.provenance.evidence}
         assumption_refs = {item.assumption_id: item for item in self.provenance.assumptions}
         assumption_ids = set(assumption_refs)
@@ -529,6 +582,10 @@ class ProcurementAction(BaseModel):
     landed_cost: LandedCostBreakdown
     evidence_ids: list[UUID] = Field(min_length=1, max_length=MAX_REFERENCES)
     assumption_ids: list[UUID] = Field(default_factory=list, max_length=MAX_REFERENCES)
+    option_fingerprint: str | None = Field(default=None, pattern=SHA256_PATTERN)
+    load_port_id: UUID | None = None
+    receiving_port_id: UUID | None = None
+    route_segment_ids: list[UUID] = Field(default_factory=list, max_length=100)
 
     @model_validator(mode="after")
     def validate_action(self) -> Self:
@@ -539,6 +596,7 @@ class ProcurementAction(BaseModel):
             raise ValueError("supplier, route and refinery action volumes must reconcile")
         _require_unique(self.evidence_ids, "action evidence")
         _require_unique(self.assumption_ids, "action assumptions")
+        _require_unique(self.route_segment_ids, "action route segments")
         return self
 
 
@@ -554,12 +612,24 @@ class ObjectiveBreakdown(BaseModel):
     compatibility_penalty: MetricEnvelope[float]
     emissions_penalty: MetricEnvelope[float]
     total: MetricEnvelope[float]
+    raw_metrics: dict[str, float] = Field(default_factory=dict, max_length=20)
+    weights: dict[str, float] = Field(default_factory=dict, max_length=20)
+    weighted_contributions: dict[str, float] = Field(default_factory=dict, max_length=20)
 
     @model_validator(mode="after")
     def validate_objective(self) -> Self:
         for name in self.__class__.model_fields:
             metric = getattr(self, name)
-            _validate_modeled_non_negative_metric(metric, {"objective_point"}, name)
+            if isinstance(metric, MetricEnvelope):
+                _validate_modeled_non_negative_metric(metric, {"objective_point"}, name)
+        for collection in (self.raw_metrics, self.weights, self.weighted_contributions):
+            if any(not math.isfinite(value) or value < 0 for value in collection.values()):
+                raise ValueError("objective values must be finite and nonnegative")
+        if (
+            self.weighted_contributions
+            and abs(sum(self.weighted_contributions.values()) - self.total.value) > 1e-6
+        ):
+            raise ValueError("weighted objective contributions must reconcile to total")
         return self
 
 
@@ -673,6 +743,11 @@ class IndependentCheckResult(BaseModel):
     reconstructed_objective: MetricEnvelope[float]
     tolerance: MetricEnvelope[float]
     failure_codes: list[BoundedCode] = Field(default_factory=list, max_length=100)
+    hard_constraints_recalculated: bool = True
+    landed_cost_recalculated: bool = True
+    concentration_recalculated: bool = True
+    delivery_timing_recalculated: bool = True
+    inventory_balance_recalculated: bool = True
 
     @model_validator(mode="after")
     def validate_check(self) -> Self:
@@ -692,6 +767,11 @@ class IndependentCheckResult(BaseModel):
             self.sanctions_exclusion_passed,
             self.compatibility_exclusion_passed,
             self.fingerprint_reproduction_passed,
+            self.hard_constraints_recalculated,
+            self.landed_cost_recalculated,
+            self.concentration_recalculated,
+            self.delivery_timing_recalculated,
+            self.inventory_balance_recalculated,
         )
         expected_passed = all(checks) and not self.failure_codes
         objective_within_tolerance = (
@@ -749,6 +829,8 @@ class SolverResult(BaseModel):
     rejected_options: list[RejectedOption] = Field(default_factory=list, max_length=MAX_OPTIONS)
     independent_check: IndependentCheckResult | None = None
     failure: ProcurementFailure | None = None
+    delivered_volume: MetricEnvelope[float] | None = None
+    shortage: MetricEnvelope[float] | None = None
 
     @model_validator(mode="after")
     def validate_result_state(self) -> Self:
@@ -772,6 +854,12 @@ class SolverResult(BaseModel):
                 raise ValueError("feasible solver status requires a passed independent check")
             if self.failure is not None:
                 raise ValueError("feasible solver status cannot include a failure")
+            if self.delivered_volume is not None:
+                _validate_modeled_non_negative_metric(
+                    self.delivered_volume, {"ktonne"}, "delivered_volume"
+                )
+            if self.shortage is not None:
+                _validate_modeled_non_negative_metric(self.shortage, {"ktonne"}, "shortage")
         else:
             if allocations_present:
                 raise ValueError("non-feasible solver result cannot contain procurement actions")
@@ -929,6 +1017,10 @@ class ProcurementPlan(BaseModel):
                 or action.refinery.grade_id != option.grade_id
             ):
                 raise ValueError("plan action allocations must match the referenced input option")
+            if action.option_fingerprint is not None and (
+                action.option_fingerprint != option.option_fingerprint
+            ):
+                raise ValueError("plan action fingerprint must match its exact input option")
             if (
                 action.delivery_window_start < option.delivery_window_start
                 or action.delivery_window_end > option.delivery_window_end
@@ -955,6 +1047,7 @@ class ProcurementPlanResponse(BaseModel):
     results: list[SolverResult] = Field(min_length=1, max_length=3)
     plans: list[ProcurementPlan] = Field(default_factory=list, max_length=3)
     failures: list[ProcurementFailure] = Field(default_factory=list, max_length=3)
+    reused: bool = False
 
     @model_validator(mode="after")
     def validate_response(self) -> Self:
@@ -1013,9 +1106,30 @@ class ProcurementLifecycleTransition(BaseModel):
 def procurement_optimisation_input_fingerprint(
     value: ProcurementOptimisationInput | dict[str, Any],
 ) -> str:
-    payload = value.model_dump(mode="json") if isinstance(value, BaseModel) else dict(value)
+    payload = (
+        value.model_dump(mode="json")
+        if isinstance(value, BaseModel)
+        else dict(to_jsonable_python(dict(value)))
+    )
     payload.pop("input_fingerprint", None)
     payload.setdefault("input_schema_version", "procurement-input-v1")
+    payload.setdefault("demands", [])
+    for option in payload.get("options", []):
+        option.setdefault("load_port_id", None)
+        option.setdefault("receiving_port_id", None)
+        option.setdefault("route_segment_ids", [])
+        option.setdefault("route_segment_capacities", {})
+        option.setdefault("option_fingerprint", None)
+    return _sha256(payload)
+
+
+def procurement_option_fingerprint(value: ProcurementOption | dict[str, Any]) -> str:
+    payload = (
+        value.model_dump(mode="json")
+        if isinstance(value, BaseModel)
+        else dict(to_jsonable_python(dict(value)))
+    )
+    payload.pop("option_fingerprint", None)
     return _sha256(payload)
 
 

@@ -1436,6 +1436,16 @@
             "title": "Compatibility Exclusion Passed",
             "type": "boolean"
           },
+          "concentration_recalculated": {
+            "default": true,
+            "title": "Concentration Recalculated",
+            "type": "boolean"
+          },
+          "delivery_timing_recalculated": {
+            "default": true,
+            "title": "Delivery Timing Recalculated",
+            "type": "boolean"
+          },
           "failure_codes": {
             "items": {
               "maxLength": 100,
@@ -1448,6 +1458,21 @@
           },
           "fingerprint_reproduction_passed": {
             "title": "Fingerprint Reproduction Passed",
+            "type": "boolean"
+          },
+          "hard_constraints_recalculated": {
+            "default": true,
+            "title": "Hard Constraints Recalculated",
+            "type": "boolean"
+          },
+          "inventory_balance_recalculated": {
+            "default": true,
+            "title": "Inventory Balance Recalculated",
+            "type": "boolean"
+          },
+          "landed_cost_recalculated": {
+            "default": true,
+            "title": "Landed Cost Recalculated",
             "type": "boolean"
           },
           "mass_balance_passed": {
@@ -2003,6 +2028,14 @@
           "landed_cost": {
             "$ref": "#/components/schemas/MetricEnvelope_float_"
           },
+          "raw_metrics": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "maxProperties": 20,
+            "title": "Raw Metrics",
+            "type": "object"
+          },
           "route_risk_penalty": {
             "$ref": "#/components/schemas/MetricEnvelope_float_"
           },
@@ -2014,6 +2047,22 @@
           },
           "total": {
             "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "weighted_contributions": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "maxProperties": 20,
+            "title": "Weighted Contributions",
+            "type": "object"
+          },
+          "weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "maxProperties": 20,
+            "title": "Weights",
+            "type": "object"
           }
         },
         "required": [
@@ -2394,16 +2443,64 @@
           "landed_cost": {
             "$ref": "#/components/schemas/LandedCostBreakdown"
           },
+          "load_port_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Load Port Id"
+          },
+          "option_fingerprint": {
+            "anyOf": [
+              {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Option Fingerprint"
+          },
           "option_id": {
             "format": "uuid",
             "title": "Option Id",
             "type": "string"
+          },
+          "receiving_port_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Receiving Port Id"
           },
           "refinery": {
             "$ref": "#/components/schemas/RefineryAllocation"
           },
           "route": {
             "$ref": "#/components/schemas/RouteAllocation"
+          },
+          "route_segment_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Route Segment Ids",
+            "type": "array"
           },
           "supplier": {
             "$ref": "#/components/schemas/SupplierAllocation"
@@ -2421,6 +2518,60 @@
           "evidence_ids"
         ],
         "title": "ProcurementAction",
+        "type": "object"
+      },
+      "ProcurementDemand": {
+        "additionalProperties": false,
+        "properties": {
+          "interval_end": {
+            "format": "date-time",
+            "title": "Interval End",
+            "type": "string"
+          },
+          "interval_start": {
+            "format": "date-time",
+            "title": "Interval Start",
+            "type": "string"
+          },
+          "refinery_id": {
+            "format": "uuid",
+            "title": "Refinery Id",
+            "type": "string"
+          },
+          "required_volume": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "refinery_id",
+          "interval_start",
+          "interval_end",
+          "required_volume"
+        ],
+        "title": "ProcurementDemand",
+        "type": "object"
+      },
+      "ProcurementExecutionRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "profiles": {
+            "items": {
+              "$ref": "#/components/schemas/ProcurementProfile"
+            },
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Profiles",
+            "type": "array"
+          },
+          "time_limit_seconds": {
+            "default": 10.0,
+            "exclusiveMinimum": 0.0,
+            "maximum": 60.0,
+            "title": "Time Limit Seconds",
+            "type": "number"
+          }
+        },
+        "title": "ProcurementExecutionRequest",
         "type": "object"
       },
       "ProcurementFailure": {
@@ -2516,6 +2667,14 @@
       "ProcurementOptimisationInput": {
         "additionalProperties": false,
         "properties": {
+          "demands": {
+            "items": {
+              "$ref": "#/components/schemas/ProcurementDemand"
+            },
+            "maxItems": 500,
+            "title": "Demands",
+            "type": "array"
+          },
           "hard_constraints": {
             "$ref": "#/components/schemas/HardConstraintConfiguration"
           },
@@ -2626,10 +2785,49 @@
             ],
             "default": null
           },
+          "load_port_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Load Port Id"
+          },
+          "option_fingerprint": {
+            "anyOf": [
+              {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Option Fingerprint"
+          },
           "option_id": {
             "format": "uuid",
             "title": "Option Id",
             "type": "string"
+          },
+          "receiving_port_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Receiving Port Id"
           },
           "refinery_id": {
             "format": "uuid",
@@ -2657,6 +2855,26 @@
             "format": "uuid",
             "title": "Route Id",
             "type": "string"
+          },
+          "route_segment_capacities": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "maxProperties": 100,
+            "propertyNames": {
+              "format": "uuid"
+            },
+            "title": "Route Segment Capacities",
+            "type": "object"
+          },
+          "route_segment_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Route Segment Ids",
+            "type": "array"
           },
           "sanctions_permitted": {
             "title": "Sanctions Permitted",
@@ -2950,6 +3168,11 @@
             "title": "Results",
             "type": "array"
           },
+          "reused": {
+            "default": false,
+            "title": "Reused",
+            "type": "boolean"
+          },
           "run_id": {
             "format": "uuid",
             "title": "Run Id",
@@ -3190,6 +3413,20 @@
       },
       "RejectedOptionReasonCode": {
         "enum": [
+          "SANCTIONED",
+          "HARD_INCOMPATIBLE",
+          "DISCONNECTED",
+          "ROUTE_CLOSED",
+          "CAPACITY_EXHAUSTED",
+          "SUPPLIER_LIMIT",
+          "PORT_LIMIT",
+          "DELIVERY_TOO_LATE",
+          "BUDGET_LIMIT",
+          "CONCENTRATION_LIMIT",
+          "HIGHER_OBJECTIVE",
+          "MISSING_COMMERCIAL_INPUT",
+          "EXPIRED_ASSUMPTION",
+          "INVALID_PROVENANCE",
           "SANCTIONS_EXCLUSION",
           "GRADE_INCOMPATIBLE",
           "SUPPLIER_CAPACITY_EXCEEDED",
@@ -4462,6 +4699,17 @@
             ],
             "default": null
           },
+          "delivered_volume": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
           "failure": {
             "anyOf": [
               {
@@ -4530,6 +4778,17 @@
             "title": "Route Allocations",
             "type": "array"
           },
+          "shortage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
           "status": {
             "$ref": "#/components/schemas/SolverStatus"
           },
@@ -4558,6 +4817,7 @@
           "INFEASIBLE",
           "TIMEOUT",
           "ERROR",
+          "CANCELLED",
           "NOT_RUN"
         ],
         "title": "SolverStatus",
@@ -5899,6 +6159,49 @@
         ]
       }
     },
+    "/api/v1/procurement-plans/{plan_id}": {
+      "get": {
+        "operationId": "procurement_plan_api_v1_procurement_plans__plan_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcurementPlan"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Procurement Plan",
+        "tags": [
+          "response-planner"
+        ]
+      }
+    },
     "/api/v1/scenario-runs": {
       "post": {
         "operationId": "start_simulation_api_v1_scenario_runs_post",
@@ -6079,6 +6382,86 @@
         "summary": "Cancel Simulation",
         "tags": [
           "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenario-runs/{run_id}/procurement-plans": {
+      "post": {
+        "operationId": "create_procurement_plans_api_v1_scenario_runs__run_id__procurement_plans_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Scenario-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Scenario-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcurementExecutionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcurementPlanResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Procurement Plans",
+        "tags": [
+          "response-planner"
         ]
       }
     },

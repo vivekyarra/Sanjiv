@@ -249,7 +249,17 @@ def fingerprint_inputs(
 def objective_breakdown() -> ObjectiveBreakdown:
     values = {
         name: modeled_metric(1, "objective_point")
-        for name in ObjectiveBreakdown.model_fields
+        for name in (
+            "landed_cost",
+            "shortfall_penalty",
+            "delay_penalty",
+            "route_risk_penalty",
+            "supplier_concentration_penalty",
+            "corridor_concentration_penalty",
+            "compatibility_penalty",
+            "emissions_penalty",
+            "total",
+        )
     }
     return ObjectiveBreakdown(**values)
 
@@ -648,7 +658,7 @@ def test_input_fingerprint_changes_after_any_material_option_change() -> None:
     assert procurement_optimisation_input_fingerprint(changed) != baseline
 
 
-def test_openapi_freezes_procurement_schemas_without_exposing_future_routes() -> None:
+def test_openapi_exposes_completed_procurement_routes_and_schemas() -> None:
     schema = app.openapi()
     expected = {
         "ProcurementOptimisationInput",
@@ -677,5 +687,5 @@ def test_openapi_freezes_procurement_schemas_without_exposing_future_routes() ->
         "TwinSnapshotReference",
     }
     assert expected <= set(schema["components"]["schemas"])
-    assert "/api/v1/scenario-runs/{run_id}/procurement-plans" not in schema["paths"]
-    assert "/api/v1/procurement-plans/{plan_id}" not in schema["paths"]
+    assert "/api/v1/scenario-runs/{run_id}/procurement-plans" in schema["paths"]
+    assert "/api/v1/procurement-plans/{plan_id}" in schema["paths"]

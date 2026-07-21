@@ -10,6 +10,8 @@
 | Malformed AIS destination | High | Medium | Preserve raw text, normalized candidate, confidence contributions | Mark unknown; do not assert destination/cargo | Maritime lead |
 | Solver infeasibility | Medium | High | Pre-solve validation and named slack diagnostics | Return infeasibility report and safe manual review | Modelling lead |
 | Solver timeout | Medium | High | Time limits, warm starts, model-size budgets | Reuse only exact-fingerprint result; otherwise no plan | Modelling lead |
+| Procurement model or checker drift | Medium | Critical | Shared immutable inputs but independent arithmetic/constraint reconstruction, fingerprint checks, deterministic golden cases | Block the plan and return typed checker failure | Modelling lead |
+| Synthetic commercial assumption mistaken for availability | High | Critical | Expiry, owner/rationale, visible `ASSUMPTION` and `SYNTHETIC_FIXTURE` labels, no execution controls or confirmation wording | Exclude missing/expired inputs and require verified operator data | Evidence lead |
 | LLM parsing failure | Medium | Medium | Strict schema, bounded repair, deterministic validation | Editable structured scenario form | Platform lead |
 | Prompt injection or provider self-approval | Medium | High | Defensive system boundary, constrained schema, injection refusal, deterministic validation, server confirmation | Discard provider output and use structured form | Security lead |
 | Local demo mutation exposure | Medium | High | Credential-free only in development/test; production mutations fail closed without configured operator API key and server-owned identity | Place behind authenticated operator gateway before multi-user deployment | Security lead |

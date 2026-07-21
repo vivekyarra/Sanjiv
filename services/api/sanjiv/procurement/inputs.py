@@ -7,6 +7,7 @@ from uuid import NAMESPACE_URL, UUID, uuid5
 from pydantic import BaseModel, ConfigDict, Field
 
 from sanjiv.contracts import (
+    Assumption,
     AssumptionStatus,
     FreshnessStatus,
     MetricEnvelope,
@@ -19,6 +20,7 @@ from sanjiv.procurement.contracts import (
     EvidenceFingerprintReference,
     FixedReservePolicyInput,
     HardConstraintConfiguration,
+    ProcurementDemand,
     ProcurementOptimisationInput,
     ProcurementOption,
     ProcurementProfile,
@@ -29,6 +31,7 @@ from sanjiv.procurement.contracts import (
     TransportAvailability,
     TransportAvailabilityStatus,
     procurement_optimisation_input_fingerprint,
+    procurement_option_fingerprint,
 )
 from sanjiv.procurement.costs import CostConfiguration, reconcile_landed_cost
 from sanjiv.scenarios.contracts import ConfirmedScenario, TwinSnapshotReference
@@ -98,6 +101,7 @@ def build_procurement_input(
     hard_constraints: HardConstraintConfiguration,
     cost_configuration: CostConfiguration,
     commercial_inputs: Mapping[tuple[UUID, UUID, UUID, UUID], CommercialOptionInput],
+    commercial_assumptions: Mapping[UUID, Assumption] | None = None,
 ) -> ProcurementInputBuildResult:
     errors: list[str] = []
     if run.status.value != "COMPLETED" or run.result is None:
@@ -121,9 +125,11 @@ def build_procurement_input(
         errors.append("planning horizon is invalid")
     if errors:
         return ProcurementInputBuildResult(blocking_errors=errors)
+    interval_days = (horizon.ends_at - horizon.starts_at).total_seconds() / 86_400
 
     evidence = {item.id: item for item in snapshot.evidence_records}
     assumptions = {item.id: item for item in snapshot.assumptions}
+    assumptions.update(commercial_assumptions or {})
     refs = [
         EvidenceFingerprintReference(
             evidence_id=item.id, raw_payload_hash=item.raw_payload_hash.lower()
@@ -138,9 +144,19 @@ def build_procurement_input(
         )
         for item in assumptions.values()
     ]
-    if any(item.status is not AssumptionStatus.APPROVED for item in assumptions.values()):
+    if any(
+        item.status is not AssumptionStatus.APPROVED
+        for item in (commercial_assumptions or {}).values()
+    ):
         return ProcurementInputBuildResult(
             blocking_errors=["all source assumptions must be approved"]
+        )
+    if any(
+        item.expires_at is not None and item.expires_at <= horizon.starts_at
+        for item in (commercial_assumptions or {}).values()
+    ):
+        return ProcurementInputBuildResult(
+            blocking_errors=["commercial assumptions must be unexpired for the planning horizon"]
         )
     node_by_id = {item.id: item for item in snapshot.nodes}
     route_by_id = {item.id: item for item in snapshot.routes}
@@ -260,10 +276,27 @@ def build_procurement_input(
                 and not commercial.evidence_ids
             ):
                 raise ValueError("transport confirmation lacks evidence")
+            path = _route_path(
+                snapshot, flow.supplier_id, refinery_id, route.id, grade.load_port_ids
+            )
+            if not path:
+                excluded.append(
+                    ExcludedOption(
+                        supplier_id=flow.supplier_id,
+                        grade_id=grade.id,
+                        route_id=route.id,
+                        refinery_id=refinery_id,
+                        reason=RejectedOptionReasonCode.DISCONNECTED,
+                        detail="no deterministic supplier-to-refinery route path exists",
+                    )
+                )
+                continue
+            path_routes = [route_by_id[item] for item in path]
+            transit_days = sum(item.transit_time.value for item in path_routes)
             start = horizon.starts_at
             end = min(
                 horizon.ends_at,
-                start + timedelta(hours=max(1, round(route.transit_time.value / 24))),
+                start + timedelta(hours=max(1, round(transit_days * 24))),
             )
             if end <= start:
                 raise ValueError("delivery interval is outside horizon")
@@ -271,7 +304,7 @@ def build_procurement_input(
             option_evidence_ids = commercial.evidence_ids or [next(iter(evidence))]
             refinery_capacity = node_by_id[refinery_id].capacity
             refinery_capacity_value = (
-                refinery_capacity.value
+                refinery_capacity.value * interval_days
                 if refinery_capacity is not None
                 else commercial.capacity_ktonne
             )
@@ -297,49 +330,79 @@ def build_procurement_input(
                     model_version=cost_configuration.version,
                 )
 
+            path_nodes = [node_by_id[item.origin_id] for item in path_routes]
+            load_port_ids = set(grade.load_port_ids)
+            load_port = next((item for item in path_nodes if item.id in load_port_ids), None)
+            receiving_port = next(
+                (item for item in reversed(path_nodes) if item.kind is AssetKind.INDIAN_PORT), None
+            )
+            disrupted_capacity = {
+                item.route_id: item.disrupted_capacity.value * interval_days
+                for item in result.flows
+                if item.supplier_id == flow.supplier_id and item.grade_id == grade.id
+            }
+            route_capacity_value = min(
+                disrupted_capacity.get(item.id, item.capacity.value * interval_days)
+                for item in path_routes
+            )
+            segment_capacities = {
+                item.id: disrupted_capacity.get(item.id, item.capacity.value * interval_days)
+                for item in path_routes
+            }
+            distance_value = sum(item.distance.value for item in path_routes)
+            chokepoints = sorted(
+                {chokepoint for item in path_routes for chokepoint in item.chokepoint_ids},
+                key=str,
+            )
+            option = ProcurementOption(
+                option_id=uuid5(
+                    NAMESPACE_URL,
+                    f"urn:sanjiv:procurement-option:{flow.supplier_id}:{grade.id}:{route.id}:{refinery_id}:{start.isoformat()}",
+                ),
+                supplier_id=flow.supplier_id,
+                grade_id=grade.id,
+                route_id=route.id,
+                refinery_id=refinery_id,
+                delivery_window_start=start,
+                delivery_window_end=end,
+                supplier_capacity=metric(commercial.capacity_ktonne, "ktonne", "supplier-capacity"),
+                commercially_available_volume=metric(
+                    commercial.available_ktonne, "ktonne", "commercial-availability"
+                ),
+                route_capacity=metric(route_capacity_value, "ktonne", "route-capacity"),
+                refinery_receiving_capacity=metric(
+                    refinery_capacity_value,
+                    "ktonne",
+                    "refinery-capacity",
+                ),
+                commodity_price=metric(
+                    commercial.components["commodity_price"], "USD_per_tonne", "commodity-price"
+                ),
+                freight=metric(commercial.components["freight"], "USD_per_tonne", "freight"),
+                sanctions_permitted=grade.sanctions_state.upper()
+                not in {"SANCTIONED", "PROHIBITED"},
+                compatibility_permitted=compatibility.allowed,
+                transport_availability=TransportAvailability(
+                    status=commercial.transport_status,
+                    commercially_confirmed=commercial.commercially_confirmed,
+                    evidence_ids=commercial.evidence_ids,
+                    assumption_ids=commercial.assumption_ids,
+                ),
+                evidence_ids=sorted(set(option_evidence_ids)),
+                assumption_ids=sorted(set(commercial.assumption_ids)),
+                landed_cost=cost,
+                route_distance=metric(distance_value, route.distance.unit, "route-distance"),
+                transit_time=metric(transit_days, route.transit_time.unit, "transit-time"),
+                chokepoint_ids=chokepoints,
+                load_port_id=load_port.id if load_port else None,
+                receiving_port_id=receiving_port.id if receiving_port else None,
+                route_segment_ids=path,
+                route_segment_capacities=segment_capacities,
+                option_fingerprint=None,
+            )
             options.append(
-                ProcurementOption(
-                    option_id=uuid5(
-                        NAMESPACE_URL,
-                        f"urn:sanjiv:procurement-option:{flow.supplier_id}:{grade.id}:{route.id}:{refinery_id}:{start.isoformat()}",
-                    ),
-                    supplier_id=flow.supplier_id,
-                    grade_id=grade.id,
-                    route_id=route.id,
-                    refinery_id=refinery_id,
-                    delivery_window_start=start,
-                    delivery_window_end=end,
-                    supplier_capacity=metric(
-                        commercial.capacity_ktonne, "ktonne", "supplier-capacity"
-                    ),
-                    commercially_available_volume=metric(
-                        commercial.available_ktonne, "ktonne", "commercial-availability"
-                    ),
-                    route_capacity=metric(route.capacity.value, "ktonne", "route-capacity"),
-                    refinery_receiving_capacity=metric(
-                        refinery_capacity_value,
-                        "ktonne",
-                        "refinery-capacity",
-                    ),
-                    commodity_price=metric(
-                        commercial.components["commodity_price"], "USD_per_tonne", "commodity-price"
-                    ),
-                    freight=metric(commercial.components["freight"], "USD_per_tonne", "freight"),
-                    sanctions_permitted=grade.sanctions_state.upper()
-                    not in {"SANCTIONED", "PROHIBITED"},
-                    compatibility_permitted=compatibility.allowed,
-                    transport_availability=TransportAvailability(
-                        status=commercial.transport_status,
-                        commercially_confirmed=commercial.commercially_confirmed,
-                        evidence_ids=commercial.evidence_ids,
-                        assumption_ids=commercial.assumption_ids,
-                    ),
-                    evidence_ids=sorted(set(commercial.evidence_ids)),
-                    assumption_ids=sorted(set(commercial.assumption_ids)),
-                    landed_cost=cost,
-                    route_distance=route.distance,
-                    transit_time=route.transit_time,
-                    chokepoint_ids=route.chokepoint_ids,
+                option.model_copy(
+                    update={"option_fingerprint": procurement_option_fingerprint(option)}
                 )
             )
         except (KeyError, ValueError) as exc:
@@ -407,15 +470,54 @@ def build_procurement_input(
         evidence=refs,
         assumptions=arefs,
     )
-    built = ProcurementOptimisationInput(
-        provenance=provenance,
-        hard_constraints=hard_constraints,
-        reserve_policy=reserve_policy,
-        options=sorted(options, key=lambda item: str(item.option_id)),
-        input_fingerprint="0" * 64,
-    )
-    built = built.model_copy(
-        update={"input_fingerprint": procurement_optimisation_input_fingerprint(built)}
+    demand_contracts: list[ProcurementDemand] = []
+    demand_results: list[DemandRequirement] = []
+    for refinery in sorted(result.refinery_throughput, key=lambda item: str(item.refinery_id)):
+        volume = refinery.shortfall.value * interval_days
+        demand_metric = MetricEnvelope(
+            value=volume,
+            unit="ktonne",
+            truth_class=TruthClass.DERIVED,
+            confidence=refinery.shortfall.confidence,
+            evidence_ids=refinery.shortfall.evidence_ids,
+            source_refs=refinery.shortfall.source_refs,
+            effective_at=horizon.starts_at,
+            fetched_at=max(horizon.starts_at, refinery.shortfall.fetched_at),
+            computed_at=max(horizon.starts_at, refinery.shortfall.computed_at),
+            freshness_status=refinery.shortfall.freshness_status,
+            transformation="procurement.demand-from-simulation-shortfall.v1",
+            model_version="procurement-demand-v1",
+        )
+        demand_contracts.append(
+            ProcurementDemand(
+                refinery_id=refinery.refinery_id,
+                interval_start=horizon.starts_at,
+                interval_end=horizon.ends_at,
+                required_volume=demand_metric,
+            )
+        )
+        demand_results.append(
+            DemandRequirement(
+                refinery_id=refinery.refinery_id,
+                interval_start=horizon.starts_at,
+                interval_end=horizon.ends_at,
+                baseline_throughput=refinery.baseline_throughput,
+                disrupted_throughput=refinery.disrupted_throughput,
+                shortfall=demand_metric,
+            )
+        )
+    input_payload = {
+        "provenance": provenance,
+        "hard_constraints": hard_constraints,
+        "reserve_policy": reserve_policy,
+        "options": sorted(options, key=lambda item: str(item.option_id)),
+        "demands": demand_contracts,
+    }
+    built = ProcurementOptimisationInput.model_validate(
+        {
+            **input_payload,
+            "input_fingerprint": procurement_optimisation_input_fingerprint(input_payload),
+        }
     )
     return ProcurementInputBuildResult(
         input=built,
@@ -425,6 +527,7 @@ def build_procurement_input(
         ),
         input_fingerprint=built.input_fingerprint,
         evidence_coverage={"evidence": len(refs), "assumptions": len(arefs)},
+        demands=demand_results,
     )
 
 
@@ -435,3 +538,37 @@ def _hash(value: object) -> str:
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":"), default=str).encode()
     ).hexdigest()
+
+
+def _route_path(
+    snapshot: TwinSnapshot,
+    supplier_id: UUID,
+    refinery_id: UUID,
+    required_route_id: UUID,
+    load_port_ids: list[UUID],
+) -> list[UUID]:
+    route_by_id = {item.id: item for item in snapshot.routes}
+    outgoing: dict[UUID, list[UUID]] = {}
+    for route in snapshot.routes:
+        if route.available:
+            outgoing.setdefault(route.origin_id, []).append(route.id)
+    for route_ids in outgoing.values():
+        route_ids.sort(key=lambda item: route_by_id[item].canonical_id)
+    candidates: list[list[UUID]] = []
+    queue: list[tuple[UUID, list[UUID], set[UUID]]] = [(supplier_id, [], {supplier_id})]
+    while queue:
+        node_id, path, visited = queue.pop(0)
+        if node_id == refinery_id:
+            if required_route_id in path:
+                path_origins = {route_by_id[item].origin_id for item in path}
+                if path_origins.intersection(load_port_ids):
+                    candidates.append(path)
+            continue
+        for route_id in outgoing.get(node_id, []):
+            destination_id = route_by_id[route_id].destination_id
+            if destination_id in visited:
+                continue
+            queue.append((destination_id, [*path, route_id], {*visited, destination_id}))
+    return (
+        min(candidates, key=lambda item: tuple(str(value) for value in item)) if candidates else []
+    )
