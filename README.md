@@ -63,7 +63,7 @@ The Scenario Lab is available at `http://localhost:3000/scenario-lab`.
 
 The Live Maritime Watch runs at `http://localhost:3000`, the Digital Twin at `http://localhost:3000/digital-twin`, and API documentation at `http://localhost:8000/docs`. With no `AISSTREAM_API_KEY`, the service automatically records an audited transition to `REPLAY`, and the UI displays a persistent `REPLAY — NOT LIVE DATA` banner. The Digital Twin separately displays `ASSUMPTION-DRIVEN REFERENCE TWIN — NOT LIVE OPERATIONAL DATA` and exposes every source/assumption.
 
-For optional live operation, create an AISStream account, set `AISSTREAM_API_KEY` only in `.env`, and leave `SANJIV_AIS_ENABLED=true`. Never place the key in browser variables or committed files. See [the Phase 1 operator guide](docs/PHASE_1_LIVE_MARITIME_WATCH.md) for replay controls, database validation, troubleshooting, and data-use limits.
+For optional live operation, create an AISStream account, set `AISSTREAM_API_KEY` only in `.env`, and leave `SANJIV_AIS_ENABLED=true`. Never place the key in browser variables or committed files. See the [source registry](docs/SOURCE_REGISTRY.md) and [operations runbook](docs/OPERATIONS_RUNBOOK.md) for replay controls, troubleshooting, and data-use limits.
 
 ## Verification
 
@@ -84,4 +84,4 @@ npm run build
 git diff --check
 ```
 
-See [the implementation plan](docs/IMPLEMENTATION_PLAN.md), [architecture](docs/ARCHITECTURE.md), and [engineering guide](AGENTS.md) before making changes. Never commit `.env` or credentials.
+See the [architecture](docs/ARCHITECTURE.md), [test strategy](docs/TEST_STRATEGY.md), and [engineering guide](AGENTS.md) before making changes. Never commit `.env` or credentials.
