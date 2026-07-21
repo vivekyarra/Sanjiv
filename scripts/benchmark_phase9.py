@@ -34,10 +34,15 @@ SAMPLES = 5
 
 def _clean_commit() -> str:
     commit = subprocess.run(
-        ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True
+        ["git", "rev-parse", "HEAD"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
     ).stdout.strip()
     status = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=all"],
+        cwd=ROOT,
         capture_output=True,
         text=True,
         check=True,
@@ -258,7 +263,7 @@ def main() -> None:
             "the clean committed source identified in this report."
         ),
     }
-    target = Path("reports/performance/phase9-benchmark.json")
+    target = ROOT / "reports" / "performance" / "phase9-benchmark.json"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     print(target)
