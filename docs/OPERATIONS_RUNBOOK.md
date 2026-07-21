@@ -25,6 +25,10 @@ Run from the repository root. On Windows use `npm run ...` or
 `cleanup` deletes only this Compose project's named local volumes. Back up any local development
 data first. It is not a production command.
 
+The default E2E gate is read-only with respect to committed evidence. Set
+`SANJIV_UPDATE_EVIDENCE=1` only when intentionally regenerating reviewed screenshots and browser
+benchmark evidence for a new release checkpoint.
+
 ## Health and observability
 
 - Liveness: `GET http://localhost:8000/health/live`

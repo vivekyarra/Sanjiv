@@ -3,6 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 const SCREENSHOTS = "reports/e2e/screenshots";
 
 async function capture(page: Page, name: string) {
+  if (process.env.SANJIV_UPDATE_EVIDENCE !== "1") return;
   await page.screenshot({ path: `${SCREENSHOTS}/${name}.png`, fullPage: true });
 }
 
