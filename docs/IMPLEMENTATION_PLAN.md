@@ -75,6 +75,10 @@ Phases are dependency ordered. Complexity is relative: S/M/L/XL. A phase closes 
 - **Risks:** confidential fill and operational limits. Require verified user input or visible assumptions and avoid execution claims.
 - **Parallel:** reserve UI and model after the reserve contract is fixed.
 
+### Phase 5 completion: checked strategic-reserve guidance
+
+Status: complete. Canonical contracts, an expiring offline operational-input fixture, exact Phase 4 coordination, versioned four-policy Pyomo/HiGHS solves, independent conservation/objective/fingerprint checks, immutable PostgreSQL persistence and reuse, POST/GET APIs, generated contracts, and `/strategic-reserve` are implemented. Capacity remains sourced separately from assumption-backed opening fill; no release authority or execution path exists.
+
 ## Phase 6 — Risk intelligence and alerting (XL)
 
 - **Goal:** evidence-backed corridor risk signals without presenting severity as probability.

@@ -55,3 +55,7 @@ Phase 2 additionally fixes the snapshot twice and requires identical fingerprint
 ## Phase 4 coverage
 
 Focused tests cover commercial-fixture classification/expiry, canonical units and non-finite rejection, option/input/plan fingerprints, deterministic profile ordering, real Pyomo/HiGHS solves, every hard-constraint family, objective reconstruction, checker forgery, closed routes, infeasible/error contracts, exact-fingerprint reuse, PostgreSQL restart readback, production mutation security, idempotency, reversible `0005` migration, generated OpenAPI/TypeScript, and Response Planner truth/no-execution labels. The full gate retains credential-free operation and exercises Compose PostgreSQL, Redis, and MinIO.
+
+## Phase 5 coverage
+
+Focused tests cover all four policy profiles, public-capacity/opening-fill separation, unknown and expired inventory, policy floors, draw/route/transit/receipt limits, stock conservation, `NO_RESERVE_USE`, exact procurement coordination, shortage/objective reconstruction, checker forgery, deterministic fingerprints and reuse, PostgreSQL restart readback, API idempotency and production security, reversible `0006` migration, generated contracts, and Strategic Reserve truth/no-execution labels.

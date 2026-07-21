@@ -5,11 +5,15 @@
 
 Sanjiv is a decision-intelligence system for observing threats to India’s energy-supply corridors, compiling validated disruption scenarios, simulating no-action consequences, and producing deterministic, evidence-backed procurement and strategic-reserve response plans.
 
-The repository includes the Phase 0 truth foundation, Phase 1 Live Maritime Watch, the Phase 2 India energy-network digital twin, Phase 3 Scenario Lab, and the Phase 4 Response Planner. All operational screens work without credentials: Phase 4 uses an explicitly synthetic, expiring commercial-assumption fixture, Pyomo with HiGHS, and an independent checker to produce three immutable modeled procurement plans. Strategic-reserve optimisation remains gated behind Phase 5.
+The repository includes the Phase 0 truth foundation, Phase 1 Live Maritime Watch, the Phase 2 India energy-network digital twin, Phase 3 Scenario Lab, the Phase 4 Response Planner, and the Phase 5 Strategic Reserve planner. All operational screens work without credentials. Phase 5 coordinates four checked reserve-policy results with one exact immutable Phase 4 plan while keeping public site capacity separate from assumption-backed opening fill.
 
 ## Phase 4 Response Planner
 
 Open `http://localhost:3000/response-planner` and supply a completed scenario-run UUID. Sanjiv sequentially generates `LOWEST_COST`, `BALANCED`, and `HIGHEST_RESILIENCE` plans with identical hard constraints, persists exact-fingerprint results, and exposes solver/checker state, allocations, shortage, costs, objective contributions, constraints, rejected options, provenance, and fingerprints. The commercial fixture is `SYNTHETIC_FIXTURE`; it is not a quote or confirmation, and the UI has no purchasing, tanker-booking, approval, or reserve-release action.
+
+## Phase 5 Strategic Reserve
+
+Open `http://localhost:3000/strategic-reserve` and supply a completed scenario-run UUID plus one checked Phase 4 plan UUID. Sanjiv generates `CONSERVATIVE`, `BALANCED`, `AGGRESSIVE_CONTINUITY`, and `NO_RESERVE_USE` guidance, checks site stock conservation, floors, draw/route/receipt capacities, transit, procurement coordination, shortage, objectives, and fingerprints, and persists immutable exact-fingerprint results. Opening fill remains an expiring `ASSUMPTION`; public capacity does not imply fill. Sanjiv recommends and does not release reserves.
 
 ## Phase 3 Scenario Lab
 

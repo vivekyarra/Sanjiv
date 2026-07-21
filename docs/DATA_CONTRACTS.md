@@ -113,3 +113,9 @@ evidence-backed commercial values, visible approved assumptions, and stable
 option fingerprints. Missing or stale commercial provenance blocks an input.
 
 Phase 4 adds `ProcurementDemand`, path-bound `ProcurementOption` segment capacities/fingerprints, versioned objective weights with raw and weighted contributions, solver/checker metadata, complete modeled actions, structured rejected options, terminal plan fingerprints, and exact-fingerprint response reuse. Horizon totals use `ktonne`; source daily capacities are explicitly normalized to the same time grid. Every action remains `MODELED` and assumption-dependent.
+
+## Phase 5 reserve contracts
+
+`ReserveOptimisationInput` binds the exact confirmed scenario, simulation run/result, immutable twin snapshot, selected checked procurement plan and input fingerprints, solver/model/checker/policy versions, evidence hashes, assumption hashes, UTC horizon, and tolerance. Each `ReserveSiteInput` separates observed storage capacity from opening-inventory truth, uses explicit `ktonne`, `ktonne_per_day`, `day`, and `USD_per_tonne` units, and carries floor, draw, route, transit, receipt, procurement-commitment, and optional replenishment provenance. `UNKNOWN` opening inventory cannot enter a plan.
+
+`ReserveSolverResult` preserves status, metadata, actions, inventory/cover timeline, raw objective metrics, versioned weights, weighted contributions, constraints, rejected options, typed failure, and `reserve-checker-v1` output. Only checked `OPTIMAL` or `FEASIBLE` results become immutable `ReservePlan` records. Actions are `MODELED`, guidance-only, and do not represent an authorised or executed reserve release.

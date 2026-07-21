@@ -1,0 +1,16 @@
+{
+  "dataset_id": "sanjiv-reserve-inputs-v1",
+  "classification": "SYNTHETIC_FIXTURE",
+  "redistribution_rights": "CC0 Sanjiv-authored synthetic fixture; unrestricted project redistribution",
+  "effective_at": "2026-07-01T00:00:00Z",
+  "expires_at": "2027-07-01T00:00:00Z",
+  "owner": "Sanjiv demo governance owner",
+  "approved_by": "Sanjiv fixture approver",
+  "rationale": "Deterministic offline reserve-planning assumptions; not a statement of current government stock or release authority.",
+  "source_gap": "Current site fill, operational draw limits, policy floors and logistics prices are not available as verified public operational data.",
+  "sites": [
+    {"assumption_id":"b5cd8f42-6957-5bc8-b371-b5fa855847fc","site":"reserve:visakhapatnam","refinery":"refinery:paradip","route":"route:reserve-vizag-to-paradip","opening_inventory_ktonne":720.0,"minimum_floor_fraction":0.50,"draw_rate_ktonne_per_day":12.0,"logistics_cost_usd_per_tonne":8.0},
+    {"assumption_id":"7c2f7cd8-5d9f-52f6-8ccb-4c975810eff6","site":"reserve:mangalore","refinery":"refinery:vadinar","route":"route:reserve-mangalore-to-vadinar","opening_inventory_ktonne":980.0,"minimum_floor_fraction":0.55,"draw_rate_ktonne_per_day":10.0,"logistics_cost_usd_per_tonne":11.0},
+    {"assumption_id":"69128970-1d38-50df-a1a7-a35c1716028c","site":"reserve:padur","refinery":"refinery:jamnagar","route":"route:reserve-padur-to-jamnagar","opening_inventory_ktonne":1650.0,"minimum_floor_fraction":0.60,"draw_rate_ktonne_per_day":10.0,"logistics_cost_usd_per_tonne":13.0}
+  ]
+}

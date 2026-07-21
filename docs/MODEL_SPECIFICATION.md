@@ -85,7 +85,7 @@ minimise shortage + α*reserve_depletion
                   + β*logistics_cost + γ*future_vulnerability
 ```
 
-Release variables are bounded by site inventory, draw rate, connection capacity, transit delay, receiving capacity, and policy minimum floor. Remaining stock is conserved by site and interval. Phase 4 holds reserve policy fixed; Phase 5 solves procurement and reserve actions from one shared input snapshot. **Calibration:** α, β, γ, policy floors, replenishment outlook, and extension-risk assumptions.
+Phase 5 implements nonnegative site dispatch and refinery shortage variables. Dispatch is bounded by opening inventory plus explicit replenishment minus the effective policy floor, draw rate over the canonical horizon, reserve-route capacity, transit arrival within the horizon, and receiving-refinery capacity remaining after the exact Phase 4 plan. Remaining stock is reconstructed as `opening + verified replenishment - dispatch`; dispatch equals in-transit quantity and receipt, so no hidden loss or replenishment exists. `NO_RESERVE_USE` fixes dispatch to zero. `reserve-checker-v1` independently reconstructs every constraint, shortage, objective, coordination binding, and fingerprint. **Calibration:** α, β, γ and policy floors; physical constraints never become penalties.
 
 At the Phase 4 contract boundary, the reserve policy is identified by an immutable fingerprint and explicitly sets `decision_variables_enabled=false` and `release_schedule_fixed=true`. No reserve quantity is selected, recommended, or varied by a procurement profile.
 

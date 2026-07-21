@@ -77,3 +77,9 @@
 **Decision:** Phase 4 uses only Pyomo and in-process HiGHS with bounded model size/time, one deterministic continuous delivered-volume model, identical hard constraints for all profiles, and versioned objective weights. Every usable result is independently reconstructed from the immutable input before content-addressed PostgreSQL persistence. The offline commercial fixture is expiring `ASSUMPTION` data and cannot establish availability. Reserve release remains fixed outside the model.
 
 **Why:** A solver status alone cannot establish physical or provenance validity, while a credential-free demo still needs multiple inspectable alternatives. Independent checks and exact-fingerprint reuse keep recommendations reproducible without inventing quotes or execution authority. **Rejected:** generated-prose recommendations, autonomous purchasing, reserve variables, silent default commercial values, unchecked timeout incumbents, and mutable terminal plans.
+
+## ADR-014: Phase 5 reserve truth and coordination boundary
+
+**Decision:** Reserve guidance uses Pyomo/HiGHS and a separate arithmetic checker, binds one exact checked procurement plan, and treats public site capacity and current opening fill as different facts. Unknown or expired opening fill blocks the site; policy floors, draw rates, routes, transit, receipts, stock conservation, and procurement-shared capacity are hard. Replenishment is fixed at zero unless verified input explicitly supplies it. Terminal plans are content-addressed and immutable.
+
+**Why:** Storage nameplate cannot establish usable stock, and procurement coordination cannot be reconstructed safely from mutable summaries. **Rejected:** inferring fill from capacity, hidden replenishment or loss, autonomous release, soft physical floors, unchecked solver output, and reserve plans detached from a Phase 4 fingerprint.

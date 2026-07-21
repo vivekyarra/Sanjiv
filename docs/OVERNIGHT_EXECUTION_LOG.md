@@ -130,7 +130,20 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 
 ## Phase 5 - Strategic reserve optimiser
 
-- Status: not started; may begin only after the Phase 4 completion commit is pushed and local/remote HEAD equality is verified.
+- Phase 4 checkpoint: `462fae8e59897af46ef09632acee35e42477761a` (`feat(phase-4): add deterministic procurement optimiser`) was pushed to `origin/feature/phases-2-9-overnight-integration`; local/remote equality, clean tree, and draft PR #2 were verified before Phase 5 began.
+
+### Phase 5 completion gate (2026-07-21)
+
+- Starting HEAD: `462fae8e59897af46ef09632acee35e42477761a`.
+- Implemented `reserve-input-v1`, four versioned policies, Pyomo/HiGHS `reserve-pyomo-highs-v1`, independent `reserve-checker-v1`, structured lifecycle/failures/rejections, exact Phase 4 coordination, immutable request/plan/action/timeline persistence and reuse, POST/GET APIs, generated contracts, and `/strategic-reserve`.
+- Fixture: `data/fixtures/reserve/reserve-inputs-v1.json` is CC0 `SYNTHETIC_FIXTURE`. Its three current-fill/operational bundles are approved expiring `ASSUMPTION` records. ISPRL storage capacity remains separately `OBSERVED`; capacity never infers fill. No private inventory or release authority is claimed.
+- Migration `20260721_0006_strategic_reserve_optimiser.py` upgraded from `0005`, downgraded exactly to `0005`, and re-upgraded to `0006`; PostgreSQL restart readback restored an immutable checked plan.
+- Focused Phase 5 suite: 12 tests in 29.64 seconds. Full Python suite: 141 tests (18.81 seconds in the final repository command; 60.99 seconds in the separately instrumented full run). Web suite: 13 tests. Contract package: 1 test. No skipped/disabled tests were found.
+- Final representative Hormuz-closure solve: all policies `OPTIMAL` and checked. Conservative: 0 actions, 2,250 ktonne residual shortage, 0.0112 seconds; Balanced: 1 action, 2,095 ktonne, 0.0101 seconds; Aggressive Continuity: 1 action, 1,950 ktonne, 0.0075 seconds; No Reserve Use: 0 actions, 2,250 ktonne, 0.0075 seconds. HiGHS is `1.15.1`; policy/model/checker versions are persisted.
+- Gate: healthy PostgreSQL/PostGIS/TimescaleDB, Redis, and MinIO; `0006 -> 0005 -> 0006`; Ruff; strict mypy across 66 production files; focused/full pytest; OpenAPI and TypeScript drift; ESLint; TypeScript; web/contracts tests; production build including `/strategic-reserve`; Docker config; `git diff --check`; both npm audits with zero vulnerabilities; no new dependencies; no high-confidence secret patterns; no skipped/disabled tests.
+- Focused security/model review: production mutation remains server-authenticated and caller identity is ignored; solver exceptions are redacted; model size/time are bounded; terminal rows are immutable; exact scenario/result/twin/procurement/evidence/assumption fingerprints are validated; unknown/expired inventory, non-finite values, malformed units, invalid lifecycle transitions, checker forgery, and fingerprint mismatches are blocked. A procurement-provenance coverage gap found during review was fixed before this gate. No reportable security finding remains.
+- Remaining risks: demo opening fill and operating limits are intentionally synthetic and require verified replacement for real use; policy weights/floors need authorised calibration; the current aggregate horizon guidance is not an execution schedule; deployment authn/authz and load/concurrency evidence remain production prerequisites. Sanjiv recommends and does not release reserves.
+- Phase 6 status: not started; it may begin only after this Phase 5 checkpoint is committed, pushed, and local/remote equality plus clean-tree state are verified.
 
 ## Phase 6 - Risk intelligence and alerting
 

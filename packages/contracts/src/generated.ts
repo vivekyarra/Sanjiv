@@ -89,6 +89,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/reserve-plans/{plan_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Reserve Plan */
+        get: operations["reserve_plan_api_v1_reserve_plans__plan_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/scenario-runs": {
         parameters: {
             query?: never;
@@ -168,6 +185,23 @@ export interface paths {
         get: operations["simulation_progress_api_v1_scenario_runs__run_id__progress_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scenario-runs/{run_id}/reserve-plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Reserve Plans */
+        post: operations["create_reserve_plans_api_v1_scenario_runs__run_id__reserve_plans_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1205,6 +1239,11 @@ export interface components {
              */
             refinery_id: string;
         };
+        /**
+         * InventoryTruthStatus
+         * @enum {string}
+         */
+        InventoryTruthStatus: "VERIFIED_USER_INPUT" | "UNEXPIRED_ASSUMPTION" | "UNKNOWN";
         /** LandedCostBreakdown */
         LandedCostBreakdown: {
             commodity_price: components["schemas"]["MetricEnvelope_float_"];
@@ -1842,6 +1881,440 @@ export interface components {
          * @enum {string}
          */
         RejectedOptionReasonCode: "SANCTIONED" | "HARD_INCOMPATIBLE" | "DISCONNECTED" | "ROUTE_CLOSED" | "CAPACITY_EXHAUSTED" | "SUPPLIER_LIMIT" | "PORT_LIMIT" | "DELIVERY_TOO_LATE" | "BUDGET_LIMIT" | "CONCENTRATION_LIMIT" | "HIGHER_OBJECTIVE" | "MISSING_COMMERCIAL_INPUT" | "EXPIRED_ASSUMPTION" | "INVALID_PROVENANCE" | "SANCTIONS_EXCLUSION" | "GRADE_INCOMPATIBLE" | "SUPPLIER_CAPACITY_EXCEEDED" | "ROUTE_CAPACITY_EXCEEDED" | "REFINERY_CAPACITY_EXCEEDED" | "DELIVERY_WINDOW_MISSED" | "BUDGET_EXCEEDED" | "CONCENTRATION_LIMIT_EXCEEDED" | "COMMERCIAL_AVAILABILITY_UNVERIFIED" | "TRANSPORT_AVAILABILITY_UNVERIFIED" | "POLICY_EXCLUSION" | "DOMINATED";
+        /** ReserveAction */
+        ReserveAction: {
+            /**
+             * Action Id
+             * Format: uuid
+             */
+            action_id: string;
+            /** Assumption Ids */
+            assumption_ids: string[];
+            dispatch: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Dispatch At
+             * Format: date-time
+             */
+            dispatch_at: string;
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Guidance Only
+             * @default true
+             * @constant
+             */
+            guidance_only: true;
+            in_transit: components["schemas"]["MetricEnvelope_float_"];
+            receipt: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Receipt At
+             * Format: date-time
+             */
+            receipt_at: string;
+            /**
+             * Refinery Id
+             * Format: uuid
+             */
+            refinery_id: string;
+            remaining_cover: components["schemas"]["MetricEnvelope_float_"];
+            remaining_inventory: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Route Id
+             * Format: uuid
+             */
+            route_id: string;
+            /**
+             * Site Id
+             * Format: uuid
+             */
+            site_id: string;
+            /**
+             * Truth Label
+             * @default MODELED
+             * @constant
+             */
+            truth_label: "MODELED";
+        };
+        /** ReserveCheckResult */
+        ReserveCheckResult: {
+            /** Capacity Passed */
+            capacity_passed: boolean;
+            /**
+             * Checked At
+             * Format: date-time
+             */
+            checked_at: string;
+            /**
+             * Checker Version
+             * @default reserve-checker-v1
+             * @constant
+             */
+            checker_version: "reserve-checker-v1";
+            /** Conservation Passed */
+            conservation_passed: boolean;
+            /** Dispatch Receipt Passed */
+            dispatch_receipt_passed: boolean;
+            /** Draw Rate Passed */
+            draw_rate_passed: boolean;
+            /** Failure Codes */
+            failure_codes?: string[];
+            /** Fingerprint Passed */
+            fingerprint_passed: boolean;
+            /** Floor Passed */
+            floor_passed: boolean;
+            /** Objective Passed */
+            objective_passed: boolean;
+            /** Opening Inventory Passed */
+            opening_inventory_passed: boolean;
+            /** Passed */
+            passed: boolean;
+            /** Procurement Coordination Passed */
+            procurement_coordination_passed: boolean;
+            /** Shortage Passed */
+            shortage_passed: boolean;
+            /** Transit Passed */
+            transit_passed: boolean;
+        };
+        /** ReserveConstraintReport */
+        ReserveConstraintReport: {
+            /** Checked */
+            checked: string[];
+            /** Feasible */
+            feasible: boolean;
+            /** Violations */
+            violations?: string[];
+        };
+        /** ReserveDemandRequirement */
+        ReserveDemandRequirement: {
+            /**
+             * Refinery Id
+             * Format: uuid
+             */
+            refinery_id: string;
+            required_volume: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** ReserveExecutionRequest */
+        ReserveExecutionRequest: {
+            /**
+             * Procurement Plan Id
+             * Format: uuid
+             */
+            procurement_plan_id: string;
+            /** Profiles */
+            profiles?: components["schemas"]["ReservePolicyProfile"][];
+            /**
+             * Time Limit Seconds
+             * @default 10
+             */
+            time_limit_seconds: number;
+        };
+        /** ReserveFailure */
+        ReserveFailure: {
+            /** Code */
+            code: string;
+            /** Message */
+            message: string;
+            /**
+             * Retryable
+             * @default false
+             */
+            retryable: boolean;
+            /**
+             * Stage
+             * @enum {string}
+             */
+            stage: "INPUT" | "SOLVER" | "CHECKER" | "CONTRACT";
+        };
+        /** ReserveInventoryPoint */
+        ReserveInventoryPoint: {
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            cover: components["schemas"]["MetricEnvelope_float_"];
+            inventory: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Site Id
+             * Format: uuid
+             */
+            site_id: string;
+        };
+        /** ReserveLifecycleTransition */
+        ReserveLifecycleTransition: {
+            /** Actor Id */
+            actor_id: string;
+            current: components["schemas"]["ReservePlanLifecycle"];
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            target: components["schemas"]["ReservePlanLifecycle"];
+        };
+        /** ReserveObjective */
+        ReserveObjective: {
+            /** Raw Metrics */
+            raw_metrics: {
+                [key: string]: number;
+            };
+            total: components["schemas"]["MetricEnvelope_float_"];
+            /** Weighted Contributions */
+            weighted_contributions: {
+                [key: string]: number;
+            };
+            /** Weights */
+            weights: {
+                [key: string]: number;
+            };
+        };
+        /** ReserveOptimisationInput */
+        ReserveOptimisationInput: {
+            /**
+             * Checker Version
+             * @default reserve-checker-v1
+             * @constant
+             */
+            checker_version: "reserve-checker-v1";
+            /** Demands */
+            demands: components["schemas"]["ReserveDemandRequirement"][];
+            /**
+             * Ends At
+             * Format: date-time
+             */
+            ends_at: string;
+            /** Input Fingerprint */
+            input_fingerprint: string;
+            /**
+             * Interval Hours
+             * @default 24
+             * @constant
+             */
+            interval_hours: 24;
+            /**
+             * Model Version
+             * @default reserve-optimiser-v1
+             * @constant
+             */
+            model_version: "reserve-optimiser-v1";
+            policy: components["schemas"]["ReservePolicyWeights"];
+            provenance: components["schemas"]["ReserveProvenance"];
+            /**
+             * Schema Version
+             * @default reserve-input-v1
+             * @constant
+             */
+            schema_version: "reserve-input-v1";
+            /** Sites */
+            sites: components["schemas"]["ReserveSiteInput"][];
+            /**
+             * Starts At
+             * Format: date-time
+             */
+            starts_at: string;
+            /**
+             * Tolerance
+             * @default 0.000001
+             */
+            tolerance: number;
+        };
+        /** ReservePlan */
+        ReservePlan: {
+            /** Audit Event Ids */
+            audit_event_ids: string[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            input: components["schemas"]["ReserveOptimisationInput"];
+            /** Input Fingerprint */
+            input_fingerprint: string;
+            lifecycle: components["schemas"]["ReservePlanLifecycle"];
+            /** Plan Fingerprint */
+            plan_fingerprint: string;
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            /**
+             * Procurement Plan Id
+             * Format: uuid
+             */
+            procurement_plan_id: string;
+            profile: components["schemas"]["ReservePolicyProfile"];
+            /**
+             * Recommendation Only
+             * @default true
+             * @constant
+             */
+            recommendation_only: true;
+            result: components["schemas"]["ReserveSolverResult"];
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+        };
+        /**
+         * ReservePlanLifecycle
+         * @enum {string}
+         */
+        ReservePlanLifecycle: "REQUESTED" | "SOLVING" | "CHECKING" | "FEASIBLE" | "FAILED";
+        /** ReservePlanResponse */
+        ReservePlanResponse: {
+            /** Failures */
+            failures: components["schemas"]["ReserveFailure"][];
+            /** Plans */
+            plans: components["schemas"]["ReservePlan"][];
+            /**
+             * Procurement Plan Id
+             * Format: uuid
+             */
+            procurement_plan_id: string;
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /** Results */
+            results: components["schemas"]["ReserveSolverResult"][];
+            /**
+             * Reused
+             * @default false
+             */
+            reused: boolean;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+        };
+        /**
+         * ReservePolicyProfile
+         * @enum {string}
+         */
+        ReservePolicyProfile: "CONSERVATIVE" | "BALANCED" | "AGGRESSIVE_CONTINUITY" | "NO_RESERVE_USE";
+        /** ReservePolicyWeights */
+        ReservePolicyWeights: {
+            /** Future Vulnerability */
+            future_vulnerability: number;
+            /** Logistics Cost */
+            logistics_cost: number;
+            /** Minimum Floor Fraction */
+            minimum_floor_fraction: number;
+            profile: components["schemas"]["ReservePolicyProfile"];
+            /** Reserve Depletion */
+            reserve_depletion: number;
+            /** Shortage */
+            shortage: number;
+            /** Version */
+            version: string;
+        };
+        /** ReserveProvenance */
+        ReserveProvenance: {
+            /** Assumptions */
+            assumptions: components["schemas"]["AssumptionFingerprintReference"][];
+            confirmed_scenario: components["schemas"]["ConfirmedScenarioReference"];
+            /** Evidence */
+            evidence: components["schemas"]["EvidenceFingerprintReference"][];
+            /** Procurement Checker Version */
+            procurement_checker_version: string;
+            /** Procurement Input Fingerprint */
+            procurement_input_fingerprint: string;
+            /** Procurement Plan Fingerprint */
+            procurement_plan_fingerprint: string;
+            /**
+             * Procurement Plan Id
+             * Format: uuid
+             */
+            procurement_plan_id: string;
+            simulation_result: components["schemas"]["SimulationResultReference"];
+            simulation_run: components["schemas"]["SimulationRunReference"];
+            twin_snapshot: components["schemas"]["TwinSnapshotReference"];
+        };
+        /** ReserveRejectedOption */
+        ReserveRejectedOption: {
+            /** Constraint Id */
+            constraint_id: string;
+            /** Explanation */
+            explanation: string;
+            reason: components["schemas"]["ReserveRejectedReason"];
+            /**
+             * Site Id
+             * Format: uuid
+             */
+            site_id: string;
+        };
+        /**
+         * ReserveRejectedReason
+         * @enum {string}
+         */
+        ReserveRejectedReason: "UNKNOWN_INVENTORY" | "EXPIRED_ASSUMPTION" | "DISCONNECTED" | "TRANSIT_TOO_LATE" | "CAPACITY_EXHAUSTED" | "POLICY_FLOOR" | "NO_RESERVE_USE" | "HIGHER_OBJECTIVE" | "INVALID_PROVENANCE";
+        /** ReserveSiteInput */
+        ReserveSiteInput: {
+            /** Assumption Ids */
+            assumption_ids?: string[];
+            capacity: components["schemas"]["MetricEnvelope_float_"];
+            draw_rate_limit: components["schemas"]["MetricEnvelope_float_"];
+            /** Evidence Ids */
+            evidence_ids: string[];
+            logistics_cost: components["schemas"]["MetricEnvelope_float_"];
+            minimum_policy_floor: components["schemas"]["MetricEnvelope_float_"];
+            opening_inventory: components["schemas"]["MetricEnvelope_float_"] | null;
+            opening_inventory_status: components["schemas"]["InventoryTruthStatus"];
+            procurement_committed_receipts: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Refinery Id
+             * Format: uuid
+             */
+            refinery_id: string;
+            refinery_receipt_capacity: components["schemas"]["MetricEnvelope_float_"];
+            /** @default null */
+            replenishment: components["schemas"]["MetricEnvelope_float_"] | null;
+            route_capacity: components["schemas"]["MetricEnvelope_float_"];
+            /**
+             * Route Id
+             * Format: uuid
+             */
+            route_id: string;
+            /**
+             * Site Id
+             * Format: uuid
+             */
+            site_id: string;
+            /** Site Name */
+            site_name: string;
+            transit_time: components["schemas"]["MetricEnvelope_float_"];
+        };
+        /** ReserveSolverResult */
+        ReserveSolverResult: {
+            /** Actions */
+            actions?: components["schemas"]["ReserveAction"][];
+            /** @default null */
+            checker: components["schemas"]["ReserveCheckResult"] | null;
+            /** @default null */
+            constraints: components["schemas"]["ReserveConstraintReport"] | null;
+            /** @default null */
+            failure: components["schemas"]["ReserveFailure"] | null;
+            metadata: components["schemas"]["SolverMetadata"];
+            /** @default null */
+            objective: components["schemas"]["ReserveObjective"] | null;
+            profile: components["schemas"]["ReservePolicyProfile"];
+            /** Rejected Options */
+            rejected_options?: components["schemas"]["ReserveRejectedOption"][];
+            /** @default null */
+            residual_shortage: components["schemas"]["MetricEnvelope_float_"] | null;
+            /**
+             * Result Id
+             * Format: uuid
+             */
+            result_id: string;
+            status: components["schemas"]["SolverStatus"];
+            /** Timeline */
+            timeline?: components["schemas"]["ReserveInventoryPoint"][];
+        };
         /** ResolvedDisruptionTarget */
         ResolvedDisruptionTarget: {
             /**
@@ -2964,6 +3437,37 @@ export interface operations {
             };
         };
     };
+    reserve_plan_api_v1_reserve_plans__plan_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                plan_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReservePlan"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     start_simulation_api_v1_scenario_runs_post: {
         parameters: {
             query?: never;
@@ -3121,6 +3625,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SimulationProgressEvent"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_reserve_plans_api_v1_scenario_runs__run_id__reserve_plans_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+                "X-Sanjiv-Scenario-Key"?: string | null;
+            };
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReserveExecutionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReservePlanResponse"];
                 };
             };
             /** @description Validation Error */

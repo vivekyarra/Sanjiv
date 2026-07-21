@@ -72,7 +72,7 @@ The simulator produces time-indexed demand, arrivals, inventory, and affected ca
 
 ### Reserve optimisation
 
-Phase 5 adds site/time/refinery release variables, connectivity, draw limits, minimum floors, replenishment, and future-vulnerability penalties. Procurement and reserve models coordinate through a single combined input snapshot and shared mass balance. Policy modes alter calibrated objective weights, never safety constraints.
+Phase 5 implements site/refinery dispatch, transit, receipt, remaining-inventory, and residual-shortage decisions in `sanjiv/reserve`. The input builder binds one exact independently checked Phase 4 plan and the same scenario/result/twin identities. Public storage capacity stays `OBSERVED`; opening fill is accepted only as verified input or an unexpired visible `ASSUMPTION`, and unknown sites are blocked. Procurement and reserve models coordinate through exact committed receipts and shared refinery capacity. Policy modes alter calibrated objective weights and floors, never physical conservation or capacity constraints. Replenishment is absent unless supplied by verified input.
 
 ### Audit and explanation
 

@@ -78,6 +78,8 @@ Phase 4 registers both procurement paths. POST requires `Idempotency-Key`, a com
 
 The request carries the exact simulation run/result, confirmed scenario, immutable twin snapshot, evidence/assumption hashes, fixed reserve policy, hard constraints, solver configuration, selected profiles, and versioned objective weights. The response shape separates solver results from operational plans: only independently checked `OPTIMAL` or `FEASIBLE` results may have a plan. Infeasible, timeout, error, not-run, or failed-check outcomes remain typed diagnostics with no plan.
 
+Phase 5 registers the reserve POST/GET paths. POST requires `Idempotency-Key`, a completed exact scenario run, server-owned identity, and one checked Phase 4 procurement plan from that run. The server builds all reserve inputs from the same immutable scenario/result/twin and procurement fingerprints, rejects unknown or expired opening inventory, runs the canonical reserve policies through bounded Pyomo/HiGHS, and persists only independently checked results at migration `20260721_0006`. GET rehydrates an immutable plan after restart; exact-fingerprint repeats are visibly reused.
+
 ## Replay
 
 Phase 1 replay selection is startup configuration, not an unauthenticated mutation API. `SANJIV_REPLAY_DATASET`, `SANJIV_REPLAY_SPEED`, and `SANJIV_REPLAY_LOOP` select a validated manifest. Missing live credentials or exhausted live retries cause an automatic, audited, visibly explained fallback. Authenticated replay-session mutation endpoints are planned but are not part of the Phase 1 attack surface.

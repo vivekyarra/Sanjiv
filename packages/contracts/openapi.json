@@ -1744,6 +1744,15 @@
         "title": "InventoryTrajectory",
         "type": "object"
       },
+      "InventoryTruthStatus": {
+        "enum": [
+          "VERIFIED_USER_INPUT",
+          "UNEXPIRED_ASSUMPTION",
+          "UNKNOWN"
+        ],
+        "title": "InventoryTruthStatus",
+        "type": "string"
+      },
       "LandedCostBreakdown": {
         "additionalProperties": false,
         "properties": {
@@ -3442,6 +3451,1018 @@
         ],
         "title": "RejectedOptionReasonCode",
         "type": "string"
+      },
+      "ReserveAction": {
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "format": "uuid",
+            "title": "Action Id",
+            "type": "string"
+          },
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "dispatch": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "dispatch_at": {
+            "format": "date-time",
+            "title": "Dispatch At",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "guidance_only": {
+            "const": true,
+            "default": true,
+            "title": "Guidance Only",
+            "type": "boolean"
+          },
+          "in_transit": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "receipt": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "receipt_at": {
+            "format": "date-time",
+            "title": "Receipt At",
+            "type": "string"
+          },
+          "refinery_id": {
+            "format": "uuid",
+            "title": "Refinery Id",
+            "type": "string"
+          },
+          "remaining_cover": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "remaining_inventory": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "route_id": {
+            "format": "uuid",
+            "title": "Route Id",
+            "type": "string"
+          },
+          "site_id": {
+            "format": "uuid",
+            "title": "Site Id",
+            "type": "string"
+          },
+          "truth_label": {
+            "const": "MODELED",
+            "default": "MODELED",
+            "title": "Truth Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action_id",
+          "site_id",
+          "refinery_id",
+          "route_id",
+          "dispatch",
+          "in_transit",
+          "receipt",
+          "remaining_inventory",
+          "remaining_cover",
+          "dispatch_at",
+          "receipt_at",
+          "evidence_ids",
+          "assumption_ids"
+        ],
+        "title": "ReserveAction",
+        "type": "object"
+      },
+      "ReserveCheckResult": {
+        "additionalProperties": false,
+        "properties": {
+          "capacity_passed": {
+            "title": "Capacity Passed",
+            "type": "boolean"
+          },
+          "checked_at": {
+            "format": "date-time",
+            "title": "Checked At",
+            "type": "string"
+          },
+          "checker_version": {
+            "const": "reserve-checker-v1",
+            "default": "reserve-checker-v1",
+            "title": "Checker Version",
+            "type": "string"
+          },
+          "conservation_passed": {
+            "title": "Conservation Passed",
+            "type": "boolean"
+          },
+          "dispatch_receipt_passed": {
+            "title": "Dispatch Receipt Passed",
+            "type": "boolean"
+          },
+          "draw_rate_passed": {
+            "title": "Draw Rate Passed",
+            "type": "boolean"
+          },
+          "failure_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Failure Codes",
+            "type": "array"
+          },
+          "fingerprint_passed": {
+            "title": "Fingerprint Passed",
+            "type": "boolean"
+          },
+          "floor_passed": {
+            "title": "Floor Passed",
+            "type": "boolean"
+          },
+          "objective_passed": {
+            "title": "Objective Passed",
+            "type": "boolean"
+          },
+          "opening_inventory_passed": {
+            "title": "Opening Inventory Passed",
+            "type": "boolean"
+          },
+          "passed": {
+            "title": "Passed",
+            "type": "boolean"
+          },
+          "procurement_coordination_passed": {
+            "title": "Procurement Coordination Passed",
+            "type": "boolean"
+          },
+          "shortage_passed": {
+            "title": "Shortage Passed",
+            "type": "boolean"
+          },
+          "transit_passed": {
+            "title": "Transit Passed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "checked_at",
+          "passed",
+          "opening_inventory_passed",
+          "floor_passed",
+          "conservation_passed",
+          "draw_rate_passed",
+          "dispatch_receipt_passed",
+          "transit_passed",
+          "capacity_passed",
+          "procurement_coordination_passed",
+          "shortage_passed",
+          "objective_passed",
+          "fingerprint_passed"
+        ],
+        "title": "ReserveCheckResult",
+        "type": "object"
+      },
+      "ReserveConstraintReport": {
+        "additionalProperties": false,
+        "properties": {
+          "checked": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Checked",
+            "type": "array"
+          },
+          "feasible": {
+            "title": "Feasible",
+            "type": "boolean"
+          },
+          "violations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Violations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "feasible",
+          "checked"
+        ],
+        "title": "ReserveConstraintReport",
+        "type": "object"
+      },
+      "ReserveDemandRequirement": {
+        "additionalProperties": false,
+        "properties": {
+          "refinery_id": {
+            "format": "uuid",
+            "title": "Refinery Id",
+            "type": "string"
+          },
+          "required_volume": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "refinery_id",
+          "required_volume"
+        ],
+        "title": "ReserveDemandRequirement",
+        "type": "object"
+      },
+      "ReserveExecutionRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "procurement_plan_id": {
+            "format": "uuid",
+            "title": "Procurement Plan Id",
+            "type": "string"
+          },
+          "profiles": {
+            "items": {
+              "$ref": "#/components/schemas/ReservePolicyProfile"
+            },
+            "maxItems": 4,
+            "minItems": 1,
+            "title": "Profiles",
+            "type": "array"
+          },
+          "time_limit_seconds": {
+            "default": 10.0,
+            "exclusiveMinimum": 0.0,
+            "maximum": 60.0,
+            "title": "Time Limit Seconds",
+            "type": "number"
+          }
+        },
+        "required": [
+          "procurement_plan_id"
+        ],
+        "title": "ReserveExecutionRequest",
+        "type": "object"
+      },
+      "ReserveFailure": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "retryable": {
+            "default": false,
+            "title": "Retryable",
+            "type": "boolean"
+          },
+          "stage": {
+            "enum": [
+              "INPUT",
+              "SOLVER",
+              "CHECKER",
+              "CONTRACT"
+            ],
+            "title": "Stage",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "stage"
+        ],
+        "title": "ReserveFailure",
+        "type": "object"
+      },
+      "ReserveInventoryPoint": {
+        "additionalProperties": false,
+        "properties": {
+          "at": {
+            "format": "date-time",
+            "title": "At",
+            "type": "string"
+          },
+          "cover": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "inventory": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "site_id": {
+            "format": "uuid",
+            "title": "Site Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "site_id",
+          "at",
+          "inventory",
+          "cover"
+        ],
+        "title": "ReserveInventoryPoint",
+        "type": "object"
+      },
+      "ReserveLifecycleTransition": {
+        "additionalProperties": false,
+        "properties": {
+          "actor_id": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Actor Id",
+            "type": "string"
+          },
+          "current": {
+            "$ref": "#/components/schemas/ReservePlanLifecycle"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/ReservePlanLifecycle"
+          }
+        },
+        "required": [
+          "current",
+          "target",
+          "occurred_at",
+          "actor_id"
+        ],
+        "title": "ReserveLifecycleTransition",
+        "type": "object"
+      },
+      "ReserveObjective": {
+        "additionalProperties": false,
+        "properties": {
+          "raw_metrics": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Raw Metrics",
+            "type": "object"
+          },
+          "total": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "weighted_contributions": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Weighted Contributions",
+            "type": "object"
+          },
+          "weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Weights",
+            "type": "object"
+          }
+        },
+        "required": [
+          "raw_metrics",
+          "weights",
+          "weighted_contributions",
+          "total"
+        ],
+        "title": "ReserveObjective",
+        "type": "object"
+      },
+      "ReserveOptimisationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "checker_version": {
+            "const": "reserve-checker-v1",
+            "default": "reserve-checker-v1",
+            "title": "Checker Version",
+            "type": "string"
+          },
+          "demands": {
+            "items": {
+              "$ref": "#/components/schemas/ReserveDemandRequirement"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Demands",
+            "type": "array"
+          },
+          "ends_at": {
+            "format": "date-time",
+            "title": "Ends At",
+            "type": "string"
+          },
+          "input_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Input Fingerprint",
+            "type": "string"
+          },
+          "interval_hours": {
+            "const": 24,
+            "default": 24,
+            "title": "Interval Hours",
+            "type": "integer"
+          },
+          "model_version": {
+            "const": "reserve-optimiser-v1",
+            "default": "reserve-optimiser-v1",
+            "title": "Model Version",
+            "type": "string"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/ReservePolicyWeights"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/ReserveProvenance"
+          },
+          "schema_version": {
+            "const": "reserve-input-v1",
+            "default": "reserve-input-v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sites": {
+            "items": {
+              "$ref": "#/components/schemas/ReserveSiteInput"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Sites",
+            "type": "array"
+          },
+          "starts_at": {
+            "format": "date-time",
+            "title": "Starts At",
+            "type": "string"
+          },
+          "tolerance": {
+            "default": 1e-06,
+            "exclusiveMinimum": 0,
+            "title": "Tolerance",
+            "type": "number"
+          }
+        },
+        "required": [
+          "provenance",
+          "policy",
+          "starts_at",
+          "ends_at",
+          "sites",
+          "demands",
+          "input_fingerprint"
+        ],
+        "title": "ReserveOptimisationInput",
+        "type": "object"
+      },
+      "ReservePlan": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_event_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Audit Event Ids",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "input": {
+            "$ref": "#/components/schemas/ReserveOptimisationInput"
+          },
+          "input_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Input Fingerprint",
+            "type": "string"
+          },
+          "lifecycle": {
+            "$ref": "#/components/schemas/ReservePlanLifecycle"
+          },
+          "plan_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Plan Fingerprint",
+            "type": "string"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "procurement_plan_id": {
+            "format": "uuid",
+            "title": "Procurement Plan Id",
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ReservePolicyProfile"
+          },
+          "recommendation_only": {
+            "const": true,
+            "default": true,
+            "title": "Recommendation Only",
+            "type": "boolean"
+          },
+          "result": {
+            "$ref": "#/components/schemas/ReserveSolverResult"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan_id",
+          "run_id",
+          "procurement_plan_id",
+          "profile",
+          "lifecycle",
+          "input",
+          "input_fingerprint",
+          "plan_fingerprint",
+          "result",
+          "created_at",
+          "audit_event_ids"
+        ],
+        "title": "ReservePlan",
+        "type": "object"
+      },
+      "ReservePlanLifecycle": {
+        "enum": [
+          "REQUESTED",
+          "SOLVING",
+          "CHECKING",
+          "FEASIBLE",
+          "FAILED"
+        ],
+        "title": "ReservePlanLifecycle",
+        "type": "string"
+      },
+      "ReservePlanResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "failures": {
+            "items": {
+              "$ref": "#/components/schemas/ReserveFailure"
+            },
+            "title": "Failures",
+            "type": "array"
+          },
+          "plans": {
+            "items": {
+              "$ref": "#/components/schemas/ReservePlan"
+            },
+            "title": "Plans",
+            "type": "array"
+          },
+          "procurement_plan_id": {
+            "format": "uuid",
+            "title": "Procurement Plan Id",
+            "type": "string"
+          },
+          "request_id": {
+            "format": "uuid",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/ReserveSolverResult"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "reused": {
+            "default": false,
+            "title": "Reused",
+            "type": "boolean"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "run_id",
+          "procurement_plan_id",
+          "results",
+          "plans",
+          "failures"
+        ],
+        "title": "ReservePlanResponse",
+        "type": "object"
+      },
+      "ReservePolicyProfile": {
+        "enum": [
+          "CONSERVATIVE",
+          "BALANCED",
+          "AGGRESSIVE_CONTINUITY",
+          "NO_RESERVE_USE"
+        ],
+        "title": "ReservePolicyProfile",
+        "type": "string"
+      },
+      "ReservePolicyWeights": {
+        "additionalProperties": false,
+        "properties": {
+          "future_vulnerability": {
+            "minimum": 0,
+            "title": "Future Vulnerability",
+            "type": "number"
+          },
+          "logistics_cost": {
+            "minimum": 0,
+            "title": "Logistics Cost",
+            "type": "number"
+          },
+          "minimum_floor_fraction": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Minimum Floor Fraction",
+            "type": "number"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ReservePolicyProfile"
+          },
+          "reserve_depletion": {
+            "minimum": 0,
+            "title": "Reserve Depletion",
+            "type": "number"
+          },
+          "shortage": {
+            "minimum": 0,
+            "title": "Shortage",
+            "type": "number"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "profile",
+          "version",
+          "shortage",
+          "reserve_depletion",
+          "logistics_cost",
+          "future_vulnerability",
+          "minimum_floor_fraction"
+        ],
+        "title": "ReservePolicyWeights",
+        "type": "object"
+      },
+      "ReserveProvenance": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "$ref": "#/components/schemas/AssumptionFingerprintReference"
+            },
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "confirmed_scenario": {
+            "$ref": "#/components/schemas/ConfirmedScenarioReference"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceFingerprintReference"
+            },
+            "minItems": 1,
+            "title": "Evidence",
+            "type": "array"
+          },
+          "procurement_checker_version": {
+            "title": "Procurement Checker Version",
+            "type": "string"
+          },
+          "procurement_input_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Procurement Input Fingerprint",
+            "type": "string"
+          },
+          "procurement_plan_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Procurement Plan Fingerprint",
+            "type": "string"
+          },
+          "procurement_plan_id": {
+            "format": "uuid",
+            "title": "Procurement Plan Id",
+            "type": "string"
+          },
+          "simulation_result": {
+            "$ref": "#/components/schemas/SimulationResultReference"
+          },
+          "simulation_run": {
+            "$ref": "#/components/schemas/SimulationRunReference"
+          },
+          "twin_snapshot": {
+            "$ref": "#/components/schemas/TwinSnapshotReference"
+          }
+        },
+        "required": [
+          "simulation_run",
+          "simulation_result",
+          "confirmed_scenario",
+          "twin_snapshot",
+          "procurement_plan_id",
+          "procurement_plan_fingerprint",
+          "procurement_input_fingerprint",
+          "procurement_checker_version",
+          "evidence",
+          "assumptions"
+        ],
+        "title": "ReserveProvenance",
+        "type": "object"
+      },
+      "ReserveRejectedOption": {
+        "additionalProperties": false,
+        "properties": {
+          "constraint_id": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Constraint Id",
+            "type": "string"
+          },
+          "explanation": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Explanation",
+            "type": "string"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/ReserveRejectedReason"
+          },
+          "site_id": {
+            "format": "uuid",
+            "title": "Site Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "site_id",
+          "reason",
+          "constraint_id",
+          "explanation"
+        ],
+        "title": "ReserveRejectedOption",
+        "type": "object"
+      },
+      "ReserveRejectedReason": {
+        "enum": [
+          "UNKNOWN_INVENTORY",
+          "EXPIRED_ASSUMPTION",
+          "DISCONNECTED",
+          "TRANSIT_TOO_LATE",
+          "CAPACITY_EXHAUSTED",
+          "POLICY_FLOOR",
+          "NO_RESERVE_USE",
+          "HIGHER_OBJECTIVE",
+          "INVALID_PROVENANCE"
+        ],
+        "title": "ReserveRejectedReason",
+        "type": "string"
+      },
+      "ReserveSiteInput": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Assumption Ids",
+            "type": "array"
+          },
+          "capacity": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "draw_rate_limit": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "logistics_cost": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "minimum_policy_floor": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "opening_inventory": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "opening_inventory_status": {
+            "$ref": "#/components/schemas/InventoryTruthStatus"
+          },
+          "procurement_committed_receipts": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "refinery_id": {
+            "format": "uuid",
+            "title": "Refinery Id",
+            "type": "string"
+          },
+          "refinery_receipt_capacity": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "replenishment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "route_capacity": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          },
+          "route_id": {
+            "format": "uuid",
+            "title": "Route Id",
+            "type": "string"
+          },
+          "site_id": {
+            "format": "uuid",
+            "title": "Site Id",
+            "type": "string"
+          },
+          "site_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Site Name",
+            "type": "string"
+          },
+          "transit_time": {
+            "$ref": "#/components/schemas/MetricEnvelope_float_"
+          }
+        },
+        "required": [
+          "site_id",
+          "site_name",
+          "refinery_id",
+          "route_id",
+          "capacity",
+          "opening_inventory",
+          "opening_inventory_status",
+          "minimum_policy_floor",
+          "draw_rate_limit",
+          "route_capacity",
+          "transit_time",
+          "refinery_receipt_capacity",
+          "procurement_committed_receipts",
+          "logistics_cost",
+          "evidence_ids"
+        ],
+        "title": "ReserveSiteInput",
+        "type": "object"
+      },
+      "ReserveSolverResult": {
+        "additionalProperties": false,
+        "properties": {
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/ReserveAction"
+            },
+            "title": "Actions",
+            "type": "array"
+          },
+          "checker": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReserveCheckResult"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "constraints": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReserveConstraintReport"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "failure": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReserveFailure"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/SolverMetadata"
+          },
+          "objective": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReserveObjective"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ReservePolicyProfile"
+          },
+          "rejected_options": {
+            "items": {
+              "$ref": "#/components/schemas/ReserveRejectedOption"
+            },
+            "title": "Rejected Options",
+            "type": "array"
+          },
+          "residual_shortage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetricEnvelope_float_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "result_id": {
+            "format": "uuid",
+            "title": "Result Id",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SolverStatus"
+          },
+          "timeline": {
+            "items": {
+              "$ref": "#/components/schemas/ReserveInventoryPoint"
+            },
+            "title": "Timeline",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result_id",
+          "profile",
+          "status",
+          "metadata"
+        ],
+        "title": "ReserveSolverResult",
+        "type": "object"
       },
       "ResolvedDisruptionTarget": {
         "additionalProperties": false,
@@ -6202,6 +7223,49 @@
         ]
       }
     },
+    "/api/v1/reserve-plans/{plan_id}": {
+      "get": {
+        "operationId": "reserve_plan_api_v1_reserve_plans__plan_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservePlan"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reserve Plan",
+        "tags": [
+          "strategic-reserve"
+        ]
+      }
+    },
     "/api/v1/scenario-runs": {
       "post": {
         "operationId": "start_simulation_api_v1_scenario_runs_post",
@@ -6509,6 +7573,86 @@
         "summary": "Simulation Progress",
         "tags": [
           "scenario-lab"
+        ]
+      }
+    },
+    "/api/v1/scenario-runs/{run_id}/reserve-plans": {
+      "post": {
+        "operationId": "create_reserve_plans_api_v1_scenario_runs__run_id__reserve_plans_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 8,
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Sanjiv-Scenario-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Sanjiv-Scenario-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReserveExecutionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservePlanResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Reserve Plans",
+        "tags": [
+          "strategic-reserve"
         ]
       }
     },

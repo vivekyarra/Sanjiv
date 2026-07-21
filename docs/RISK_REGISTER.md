@@ -8,6 +8,8 @@
 | AIS coverage gaps | High | High | Coverage/staleness indicators and gap metrics | Preserve last observation; never interpolate as observed | Maritime lead |
 | Stale data | High | High | Source-specific expected cadence and freshness computation | Block or downgrade dependent decision metrics | Evidence lead |
 | Malformed AIS destination | High | Medium | Preserve raw text, normalized candidate, confidence contributions | Mark unknown; do not assert destination/cargo | Maritime lead |
+| Reserve opening fill unavailable or stale | Critical | High | Separate capacity from fill; require verified input or expiring assumption; fingerprint every value | Block the site and show UNKNOWN/expired state; never infer fill from capacity | Reserve modelling lead |
+| Procurement/reserve shared-capacity drift | High | Medium | Bind exact checked Phase 4 plan and independently reconstruct shared receipt limits | Reject fingerprint mismatch and produce no usable reserve plan | Optimisation lead |
 | Solver infeasibility | Medium | High | Pre-solve validation and named slack diagnostics | Return infeasibility report and safe manual review | Modelling lead |
 | Solver timeout | Medium | High | Time limits, warm starts, model-size budgets | Reuse only exact-fingerprint result; otherwise no plan | Modelling lead |
 | Procurement model or checker drift | Medium | Critical | Shared immutable inputs but independent arithmetic/constraint reconstruction, fingerprint checks, deterministic golden cases | Block the plan and return typed checker failure | Modelling lead |

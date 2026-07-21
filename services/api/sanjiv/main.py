@@ -29,6 +29,10 @@ from sanjiv.procurement.repository import (
 )
 from sanjiv.procurement.routes import router as procurement_router
 from sanjiv.procurement.service import ProcurementService
+from sanjiv.reserve.openapi import add_reserve_contract_schemas
+from sanjiv.reserve.repository import InMemoryReserveRepository, PostgresReserveRepository
+from sanjiv.reserve.routes import router as reserve_router
+from sanjiv.reserve.service import ReserveService
 from sanjiv.scenarios.compiler import (
     DisabledScenarioProvider,
     OpenAIResponsesScenarioProvider,
@@ -129,6 +133,16 @@ def create_app(
         scenario_service=scenario_service,
         repository=procurement_repository,
     )
+    reserve_repository = (
+        PostgresReserveRepository(resolved_settings.database_url)
+        if resolved_settings.sanjiv_reserve_storage == "postgres"
+        else InMemoryReserveRepository()
+    )
+    reserve_service = ReserveService(
+        scenario_service=scenario_service,
+        procurement_service=procurement_service,
+        repository=reserve_repository,
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -136,6 +150,7 @@ def create_app(
         await service.repository.initialize(geofences)
         await scenario_service.initialize()
         await procurement_service.initialize()
+        await reserve_service.initialize()
         await service.initialize()
         if resolved_settings.sanjiv_maritime_autostart:
             service.start()
@@ -143,6 +158,7 @@ def create_app(
         await service.stop()
         await scenario_service.close()
         await procurement_service.close()
+        await reserve_service.close()
         close = getattr(service.repository, "close", None)
         if close is not None:
             await close()
@@ -158,6 +174,7 @@ def create_app(
     application.state.maritime_service = service
     application.state.scenario_service = scenario_service
     application.state.procurement_service = procurement_service
+    application.state.reserve_service = reserve_service
     application.add_middleware(
         CORSMiddleware,
         allow_origins=resolved_settings.allowed_origins,
@@ -175,6 +192,7 @@ def create_app(
     application.include_router(twin_router)
     application.include_router(scenario_router)
     application.include_router(procurement_router)
+    application.include_router(reserve_router)
 
     @application.exception_handler(HTTPException)
     async def typed_http_error(_: Request, error: HTTPException) -> JSONResponse:
@@ -201,6 +219,7 @@ def create_app(
         return build_foundation_sample()
 
     add_procurement_contract_schemas(application)
+    add_reserve_contract_schemas(application)
     return application
 
 
