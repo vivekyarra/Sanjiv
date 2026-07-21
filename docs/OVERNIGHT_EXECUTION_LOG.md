@@ -93,9 +93,19 @@ This append-only working log records phase gates for `feature/phases-2-9-overnig
 
 ### Checkpoint status
 
-- In progress: the procurement optimiser contracts are frozen and focused contract tests are being integrated into the full repository gate.
+- Complete for this checkpoint: procurement optimiser contracts are frozen and the full repository gate passed with healthy PostgreSQL/PostGIS/TimescaleDB, Redis, and MinIO services. The first local attempt was environment-blocked by an unavailable Docker Desktop Linux engine and connection-refused PostgreSQL; the later healthy-service run passed.
 - This is not Phase 4 completion. No optimisation equations, Pyomo/HiGHS execution, persistence, working procurement endpoint, plan generation, Response Planner UI, recommendation, rerouting action, reserve release, or approval workflow is included.
 - Remaining Phase 4 work begins with the optimiser input builder and landed-cost service, followed by shared hard constraints, the lowest-cost solve, independent checker implementation, balanced/resilience solves, persistence/API exposure, explanations, Response Planner UI, scenario-library validation, and the full Phase 4 hard gate.
+
+### Procurement contract checkpoint gate evidence (2026-07-21)
+
+- Services: Docker Compose `postgres`, `redis`, and `minio` healthy; PostgreSQL accepting connections.
+- Migration cycle: `upgrade head` -> `downgrade 20260720_0003` -> `upgrade head`; final Alembic revision `20260721_0004 (head)`.
+- Previously blocked PostgreSQL tests: all three passed; full Python suite passed `117 passed`.
+- Procurement-focused tests: `24 passed`.
+- Ruff, strict mypy, generated-contract/OpenAPI drift, ESLint, TypeScript, web tests (`9 passed`), production Next.js build, and `git diff --check`: passed.
+- No source defect was found and no product-code change was required for the gate closure. Secret and dependency-change reviews found no issues.
+- Phase 4 remains incomplete beyond this contract checkpoint; optimisation, persistence, endpoints, recommendations, reserve optimisation, and approvals remain out of scope.
 
 ## Phase 5 - Strategic reserve optimiser
 
