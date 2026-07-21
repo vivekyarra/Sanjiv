@@ -1,6 +1,7 @@
 "use client";
 
 import type { components } from "@sanjiv/contracts";
+import Link from "next/link";
 import maplibregl, {
   type GeoJSONSource,
   type Map as MapLibreMap,
@@ -202,6 +203,13 @@ export function MaritimeWatch() {
           </div>
         </div>
         <div className="status-cluster">
+          <Link className="module-link" href="/digital-twin">Digital Twin</Link>
+          <Link className="module-link" href="/scenario-lab">Scenario Lab</Link>
+          <Link className="module-link" href="/response-planner">Response Planner</Link>
+          <Link className="module-link" href="/strategic-reserve">Strategic Reserve</Link>
+          <Link className="module-link" href="/risk-intelligence">Risk Intelligence</Link>
+          <Link className="module-link" href="/evidence-approval">Evidence &amp; Approval</Link>
+          <Link className="module-link" href="/historical-replay">Historical Replay</Link>
           <span className={`mode-chip ${mode.tone}`}>{mode.label}</span>
           <span className={`connection-chip ${socketState.toLowerCase()}`}><i />{connectionLabel(socketState)}</span>
           <time>{snapshot ? formatTime(snapshot.as_of) : "Waiting for source"}</time>

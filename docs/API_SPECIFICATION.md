@@ -20,18 +20,42 @@ Phase 1 snapshots return `operating_mode`, `mode_explanation`, `connection_state
 
 WebSocket messages use `{schema_version, sequence, event_type, occurred_at, operating_mode, payload}`. Event types are `VESSEL_POSITION | GEOFENCE_EVENT | MODE_TRANSITION | HEARTBEAT | RESYNC_REQUIRED | ERROR`. Sequence is monotonic within an API process. On reconnect the client sends its last cursor; retained events are delivered in order. A cursor outside retention or a bounded-queue overflow yields `RESYNC_REQUIRED` with the snapshot URL. An invalid cursor closes with policy code `1008`. Idle connections receive heartbeats at `SANJIV_WEBSOCKET_HEARTBEAT_SECONDS`.
 
+## Digital twin
+
+```text
+GET /api/v1/twin/network
+GET /api/v1/twin/snapshots/current
+GET /api/v1/twin/snapshots/{snapshot_id}
+```
+
+These read-only endpoints expose the same immutable `TwinSnapshot` contract. The response includes canonical nodes and routes, 12-20 crude grades, compatibility, baseline flows, evidence and assumptions, version/fingerprint, and the mass-balance report. `current` resolves the configured frozen reference snapshot; scenario execution in Phase 3 must persist and submit its exact snapshot ID rather than resolving mutable latest state. Unknown UUIDs return `404`.
+
 ## Scenarios and computation
 
 ```text
+GET  /api/v1/scenario-types
+GET  /api/v1/scenarios/form-metadata
 POST /api/v1/scenarios/compile
+POST /api/v1/scenarios/{scenario_id}/validate
+GET  /api/v1/scenarios/{scenario_id}/validation
 POST /api/v1/scenarios/{scenario_id}/confirm
+GET  /api/v1/scenarios/{scenario_id}/confirmed
 POST /api/v1/scenario-runs
 GET  /api/v1/scenario-runs/{run_id}
+GET  /api/v1/scenario-runs/{run_id}/progress
 POST /api/v1/scenario-runs/{run_id}/cancel
-WS   /ws/v1/scenario-runs/{run_id}
+GET  /api/v1/scenario-runs/{run_id}/results
+GET  /api/v1/scenario-runs/{run_id}/timeline
+GET  /api/v1/scenarios/{scenario_id}/evidence
+GET  /api/v1/scenarios/{scenario_id}/assumptions
+GET  /api/v1/scenarios/{scenario_id}/audit-events
 ```
 
-Compile returns a candidate `Scenario`, visible defaults, unresolved entities, warnings, interpreter provider/model, and validation state; it never starts a run. Confirmation freezes the canonical scenario hash. Run creation requires a confirmed scenario and twin snapshot and returns state `QUEUED`. States are `QUEUED | RUNNING | SUCCEEDED | FAILED | CANCELLED`.
+Compile returns a candidate `Scenario`, visible defaults, unresolved entities, warnings, interpreter provider/model, and validation state; it never starts a run. Confirmation freezes the canonical scenario and twin hashes. Run creation requires a confirmed scenario and returns `QUEUED`; immediate in-process execution persists `RUNNING` progress and a terminal `COMPLETED | FAILED | CANCELLED` state. Progress is documented REST polling so reload/restart can retrieve persisted state. A complete matching simulation fingerprint may reuse a prior result.
+
+All mutation endpoints require `Idempotency-Key`. Compile, validate, confirm, start, and cancel write audit events or persistent lifecycle records. Errors use the canonical top-level `{code, message, request_id, details}` envelope. Stale/missing snapshots, unsupported scenarios, validation failures, provider unavailability, cancellation, and simulation failures remain typed and distinguishable.
+
+Local development/test mode uses the configured `SANJIV_SCENARIO_OPERATOR_IDENTITY` and needs no secret. Outside those modes, every scenario mutation requires `SANJIV_SCENARIO_API_KEY` in `X-Sanjiv-Scenario-Key`; startup remains credential-free, but mutation attempts fail closed until an operator credential is configured. Caller-supplied confirmation identity is ignored at the HTTP boundary so audit attribution is server-owned. A production identity-provider integration remains deployment work.
 
 ## Plans, evidence, and approval
 
@@ -41,14 +65,55 @@ GET  /api/v1/procurement-plans/{plan_id}
 POST /api/v1/scenario-runs/{run_id}/reserve-plans
 GET  /api/v1/reserve-plans/{plan_id}
 GET  /api/v1/evidence/{evidence_id}
+GET  /api/v1/plans/{plan_id}/assumptions
+GET  /api/v1/plans/{plan_id}/audit
+GET  /api/v1/plans/{plan_id}/explanation
+GET  /api/v1/plans/{plan_id}/governance
+GET  /api/v1/plans/{plan_id}/reviews
 GET  /api/v1/scenarios/{scenario_id}/assumptions
 GET  /api/v1/scenarios/{scenario_id}/audit-events
 POST /api/v1/plans/{plan_id}/reviews
 POST /api/v1/plans/{plan_id}/approvals
 POST /api/v1/plans/{plan_id}/rejections
+POST /api/v1/plans/{plan_id}/supersessions
 ```
 
-Plan generation requests explicit profiles; the standard request is all of `LOWEST_COST`, `BALANCED`, and `HIGHEST_RESILIENCE`. Responses include solver status/version, input hash, objective breakdown, actions, rejected options, constraint report, metric envelopes, audit status, and lifecycle state. Approval requires an unchanged plan/assumption hash, successful audit, feasible solution, authenticated approver, and optional comment.
+Plan generation requests explicit profiles; the standard request is all of `LOWEST_COST`, `BALANCED`, and `HIGHEST_RESILIENCE`. Responses include solver status/version, input hash, objective breakdown, actions, rejected options, constraint report, metric envelopes, audit status, and lifecycle state. Approval requires an unchanged plan/assumption hash, successful audit, feasible solution, authenticated approver, and a policy-required comment.
+
+Phase 7 implements these paths for both procurement and reserve plans. `audit` returns every
+decision metric, including blocked metrics, plus structured failures, coverage, exact
+scenario/simulation/twin/procurement/reserve fingerprints, evidence and assumption-set hashes,
+solver/checker/model/formula versions, and a content fingerprint for the audit itself. A failed
+audit sets `usable`, `approval_allowed`, `export_allowed`, and
+`definitive_narrative_allowed` to false. `explanation` is deterministic and consumes the latest
+persisted audit; it exposes constraints, objective contributions and weights, allocations,
+rejected alternatives, assumptions, evidence, sensitivity drivers, residual shortage, and the
+no-action difference without operational execution language.
+
+Review actions require `Idempotency-Key` and the exact unchanged plan, assumption, and audit
+fingerprints. In development/test, `X-Sanjiv-Demo-Identity` may select only a server-configured
+identity/role. Outside those modes, `X-Sanjiv-Governance-Key` must resolve through
+`SANJIV_GOVERNANCE_API_KEYS`; missing configuration fails closed. Caller-supplied actor or role
+fields are not accepted. Operator, reviewer, approver, and administrator permissions are
+server-enforced, and lifecycle records are append-only with immutable UTC actor attribution.
+
+Phase 4 registers both procurement paths. POST requires `Idempotency-Key`, a completed exact scenario run, server-owned operator identity, canonical profile ordering, and valid unexpired provenance. The server builds the immutable input from the checked run and synthetic commercial assumptions, executes each profile sequentially through bounded HiGHS, independently verifies every usable result, persists it at migration `20260721_0005`, and reuses only an exact request fingerprint. GET rehydrates the immutable plan after restart. `INFEASIBLE` and `ERROR` have no plan; a timeout is usable only when its incumbent passes the same checker.
+
+The request carries the exact simulation run/result, confirmed scenario, immutable twin snapshot, evidence/assumption hashes, fixed reserve policy, hard constraints, solver configuration, selected profiles, and versioned objective weights. The response shape separates solver results from operational plans: only independently checked `OPTIMAL` or `FEASIBLE` results may have a plan. Infeasible, timeout, error, not-run, or failed-check outcomes remain typed diagnostics with no plan.
+
+Phase 5 registers the reserve POST/GET paths. POST requires `Idempotency-Key`, a completed exact scenario run, server-owned identity, and one checked Phase 4 procurement plan from that run. The server builds all reserve inputs from the same immutable scenario/result/twin and procurement fingerprints, rejects unknown or expired opening inventory, runs the canonical reserve policies through bounded Pyomo/HiGHS, and persists only independently checked results at migration `20260721_0006`. GET rehydrates an immutable plan after restart; exact-fingerprint repeats are visibly reused.
+
+## Risk intelligence
+
+```text
+GET /api/v1/risk/corridors
+GET /api/v1/risk/corridors/{risk_id}
+GET /api/v1/risk/corridors/{corridor_id}/timeline
+GET /api/v1/risk/alerts
+GET /api/v1/risk/backtests
+```
+
+These read-only endpoints expose ranked current results, full contributions and evidence, effective-dated history, alert states, and checksummed replay results. `RiskSeverity` uses `severity_point` on 0-100; `EvidenceConfidence` and `DataCompleteness` use fractions on 0-1 and are never aliases. Missing features remain explicit, stale evidence degrades completeness/confidence, and critical alerts require corroboration. Backtest responses carry their fixture/recorded-data classification and `fixture_evidence_only=true`; they are not production-accuracy claims.
 
 ## Replay
 
@@ -61,3 +126,23 @@ Phase 1 replay selection is startup configuration, not an unauthenticated mutati
 - LLM failure returns the structured form schema and extracted deterministic fields, not an invented scenario.
 - Solver infeasibility returns diagnostics and no operational plan. A cached plan is returned only for an exact input fingerprint and remains explicitly cached/stale.
 - All decision metrics use `MetricEnvelope`; evidence details can redact licensed raw payloads while retaining hash and provenance.
+
+## Phase 8 replay, LPG, sensitivity, export, and monitoring APIs
+
+- `GET /api/v1/replay-catalogue` returns the versioned, checksum-verified replay catalogue.
+- `POST /api/v1/replay-cases/{case_id}/runs` executes and stores a deterministic replay run;
+  `GET /api/v1/replay-runs` and `GET /api/v1/replay-runs/{run_id}` read stored results.
+- `GET /api/v1/lpg/network` returns the typed LPG fixture network and its immutable fingerprint;
+  `GET /api/v1/replay-runs/{run_id}/lpg-plans` returns the three checked LPG response profiles.
+- `POST /api/v1/plans/{plan_id}/sensitivity-runs` creates a deterministic fast or deep analysis;
+  `GET /api/v1/sensitivity-runs/{sensitivity_id}` reads it after restart.
+- `POST /api/v1/plans/{plan_id}/exports` and `POST /api/v1/lpg-plans/{plan_id}/exports` create
+  audited decision packages. `GET /api/v1/exports/{export_id}` returns immutable metadata and
+  `GET /api/v1/exports/{export_id}/download` returns the checksum-bound JSON or PDF bytes.
+- `POST|GET /api/v1/plans/{plan_id}/comments` records/reads immutable, server-attributed review
+  comments. `POST|GET /api/v1/plans/{plan_id}/monitoring` records/reads deviations and stale-input
+  warnings without any execution integration.
+
+All mutation endpoints require server-resolved governance identity and idempotency. Audited plan
+exports require a passed Evidence Auditor result and exact plan/audit/assumption fingerprints; LPG
+exports use the checked fixture plan fingerprint and remain explicitly synthetic decision support.

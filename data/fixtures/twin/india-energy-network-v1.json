@@ -1,0 +1,415 @@
+{
+  "dataset_id": "india-energy-network-v1",
+  "version": "india-energy-network-1.0.0",
+  "records": [
+    {
+      "source_id": "PPAC",
+      "record_id": "ppac-demo-normalisation-2026-07",
+      "dataset": "PPAC-shaped offline reference fixture",
+      "dataset_version": "1.0.0",
+      "effective_at": "2026-07-01T00:00:00Z",
+      "fetched_at": "2026-07-20T00:00:00Z",
+      "mode": "FIXTURE",
+      "truth_class": "ASSUMPTION",
+      "confidence": 0.55,
+      "source_url": "https://ppac.gov.in/import-export",
+      "license": "CC0 Sanjiv-authored synthetic fixture; no PPAC payload is redistributed",
+      "redistribution_rights": "SYNTHETIC_FIXTURE; unrestricted project redistribution",
+      "transformation": "ppac-reference-fixture.normalise.v1",
+      "expires_at": "2027-07-20T00:00:00Z",
+      "payload": {
+        "nodes": [
+          {
+            "canonical_id": "port:jamnagar",
+            "kind": "INDIAN_PORT",
+            "name": "Jamnagar Energy Port",
+            "country_code": "IN",
+            "latitude": 22.36,
+            "longitude": 69.96,
+            "capacity": 150.0,
+            "capacity_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "port:vadinar",
+            "kind": "INDIAN_PORT",
+            "name": "Vadinar Energy Port",
+            "country_code": "IN",
+            "latitude": 22.47,
+            "longitude": 69.7,
+            "capacity": 110.0,
+            "capacity_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "port:paradip",
+            "kind": "INDIAN_PORT",
+            "name": "Paradip Energy Port",
+            "country_code": "IN",
+            "latitude": 20.27,
+            "longitude": 86.68,
+            "capacity": 105.0,
+            "capacity_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "refinery:jamnagar",
+            "kind": "REFINERY",
+            "name": "Jamnagar Refinery Cluster",
+            "country_code": "IN",
+            "latitude": 22.31,
+            "longitude": 70.06,
+            "capacity": 100.0,
+            "capacity_unit": "ktonne_per_day",
+            "baseline_demand": 100.0,
+            "baseline_demand_unit": "ktonne_per_day",
+            "attributes": {
+              "preferred_api_min": 24.0,
+              "preferred_api_max": 44.0,
+              "sulfur_max_pct": 4.0,
+              "complexity_class": "HIGH",
+              "operational_values_verified": false
+            }
+          },
+          {
+            "canonical_id": "refinery:vadinar",
+            "kind": "REFINERY",
+            "name": "Vadinar Refinery",
+            "country_code": "IN",
+            "latitude": 22.39,
+            "longitude": 69.72,
+            "capacity": 75.0,
+            "capacity_unit": "ktonne_per_day",
+            "baseline_demand": 75.0,
+            "baseline_demand_unit": "ktonne_per_day",
+            "attributes": {
+              "preferred_api_min": 25.0,
+              "preferred_api_max": 42.0,
+              "sulfur_max_pct": 3.5,
+              "complexity_class": "HIGH",
+              "operational_values_verified": false
+            }
+          },
+          {
+            "canonical_id": "refinery:paradip",
+            "kind": "REFINERY",
+            "name": "Paradip Refinery",
+            "country_code": "IN",
+            "latitude": 20.32,
+            "longitude": 86.61,
+            "capacity": 75.0,
+            "capacity_unit": "ktonne_per_day",
+            "baseline_demand": 75.0,
+            "baseline_demand_unit": "ktonne_per_day",
+            "attributes": {
+              "preferred_api_min": 26.0,
+              "preferred_api_max": 40.0,
+              "sulfur_max_pct": 3.0,
+              "complexity_class": "MEDIUM_HIGH",
+              "operational_values_verified": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source_id": "ISPRL",
+      "record_id": "isprl-public-capacity-reference-v1",
+      "dataset": "ISPRL public site-capacity facts",
+      "dataset_version": "2026-07-20-citation",
+      "effective_at": "2025-04-01T00:00:00Z",
+      "fetched_at": "2026-07-20T00:00:00Z",
+      "mode": "CACHED",
+      "truth_class": "OBSERVED",
+      "confidence": 0.9,
+      "source_url": "https://isprlindia.com/aboutus.asp",
+      "license": "Public factual metadata with attribution; original publication content is not bundled",
+      "redistribution_rights": "Derived factual metadata only; verify source terms before republishing raw material",
+      "transformation": "isprl-public-capacity.normalise.v1",
+      "payload": {
+        "nodes": [
+          {
+            "canonical_id": "reserve:visakhapatnam",
+            "kind": "RESERVE_SITE",
+            "name": "Visakhapatnam Strategic Reserve",
+            "country_code": "IN",
+            "latitude": 17.69,
+            "longitude": 83.24,
+            "capacity": 1.03,
+            "capacity_unit": "million_metric_tonne",
+            "attributes": {
+              "current_fill_known": false,
+              "current_fill_status": "UNKNOWN"
+            }
+          },
+          {
+            "canonical_id": "reserve:mangalore",
+            "kind": "RESERVE_SITE",
+            "name": "Mangalore Strategic Reserve",
+            "country_code": "IN",
+            "latitude": 12.92,
+            "longitude": 74.86,
+            "capacity": 1.5,
+            "capacity_unit": "million_metric_tonne",
+            "attributes": {
+              "current_fill_known": false,
+              "current_fill_status": "UNKNOWN"
+            }
+          },
+          {
+            "canonical_id": "reserve:padur",
+            "kind": "RESERVE_SITE",
+            "name": "Padur Strategic Reserve",
+            "country_code": "IN",
+            "latitude": 13.13,
+            "longitude": 74.78,
+            "capacity": 2.5,
+            "capacity_unit": "million_metric_tonne",
+            "attributes": {
+              "current_fill_known": false,
+              "current_fill_status": "UNKNOWN"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source_id": "UN_COMTRADE",
+      "record_id": "comtrade-shaped-supplier-baseline-fixture-v1",
+      "dataset": "UN Comtrade-shaped supplier baseline fixture",
+      "dataset_version": "1.0.0",
+      "effective_at": "2026-07-01T00:00:00Z",
+      "fetched_at": "2026-07-20T00:00:00Z",
+      "mode": "FIXTURE",
+      "truth_class": "ASSUMPTION",
+      "confidence": 0.5,
+      "source_url": "https://uncomtrade.org/docs/un-comtrade-api/",
+      "license": "CC0 Sanjiv-authored synthetic fixture; no UN Comtrade records are redistributed",
+      "redistribution_rights": "SYNTHETIC_FIXTURE; unrestricted project redistribution",
+      "transformation": "comtrade-reference-fixture.normalise.v1",
+      "expires_at": "2027-07-20T00:00:00Z",
+      "payload": {
+        "nodes": [
+          {
+            "canonical_id": "supplier:saudi-arabia",
+            "kind": "SUPPLIER",
+            "name": "Saudi Arabia Baseline Supplier",
+            "country_code": "SA",
+            "latitude": 24.0,
+            "longitude": 45.0,
+            "baseline_supply": 100.0,
+            "baseline_supply_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "supplier:iraq",
+            "kind": "SUPPLIER",
+            "name": "Iraq Baseline Supplier",
+            "country_code": "IQ",
+            "latitude": 33.0,
+            "longitude": 44.0,
+            "baseline_supply": 100.0,
+            "baseline_supply_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "supplier:uae",
+            "kind": "SUPPLIER",
+            "name": "United Arab Emirates Baseline Supplier",
+            "country_code": "AE",
+            "latitude": 24.3,
+            "longitude": 54.4,
+            "baseline_supply": 30.0,
+            "baseline_supply_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "supplier:nigeria",
+            "kind": "SUPPLIER",
+            "name": "Nigeria Baseline Supplier",
+            "country_code": "NG",
+            "latitude": 9.1,
+            "longitude": 8.7,
+            "baseline_supply": 20.0,
+            "baseline_supply_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "load-port:ras-tanura",
+            "kind": "LOAD_PORT",
+            "name": "Ras Tanura Load Port",
+            "country_code": "SA",
+            "latitude": 26.64,
+            "longitude": 50.16,
+            "capacity": 160.0,
+            "capacity_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "load-port:basra",
+            "kind": "LOAD_PORT",
+            "name": "Basra Load Port",
+            "country_code": "IQ",
+            "latitude": 29.68,
+            "longitude": 48.81,
+            "capacity": 150.0,
+            "capacity_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "load-port:fujairah",
+            "kind": "LOAD_PORT",
+            "name": "Fujairah Load Port",
+            "country_code": "AE",
+            "latitude": 25.12,
+            "longitude": 56.35,
+            "capacity": 90.0,
+            "capacity_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "load-port:bonny",
+            "kind": "LOAD_PORT",
+            "name": "Bonny Load Port",
+            "country_code": "NG",
+            "latitude": 4.45,
+            "longitude": 7.17,
+            "capacity": 70.0,
+            "capacity_unit": "ktonne_per_day"
+          }
+        ],
+        "allocations": [
+          {
+            "supplier": "supplier:saudi-arabia",
+            "grade": "grade:arab-light",
+            "volume_ktonne_per_day": 70.0,
+            "route_ids": [
+              "route:saudi-to-ras-tanura",
+              "route:ras-tanura-to-hormuz",
+              "route:hormuz-to-jamnagar",
+              "route:jamnagar-port-to-refinery"
+            ]
+          },
+          {
+            "supplier": "supplier:saudi-arabia",
+            "grade": "grade:arab-light",
+            "volume_ktonne_per_day": 30.0,
+            "route_ids": [
+              "route:saudi-to-ras-tanura",
+              "route:ras-tanura-to-hormuz",
+              "route:hormuz-to-vadinar",
+              "route:vadinar-port-to-refinery"
+            ]
+          },
+          {
+            "supplier": "supplier:iraq",
+            "grade": "grade:basrah-medium",
+            "volume_ktonne_per_day": 45.0,
+            "route_ids": [
+              "route:iraq-to-basra",
+              "route:basra-to-hormuz",
+              "route:hormuz-to-vadinar",
+              "route:vadinar-port-to-refinery"
+            ]
+          },
+          {
+            "supplier": "supplier:iraq",
+            "grade": "grade:basrah-medium",
+            "volume_ktonne_per_day": 55.0,
+            "route_ids": [
+              "route:iraq-to-basra",
+              "route:basra-to-hormuz",
+              "route:hormuz-to-paradip",
+              "route:paradip-port-to-refinery"
+            ]
+          },
+          {
+            "supplier": "supplier:uae",
+            "grade": "grade:murban",
+            "volume_ktonne_per_day": 30.0,
+            "route_ids": [
+              "route:uae-to-fujairah",
+              "route:fujairah-to-jamnagar",
+              "route:jamnagar-port-to-refinery"
+            ]
+          },
+          {
+            "supplier": "supplier:nigeria",
+            "grade": "grade:bonny-light",
+            "volume_ktonne_per_day": 20.0,
+            "route_ids": [
+              "route:nigeria-to-bonny",
+              "route:bonny-to-cape",
+              "route:cape-to-paradip",
+              "route:paradip-port-to-refinery"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source_id": "SANJIV_TWIN_FIXTURE",
+      "record_id": "network-topology-and-grade-assumptions-v1",
+      "dataset": "Sanjiv Phase 2 network topology fixture",
+      "dataset_version": "1.0.0",
+      "effective_at": "2026-07-01T00:00:00Z",
+      "fetched_at": "2026-07-20T00:00:00Z",
+      "mode": "FIXTURE",
+      "truth_class": "ASSUMPTION",
+      "confidence": 0.45,
+      "source_url": "https://github.com/vivekyarra/Sanjiv",
+      "license": "CC0 Sanjiv-authored synthetic fixture",
+      "redistribution_rights": "SYNTHETIC_FIXTURE; unrestricted project redistribution",
+      "transformation": "twin-network-fixture.normalise.v1",
+      "expires_at": "2027-07-20T00:00:00Z",
+      "payload": {
+        "nodes": [
+          {
+            "canonical_id": "chokepoint:strait-of-hormuz",
+            "kind": "CHOKEPOINT",
+            "name": "Strait of Hormuz",
+            "country_code": "OM",
+            "latitude": 26.56,
+            "longitude": 56.25,
+            "capacity": 320.0,
+            "capacity_unit": "ktonne_per_day"
+          },
+          {
+            "canonical_id": "chokepoint:cape-of-good-hope",
+            "kind": "CHOKEPOINT",
+            "name": "Cape of Good Hope",
+            "country_code": "ZA",
+            "latitude": -34.36,
+            "longitude": 18.47,
+            "capacity": 250.0,
+            "capacity_unit": "ktonne_per_day"
+          }
+        ],
+        "routes": [
+          {"canonical_id":"route:saudi-to-ras-tanura","origin":"supplier:saudi-arabia","destination":"load-port:ras-tanura","capacity":150.0,"capacity_unit":"ktonne_per_day","transit_days":0.5,"distance_nm":100.0,"chokepoints":[]},
+          {"canonical_id":"route:ras-tanura-to-hormuz","origin":"load-port:ras-tanura","destination":"chokepoint:strait-of-hormuz","capacity":150.0,"capacity_unit":"ktonne_per_day","transit_days":1.5,"distance_nm":280.0,"chokepoints":["chokepoint:strait-of-hormuz"]},
+          {"canonical_id":"route:iraq-to-basra","origin":"supplier:iraq","destination":"load-port:basra","capacity":145.0,"capacity_unit":"ktonne_per_day","transit_days":0.5,"distance_nm":80.0,"chokepoints":[]},
+          {"canonical_id":"route:basra-to-hormuz","origin":"load-port:basra","destination":"chokepoint:strait-of-hormuz","capacity":145.0,"capacity_unit":"ktonne_per_day","transit_days":2.0,"distance_nm":430.0,"chokepoints":["chokepoint:strait-of-hormuz"]},
+          {"canonical_id":"route:uae-to-fujairah","origin":"supplier:uae","destination":"load-port:fujairah","capacity":85.0,"capacity_unit":"ktonne_per_day","transit_days":0.5,"distance_nm":90.0,"chokepoints":[]},
+          {"canonical_id":"route:fujairah-to-jamnagar","origin":"load-port:fujairah","destination":"port:jamnagar","capacity":85.0,"capacity_unit":"ktonne_per_day","transit_days":4.0,"distance_nm":1020.0,"chokepoints":[]},
+          {"canonical_id":"route:nigeria-to-bonny","origin":"supplier:nigeria","destination":"load-port:bonny","capacity":65.0,"capacity_unit":"ktonne_per_day","transit_days":0.5,"distance_nm":100.0,"chokepoints":[]},
+          {"canonical_id":"route:bonny-to-cape","origin":"load-port:bonny","destination":"chokepoint:cape-of-good-hope","capacity":65.0,"capacity_unit":"ktonne_per_day","transit_days":12.0,"distance_nm":3450.0,"chokepoints":["chokepoint:cape-of-good-hope"]},
+          {"canonical_id":"route:cape-to-paradip","origin":"chokepoint:cape-of-good-hope","destination":"port:paradip","capacity":80.0,"capacity_unit":"ktonne_per_day","transit_days":18.0,"distance_nm":5200.0,"chokepoints":["chokepoint:cape-of-good-hope"]},
+          {"canonical_id":"route:hormuz-to-jamnagar","origin":"chokepoint:strait-of-hormuz","destination":"port:jamnagar","capacity":130.0,"capacity_unit":"ktonne_per_day","transit_days":4.0,"distance_nm":1050.0,"chokepoints":["chokepoint:strait-of-hormuz"]},
+          {"canonical_id":"route:hormuz-to-vadinar","origin":"chokepoint:strait-of-hormuz","destination":"port:vadinar","capacity":105.0,"capacity_unit":"ktonne_per_day","transit_days":4.0,"distance_nm":1060.0,"chokepoints":["chokepoint:strait-of-hormuz"]},
+          {"canonical_id":"route:hormuz-to-paradip","origin":"chokepoint:strait-of-hormuz","destination":"port:paradip","capacity":90.0,"capacity_unit":"ktonne_per_day","transit_days":8.0,"distance_nm":2350.0,"chokepoints":["chokepoint:strait-of-hormuz"]},
+          {"canonical_id":"route:jamnagar-port-to-refinery","origin":"port:jamnagar","destination":"refinery:jamnagar","capacity":140.0,"capacity_unit":"ktonne_per_day","transit_days":0.25,"distance_nm":15.0,"chokepoints":[]},
+          {"canonical_id":"route:vadinar-port-to-refinery","origin":"port:vadinar","destination":"refinery:vadinar","capacity":100.0,"capacity_unit":"ktonne_per_day","transit_days":0.25,"distance_nm":12.0,"chokepoints":[]},
+          {"canonical_id":"route:paradip-port-to-refinery","origin":"port:paradip","destination":"refinery:paradip","capacity":95.0,"capacity_unit":"ktonne_per_day","transit_days":0.25,"distance_nm":10.0,"chokepoints":[]},
+          {"canonical_id":"route:reserve-vizag-to-paradip","origin":"reserve:visakhapatnam","destination":"refinery:paradip","capacity":12.0,"capacity_unit":"ktonne_per_day","transit_days":1.0,"distance_nm":230.0,"chokepoints":[]},
+          {"canonical_id":"route:reserve-mangalore-to-vadinar","origin":"reserve:mangalore","destination":"refinery:vadinar","capacity":10.0,"capacity_unit":"ktonne_per_day","transit_days":2.5,"distance_nm":620.0,"chokepoints":[]},
+          {"canonical_id":"route:reserve-padur-to-jamnagar","origin":"reserve:padur","destination":"refinery:jamnagar","capacity":10.0,"capacity_unit":"ktonne_per_day","transit_days":3.0,"distance_nm":700.0,"chokepoints":[]}
+        ],
+        "grades": [
+          {"canonical_id":"grade:arab-light","name":"Arab Light","origin_country_code":"SA","load_ports":["load-port:ras-tanura"],"api_gravity":33.0,"sulfur_pct":1.8,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:arab-medium","name":"Arab Medium","origin_country_code":"SA","load_ports":["load-port:ras-tanura"],"api_gravity":30.0,"sulfur_pct":2.5,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:arab-heavy","name":"Arab Heavy","origin_country_code":"SA","load_ports":["load-port:ras-tanura"],"api_gravity":27.0,"sulfur_pct":2.9,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:basrah-light","name":"Basrah Light","origin_country_code":"IQ","load_ports":["load-port:basra"],"api_gravity":34.0,"sulfur_pct":2.1,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:basrah-medium","name":"Basrah Medium","origin_country_code":"IQ","load_ports":["load-port:basra"],"api_gravity":29.5,"sulfur_pct":3.0,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:basrah-heavy","name":"Basrah Heavy","origin_country_code":"IQ","load_ports":["load-port:basra"],"api_gravity":24.0,"sulfur_pct":3.8,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:kirkuk","name":"Kirkuk","origin_country_code":"IQ","load_ports":["load-port:basra"],"api_gravity":36.0,"sulfur_pct":2.0,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:murban","name":"Murban","origin_country_code":"AE","load_ports":["load-port:fujairah"],"api_gravity":40.5,"sulfur_pct":0.8,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:upper-zakum","name":"Upper Zakum","origin_country_code":"AE","load_ports":["load-port:fujairah"],"api_gravity":34.0,"sulfur_pct":1.9,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:dubai","name":"Dubai","origin_country_code":"AE","load_ports":["load-port:fujairah"],"api_gravity":31.0,"sulfur_pct":2.0,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:bonny-light","name":"Bonny Light","origin_country_code":"NG","load_ports":["load-port:bonny"],"api_gravity":35.0,"sulfur_pct":0.2,"sanctions_state":"REQUIRES_CURRENT_SCREENING"},
+          {"canonical_id":"grade:qua-iboe","name":"Qua Iboe","origin_country_code":"NG","load_ports":["load-port:bonny"],"api_gravity":36.0,"sulfur_pct":0.1,"sanctions_state":"REQUIRES_CURRENT_SCREENING"}
+        ]
+      }
+    }
+  ]
+}

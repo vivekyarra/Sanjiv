@@ -1,0 +1,30 @@
+{
+  "dataset_id": "india-lpg-network-v1",
+  "version": "1.0.0",
+  "classification": "SYNTHETIC_FIXTURE",
+  "license": "CC0-1.0",
+  "redistribution_status": "UNRESTRICTED_SYNTHETIC_REDISTRIBUTION",
+  "unit": "tonne_per_day",
+  "effective_at": "2026-07-01T00:00:00Z",
+  "expires_at": "2027-07-01T00:00:00Z",
+  "suppliers": [
+    {"id": "lpg:supplier:gulf-a", "country_code": "AE", "capacity": 7800, "sanctioned": false},
+    {"id": "lpg:supplier:gulf-b", "country_code": "QA", "capacity": 6200, "sanctioned": false},
+    {"id": "lpg:supplier:asia-a", "country_code": "SG", "capacity": 5100, "sanctioned": false},
+    {"id": "lpg:supplier:africa-a", "country_code": "DZ", "capacity": 6000, "sanctioned": false}
+  ],
+  "terminals": [
+    {"id": "lpg:terminal:dahej", "name": "Dahej LPG Terminal", "capacity": 8200, "compatible": true},
+    {"id": "lpg:terminal:mangalore", "name": "Mangalore LPG Terminal", "capacity": 6600, "compatible": true},
+    {"id": "lpg:terminal:haldia", "name": "Haldia LPG Terminal", "capacity": 5000, "compatible": true}
+  ],
+  "routes": [
+    {"id": "lpg:route:gulf-a-dahej", "supplier_id": "lpg:supplier:gulf-a", "terminal_id": "lpg:terminal:dahej", "via": "chokepoint:hormuz", "capacity": 6500, "baseline_flow": 6000, "transit_days": 5, "cost_usd_per_tonne": 68},
+    {"id": "lpg:route:gulf-b-mangalore", "supplier_id": "lpg:supplier:gulf-b", "terminal_id": "lpg:terminal:mangalore", "via": "chokepoint:hormuz", "capacity": 5200, "baseline_flow": 4800, "transit_days": 6, "cost_usd_per_tonne": 72},
+    {"id": "lpg:route:asia-a-haldia", "supplier_id": "lpg:supplier:asia-a", "terminal_id": "lpg:terminal:haldia", "via": "route:malacca", "capacity": 4500, "baseline_flow": 4200, "transit_days": 8, "cost_usd_per_tonne": 81},
+    {"id": "lpg:route:africa-a-mangalore", "supplier_id": "lpg:supplier:africa-a", "terminal_id": "lpg:terminal:mangalore", "via": "route:cape", "capacity": 4200, "baseline_flow": 0, "transit_days": 15, "cost_usd_per_tonne": 98}
+  ],
+  "baseline_demand": 15000,
+  "public_reserve_policy": "NOT_APPLICABLE",
+  "assumption_notice": "All capacities, costs, availability, and demand are synthetic expiring assumptions; no commercial availability is claimed."
+}

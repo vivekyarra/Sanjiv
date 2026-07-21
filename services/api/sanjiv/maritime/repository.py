@@ -305,7 +305,8 @@ class PostgresMaritimeRepository(InMemoryMaritimeRepository):
         async with self._engine.connect() as connection:
             result = await connection.execute(
                 text(
-                    _POSITION_SELECT
+                    # All fragments are module constants; no input is interpolated.
+                    _POSITION_SELECT  # nosec B608
                     + " WHERE (p.vessel_id, p.source_timestamp) IN "
                     + "(SELECT vessel_id, MAX(source_timestamp) FROM vessel_positions "
                     + "GROUP BY vessel_id) ORDER BY v.mmsi"

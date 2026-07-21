@@ -1,0 +1,9 @@
+{
+  "dataset_id": "india-lpg-network-v1",
+  "version": "1.0.0",
+  "classification": "SYNTHETIC_FIXTURE",
+  "payload": "india-lpg-network-v1.json",
+  "checksum_sha256": "08d4885be1af5b10aecbe98e085c9b10d2c9ebffd8b7daa7f8eb1634728678b4",
+  "license": "CC0-1.0",
+  "redistribution_status": "UNRESTRICTED_SYNTHETIC_REDISTRIBUTION"
+}

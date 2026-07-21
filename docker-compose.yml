@@ -45,6 +45,95 @@ services:
       timeout: 5s
       retries: 20
 
+  api:
+    profiles: ["app", "offline"]
+    image: sanjiv-api:phase9
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.api
+    environment:
+      SANJIV_ENV: ${SANJIV_ENV:-development}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sanjiv}:${POSTGRES_PASSWORD:-change-me-local-only}@postgres:5432/${POSTGRES_DB:-sanjiv}
+      REDIS_URL: redis://redis:6379/0
+      MINIO_ENDPOINT: http://minio:9000
+      SANJIV_AIS_ENABLED: "false"
+      SANJIV_MARITIME_AUTOSTART: "true"
+      SANJIV_ALLOWED_ORIGINS: http://localhost:3000
+      SANJIV_WORKER_RUNTIME_DIR: /app/data/runtime/workers
+      SANJIV_DEPENDENCY_CHECKS_ENABLED: "true"
+      SANJIV_COMMIT_SHA: ${SANJIV_COMMIT_SHA:-development}
+    command: ["uv", "run", "uvicorn", "--app-dir", "services/api", "sanjiv.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - runtime-data:/app/data/runtime
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web:
+    profiles: ["app", "offline"]
+    image: sanjiv-web:phase9
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.web
+    environment:
+      NEXT_PUBLIC_SANJIV_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  ingestion-worker:
+    profiles: ["app", "offline"]
+    image: sanjiv-api:phase9
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.api
+    command: ["uv", "run", "python", "workers/runner.py", "ingestion", "--runtime-dir", "/app/data/runtime/workers"]
+    volumes:
+      - runtime-data:/app/data/runtime
+    depends_on:
+      api:
+        condition: service_healthy
+
+  refresh-worker:
+    profiles: ["app", "offline"]
+    image: sanjiv-api:phase9
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.api
+    command: ["uv", "run", "python", "workers/runner.py", "refresh", "--runtime-dir", "/app/data/runtime/workers"]
+    volumes:
+      - runtime-data:/app/data/runtime
+    depends_on:
+      api:
+        condition: service_healthy
+
+  compute-worker:
+    profiles: ["app", "offline"]
+    image: sanjiv-api:phase9
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.api
+    command: ["uv", "run", "python", "workers/runner.py", "compute", "--runtime-dir", "/app/data/runtime/workers"]
+    volumes:
+      - runtime-data:/app/data/runtime
+    depends_on:
+      api:
+        condition: service_healthy
+
 volumes:
   postgres-data:
   minio-data:
+  runtime-data:

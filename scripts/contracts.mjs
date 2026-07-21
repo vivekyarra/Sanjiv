@@ -15,12 +15,15 @@ const temp = mkdtempSync(join(tmpdir(), "sanjiv-contracts-"));
 const openapiTemp = join(temp, "openapi.json");
 const typesTemp = join(temp, "generated.ts");
 const openapiTypescript = join(root, "node_modules", "openapi-typescript", "bin", "cli.js");
+const uvCommand = process.platform === "win32" ? "py" : "uv";
+const uvPrefix = process.platform === "win32" ? ["-m", "uv"] : [];
 
 try {
-  execFileSync("uv", ["run", "python", "scripts/export_openapi.py", "--output", openapiTemp], {
-    cwd: root,
-    stdio: "inherit",
-  });
+  execFileSync(
+    uvCommand,
+    [...uvPrefix, "run", "python", "scripts/export_openapi.py", "--output", openapiTemp],
+    { cwd: root, stdio: "inherit" },
+  );
   execFileSync(process.execPath, [openapiTypescript, openapiTemp, "--output", typesTemp], {
     cwd: root,
     stdio: "inherit",

@@ -28,16 +28,22 @@ A 100% loss gives multiplier zero and therefore zero flow. Alternative routes ar
 
 Grade/refinery compatibility is the weighted sum of normalized gravity, sulfur, configuration, and logistics components. **Calibration:** component weights and classification thresholds. A hard `allowed[g,r]` matrix is derived from sourced limits plus visible assumptions; `allowed=0` prevents flow regardless of the soft score.
 
+Phase 2 calibration uses `0.35 gravity + 0.35 sulfur + 0.15 configuration + 0.15 logistics`. Gravity and sulfur scores fall from one outside the visible assumed refinery range/tolerance; configuration is currently a visible `0.75` fixture assumption and logistics is one only for the connected reference network. Classification thresholds remain `PREFERRED >= 0.80`, `ACCEPTABLE >= 0.60`, `DIFFICULT >= 0.40`, and otherwise `DISALLOWED`. These are model parameters, not observed refinery operating limits.
+
+The baseline graph validator aggregates each supplier-grade allocation over every route in its explicit path. Supplier outflow equals declared baseline supply, every load port/chokepoint/Indian port has inflow equal to outflow, refinery inflow equals declared demand, and global supply equals demand within `1e-6 ktonne_per_day`. A route over capacity, disconnected supplier/reserve site, unknown endpoint, incompatible delivered grade, or non-zero residual blocks snapshot creation.
+
 ## India-bound confidence and corridor risk
 
 ```text
 C_india = 0.30 D + 0.25 R + 0.20 H + 0.15 P + 0.10 V
-RiskSeverity = 0.30 T + 0.25 G + 0.15 A + 0.15 M + 0.10 S + 0.05 I
+RiskSeverity = (0.25 T + 0.20 G + 0.15 A + 0.15 M + 0.10 S + 0.15 I) / present_weight
 ```
 
 These initial weights are **calibration**, not final scientific constants. Components are normalized to `[0,1]`, missing components are not silently zeroed, and output includes contributions and completeness. India-bound is `INFERRED`. Corridor risk is a severity score scaled to 0–100, not disruption probability.
 
 Evidence confidence combines source reliability, freshness, completeness, agreement, and transformation confidence using a documented versioned function. **Calibration:** component weights and source reliability priors. It cannot upgrade stale or assumption-only evidence to observed fact.
+
+Phase 6 implements this as `corridor-risk-structural-v1` with `risk-baseline-effective-window-v1` and `risk-feature-normalizer-v1`. Each feature is standardized against an effective-dated deterministic baseline, mapped to 0-100, clipped at its physical score bounds, and reported with its raw value, source state, freshness, evidence, transformation, and weighted contribution. The denominator contains only present feature weights, while completeness independently records missing/stale coverage; missing values therefore cannot masquerade as zero severity. Critical alerting requires at least two independent elevated fresh sources including an operational signal. Media-only, thermal-only, AIS-only, stale, incomplete, and disagreeing evidence is suppressed or downgraded.
 
 ## No-action baseline
 
@@ -61,6 +67,8 @@ Currency and unit conversion use effective-dated evidence. Unavailable commercia
 
 ## Procurement model
 
+Phase 4 implements the frozen optimiser boundary with Pyomo `procurement-pyomo-highs-v1` and HiGHS. The nonnegative decision is horizon-total delivered `ktonne` per exact supplier/grade/load-port/route-segment/receiving-port/refinery/delivery option; explicit refinery shortage reconciles horizon demand. Segment, port, supplier, refinery, budget, sanctions, compatibility, timing, and concentration constraints are hard. All three profiles share those inputs and constraints and differ only through `procurement-objectives-v1` weights. `procurement-independent-checker-v1` reconstructs quantities, landed cost, objective, mass balance, concentration, timing, capacity, sanctions/compatibility, and fingerprints before a plan is usable.
+
 Decision `x[s,g,r,p,t] >= 0` is delivered volume. Auxiliary variables represent shortage, concentration, delay, and soft-policy violations.
 
 ```text
@@ -79,7 +87,30 @@ minimise shortage + α*reserve_depletion
                   + β*logistics_cost + γ*future_vulnerability
 ```
 
-Release variables are bounded by site inventory, draw rate, connection capacity, transit delay, receiving capacity, and policy minimum floor. Remaining stock is conserved by site and interval. Phase 4 holds reserve policy fixed; Phase 5 solves procurement and reserve actions from one shared input snapshot. **Calibration:** α, β, γ, policy floors, replenishment outlook, and extension-risk assumptions.
+Phase 5 implements nonnegative site dispatch and refinery shortage variables. Dispatch is bounded by opening inventory plus explicit replenishment minus the effective policy floor, draw rate over the canonical horizon, reserve-route capacity, transit arrival within the horizon, and receiving-refinery capacity remaining after the exact Phase 4 plan. Remaining stock is reconstructed as `opening + verified replenishment - dispatch`; dispatch equals in-transit quantity and receipt, so no hidden loss or replenishment exists. `NO_RESERVE_USE` fixes dispatch to zero. `reserve-checker-v1` independently reconstructs every constraint, shortage, objective, coordination binding, and fingerprint. **Calibration:** α, β, γ and policy floors; physical constraints never become penalties.
+
+At the Phase 4 contract boundary, the reserve policy is identified by an immutable fingerprint and explicitly sets `decision_variables_enabled=false` and `release_schedule_fixed=true`. No reserve quantity is selected, recommended, or varied by a procurement profile.
+
+## Phase 3 deterministic no-action model
+
+The Phase 3 time step is one UTC day. For baseline path `p` with flow `B_p`, full closure has surviving fraction `0`, and a reduction of `q percent` has surviving fraction `1 - q/100`. Supplier, port, route/chokepoint, and refinery effects apply only to resolved targets. The path flow is:
+
+```text
+F[p,t] = min(B[p], supplier_available[p,t], min(disrupted_capacity[r,t]))
+```
+
+Every segment on a path receives the same `F[p,t]`, preventing intermediate creation or loss. Refinery receipt is the sum of compatible inbound paths, and throughput is:
+
+```text
+T[j,t] = min(baseline_throughput[j], compatible_receipts[j,t], disrupted_refinery_capacity[j,t])
+shortfall[j,t] = max(0, baseline_throughput[j] - T[j,t])
+```
+
+Cumulative shortfall is the exact timeline sum. The engine enforces non-negative quantities; closed-route zero flow; route, supplier, and refinery caps; crude compatibility; per-step path mass conservation; unchanged baseline; immutable snapshot input; and deterministic fingerprints. Unsafe inputs return a typed failure.
+
+Inventory is calculated only when an explicit, unexpired starting-inventory assumption exists: `I[j,t+1] = max(0, I[j,t] + receipts[j,t] - T[j,t])`. Such trajectories are assumption-dependent and never observed inventory.
+
+Phase 3 uncertainty is bounded deterministic sensitivity, not probability. It varies each active disruption reduction by minus and plus 10 percentage points within `[0,100]`, re-runs the same equations, and reports central/lower/upper cumulative shortfall, parameters varied, method, assumption dependencies, and model version.
 
 ## Uncertainty and stability
 
@@ -95,4 +126,29 @@ Similarity is one minus normalized L1 distance over supplier-route allocation sh
 
 ## Validation
 
+### Phase 8 deterministic replay, LPG, and stability models
+
+Each replay case is a deterministic event sequence. Detection lead time is the bounded difference
+between the declared onset and the first qualifying signal; recommendation runtime is measured by
+the execution service and stored, never prewritten. Expected invariants and outcome reason codes are
+evaluated against the same checksummed case definition.
+
+LPG uses `tonne_per_day` and a commodity-specific network. For every allocation `x_r` on route `r`:
+`0 <= x_r <= route_capacity_r`, supplier totals do not exceed supplier capacity, terminal receipts
+do not exceed terminal capacity, sanctioned or incompatible paths receive zero, and delivered plus
+residual shortage equals disrupted demand within tolerance. Crude reserve capacity and opening-fill
+assumptions are not reused for LPG; reserve handling is `NOT_APPLICABLE` in this fixture model.
+
+Fast and deep sensitivity use recorded deterministic seeds and versioned Latin-hypercube sample
+designs (40 and 500 samples respectively). The output stores median, P10/P90, extrema, ranked
+drivers, and a stability score derived from plan-ranking consistency. These are scenario sensitivity
+statistics, not calibrated event probabilities or confidence intervals.
+
 Every solution is independently checked for mass-balance residual, bound/constraint violation, objective reconstruction, sanctions/compatibility exclusion, and deterministic reproduction tolerance. Failed checks block the plan. Model cards record final equations, calibrated values, training/backtest period where relevant, limitations, and version history.
+### Phase 4 deterministic input boundary
+
+The procurement input builder now consumes only an exact completed simulation,
+confirmed scenario, and immutable twin snapshot. It emits deterministically
+ordered eligible options and structured exclusions; no volume allocation or
+solver execution occurs. Landed cost is reconciled in `USD_per_tonne` with a
+configured numerical tolerance and the frozen structural component list.

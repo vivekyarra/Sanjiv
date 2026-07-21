@@ -1,0 +1,21 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated and third-party trees are scanned by dependency and image scanners"
+paths = [
+  '''(^|[\\/])\.git([\\/]|$)''',
+  '''(^|[\\/])\.next([\\/]|$)''',
+  '''(^|[\\/])\.venv([\\/]|$)''',
+  '''(^|[\\/])node_modules([\\/]|$)''',
+  '''(^|[\\/])reports([\\/]|$)''',
+]
+
+[[allowlists]]
+description = "Empty example API key assignments and non-secret idempotency header names"
+targetRules = ["generic-api-key"]
+regexTarget = "line"
+regexes = [
+  '''^[A-Z0-9_]+_API_KEY=$''',
+  '''Idempotency-Key''',
+]

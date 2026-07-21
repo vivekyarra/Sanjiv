@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "sanjiv-risk-intelligence-synthetic-v1",
+  "classification": "SYNTHETIC_FIXTURE",
+  "description": "Deterministic corridor-risk replay cases for CI and demonstration; not production accuracy evidence.",
+  "data_file": "cases.json",
+  "checksum_sha256": "3a46f089116a9ec7287702b88621ba24d9222ef8ffd7770660d57c684bd28ef9",
+  "case_count": 10,
+  "license": "CC0-1.0",
+  "redistribution": "Permitted with SYNTHETIC_FIXTURE and replay-evidence labels preserved",
+  "model_version": "corridor-risk-structural-v1",
+  "source_references": [
+    {"source_id":"GDELT","documentation":"https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/","license":"Unlimited use with GDELT attribution and link"},
+    {"source_id":"IMF_PORTWATCH","documentation":"https://portwatch.imf.org/pages/data-and-methodology/","license":"IMF data attribution/integrity terms; verify third-party content and commercial reuse"},
+    {"source_id":"EIA","documentation":"https://www.eia.gov/opendata/documentation.php","license":"US government public-domain data with acknowledgment; API key and terms required"},
+    {"source_id":"FRED","documentation":"https://fred.stlouisfed.org/docs/api/fred/overview.html","license":"FRED API terms and underlying series-specific rights apply; API key required"},
+    {"source_id":"NASA_FIRMS","documentation":"https://firms.modaps.eosdis.nasa.gov/api/area/","license":"NASA Earthdata reuse/citation policy; MAP_KEY and transaction limits apply"},
+    {"source_id":"SANCTIONS_BOUNDARY","documentation":"docs/SOURCE_REGISTRY.md","license":"Existing loaded-list boundary and source-specific rights"},
+    {"source_id":"AIS_PHASE_1","documentation":"docs/PHASE_1_LIVE_MARITIME_WATCH.md","license":"Existing Phase 1 adapter/replay contract and source-specific rights"}
+  ]
+}

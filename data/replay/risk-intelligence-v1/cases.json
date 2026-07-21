@@ -1,0 +1,18 @@
+{
+  "schema_version": "risk-replay-v1",
+  "classification": "SYNTHETIC_FIXTURE",
+  "redistribution_rights": "CC0-1.0 Sanjiv-authored synthetic fixture",
+  "baseline": [1.0, 2.0, 3.0, 4.0, 5.0],
+  "cases": [
+    {"case_id":"true-disruption-escalation","corridor":"chokepoint:strait-of-hormuz","label":"TRUE_DISRUPTION_ESCALATION","expected_alert":true,"lead_hours":18,"features":{"TRANSIT_ANOMALY":9,"GEOPOLITICAL_SEVERITY":8,"AIS_BEHAVIORAL_ANOMALY":8,"MARKET_STRESS":7,"SANCTIONS_EXPOSURE":2,"INFRASTRUCTURE_PHYSICAL_SIGNAL":8}},
+    {"case_id":"port-chokepoint-anomaly","corridor":"route:hormuz-to-jamnagar","label":"PORT_CHOKEPOINT_ANOMALY","expected_alert":true,"lead_hours":10,"features":{"TRANSIT_ANOMALY":8,"GEOPOLITICAL_SEVERITY":5,"AIS_BEHAVIORAL_ANOMALY":7,"MARKET_STRESS":6,"SANCTIONS_EXPOSURE":2,"INFRASTRUCTURE_PHYSICAL_SIGNAL":8}},
+    {"case_id":"geopolitical-media-spike","corridor":"chokepoint:strait-of-hormuz","label":"GEOPOLITICAL_MEDIA_SPIKE","expected_alert":true,"lead_hours":8,"features":{"TRANSIT_ANOMALY":6,"GEOPOLITICAL_SEVERITY":9,"AIS_BEHAVIORAL_ANOMALY":6,"MARKET_STRESS":7,"SANCTIONS_EXPOSURE":3,"INFRASTRUCTURE_PHYSICAL_SIGNAL":4}},
+    {"case_id":"false-news-spike","corridor":"chokepoint:strait-of-hormuz","label":"FALSE_NEWS_SPIKE","expected_alert":false,"lead_hours":0,"features":{"TRANSIT_ANOMALY":2,"GEOPOLITICAL_SEVERITY":10,"AIS_BEHAVIORAL_ANOMALY":2,"MARKET_STRESS":3,"SANCTIONS_EXPOSURE":1,"INFRASTRUCTURE_PHYSICAL_SIGNAL":2}},
+    {"case_id":"thermal-ambiguity","corridor":"route:hormuz-to-vadinar","label":"THERMAL_AMBIGUITY","expected_alert":false,"lead_hours":0,"features":{"TRANSIT_ANOMALY":2,"GEOPOLITICAL_SEVERITY":3,"AIS_BEHAVIORAL_ANOMALY":2,"MARKET_STRESS":2,"SANCTIONS_EXPOSURE":1,"INFRASTRUCTURE_PHYSICAL_SIGNAL":10}},
+    {"case_id":"source-outage","corridor":"chokepoint:cape-of-good-hope","label":"SOURCE_OUTAGE","expected_alert":false,"lead_hours":0,"features":{"TRANSIT_ANOMALY":4,"GEOPOLITICAL_SEVERITY":null,"AIS_BEHAVIORAL_ANOMALY":null,"MARKET_STRESS":null,"SANCTIONS_EXPOSURE":2,"INFRASTRUCTURE_PHYSICAL_SIGNAL":null}},
+    {"case_id":"stale-market-data","corridor":"chokepoint:cape-of-good-hope","label":"STALE_MARKET_DATA","expected_alert":false,"lead_hours":0,"stale_features":["MARKET_STRESS"],"features":{"TRANSIT_ANOMALY":5,"GEOPOLITICAL_SEVERITY":4,"AIS_BEHAVIORAL_ANOMALY":4,"MARKET_STRESS":9,"SANCTIONS_EXPOSURE":1,"INFRASTRUCTURE_PHYSICAL_SIGNAL":3}},
+    {"case_id":"conflicting-sources","corridor":"route:cape-to-paradip","label":"CONFLICTING_SOURCES","expected_alert":false,"lead_hours":0,"features":{"TRANSIT_ANOMALY":2,"GEOPOLITICAL_SEVERITY":9,"AIS_BEHAVIORAL_ANOMALY":2,"MARKET_STRESS":8,"SANCTIONS_EXPOSURE":1,"INFRASTRUCTURE_PHYSICAL_SIGNAL":2}},
+    {"case_id":"sanctions-change","corridor":"route:basra-to-hormuz","label":"SANCTIONS_CHANGE","expected_alert":true,"lead_hours":6,"features":{"TRANSIT_ANOMALY":6,"GEOPOLITICAL_SEVERITY":7,"AIS_BEHAVIORAL_ANOMALY":6,"MARKET_STRESS":6,"SANCTIONS_EXPOSURE":10,"INFRASTRUCTURE_PHYSICAL_SIGNAL":4}},
+    {"case_id":"ais-without-corroboration","corridor":"route:bonny-to-cape","label":"AIS_ANOMALY_WITHOUT_CORROBORATION","expected_alert":false,"lead_hours":0,"features":{"TRANSIT_ANOMALY":2,"GEOPOLITICAL_SEVERITY":2,"AIS_BEHAVIORAL_ANOMALY":10,"MARKET_STRESS":2,"SANCTIONS_EXPOSURE":1,"INFRASTRUCTURE_PHYSICAL_SIGNAL":2}}
+  ]
+}

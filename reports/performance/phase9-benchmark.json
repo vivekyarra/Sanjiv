@@ -1,0 +1,122 @@
+{
+  "browser_metrics_file": "reports/performance/browser-benchmark.json",
+  "classification": "MEASURED_LOCAL_SYNTHETIC_FIXTURE",
+  "commit": "43d5837b30d2460a714f58cf9b7e697f803005bd",
+  "dataset": {
+    "benchmark_samples": 5,
+    "load_concurrency": 8,
+    "load_requests": 64,
+    "replay_cases": 21,
+    "twin_flows": 23,
+    "twin_nodes": 19,
+    "twin_routes": 18
+  },
+  "declared_concurrency_load": {
+    "concurrency": 8,
+    "maximum": 497.998,
+    "median": 497.998,
+    "minimum": 497.998,
+    "p95": 497.998,
+    "requests": 64,
+    "samples": 1,
+    "successful": 64,
+    "unit": "ms"
+  },
+  "hardware": {
+    "logical_cpu_count": 12,
+    "machine": "AMD64",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 186 Stepping 3, GenuineIntel",
+    "python": "3.11.6"
+  },
+  "metrics": {
+    "ais_ingest_to_map": {
+      "maximum": 15.642,
+      "median": 15.642,
+      "minimum": 15.642,
+      "p95": 15.642,
+      "samples": 1,
+      "unit": "ms"
+    },
+    "briefing_export": {
+      "maximum": 105.225,
+      "median": 101.652,
+      "minimum": 88.26,
+      "p95": 105.225,
+      "samples": 5,
+      "unit": "ms"
+    },
+    "evidence_audit": {
+      "maximum": 45.67,
+      "median": 37.035,
+      "minimum": 34.991,
+      "p95": 45.67,
+      "samples": 5,
+      "unit": "ms"
+    },
+    "procurement_optimisation": {
+      "maximum": 397.531,
+      "median": 222.349,
+      "minimum": 201.816,
+      "p95": 397.531,
+      "samples": 5,
+      "unit": "ms"
+    },
+    "reserve_optimisation": {
+      "maximum": 149.085,
+      "median": 136.884,
+      "minimum": 110.886,
+      "p95": 149.085,
+      "samples": 5,
+      "unit": "ms"
+    },
+    "scenario_compilation": {
+      "maximum": 11.314,
+      "median": 7.539,
+      "minimum": 4.428,
+      "p95": 11.314,
+      "samples": 5,
+      "unit": "ms"
+    },
+    "signal_to_recommendation": {
+      "maximum": 754.707,
+      "median": 568.141,
+      "minimum": 497.824,
+      "p95": 754.707,
+      "samples": 5,
+      "unit": "ms"
+    },
+    "simulation": {
+      "maximum": 61.839,
+      "median": 44.602,
+      "minimum": 39.039,
+      "p95": 61.839,
+      "samples": 5,
+      "unit": "ms"
+    }
+  },
+  "notice": "Targets are not claims. Values are actual local fixture measurements for this run; the commit is the Phase 8 parent of the uncommitted Phase 9 working tree.",
+  "risk_scoring": {
+    "maximum": 33.791,
+    "median": 33.209,
+    "minimum": 28.42,
+    "p95": 33.791,
+    "samples": 5,
+    "unit": "ms"
+  },
+  "run_id": "39c36a17-4a87-4e37-a2f2-2565ff92c50d",
+  "schema_version": "1.0",
+  "source_state": "DIRTY_UNCOMMITTED_PHASE9",
+  "timestamp": "2026-07-21T18:06:19.001599Z",
+  "websocket_delivery_loss_resync": {
+    "maximum": 1.438,
+    "median": 1.438,
+    "minimum": 1.438,
+    "p95": 1.438,
+    "published": 100,
+    "queue_items_after_overflow": 10,
+    "resync_observed": true,
+    "samples": 1,
+    "unit": "ms"
+  }
+}

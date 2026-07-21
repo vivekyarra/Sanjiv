@@ -43,7 +43,7 @@ Official/public sources + user inputs
 
 ### Live WebSocket
 
-The Phase 1 browser obtains a snapshot cursor over read-only REST and opens `/ws/v1/operations?after=<cursor>`. The in-process broker emits versioned envelopes with monotonically increasing sequence IDs and bounded per-subscriber queues. Retained deltas are replayed on reconnect. An expired cursor or queue overflow emits `RESYNC_REQUIRED`, causing a snapshot refetch. Heartbeats carry cursor, mode, connection state, and freshness; the client reconnects with exponential backoff capped at 30 seconds. Redis fan-out and authenticated multi-user operations remain later deployment work.
+The Phase 1 browser obtains a snapshot cursor over read-only REST and opens `/ws/v1/operations?after=<cursor>`. The in-process broker emits versioned envelopes with monotonically increasing sequence IDs and bounded per-subscriber queues. Retained deltas are replayed on reconnect. An expired cursor or queue overflow emits `RESYNC_REQUIRED`, causing a snapshot refetch. Heartbeats carry cursor, mode, connection state, and freshness; the client reconnects with exponential backoff capped at 30 seconds. Phase 9 adds production perimeter authentication and bounded rate/origin policy. Redis fan-out and deployment-IdP-backed multi-user sessions remain required before horizontally scaling API replicas.
 
 ### Live Maritime Watch vertical slice
 
@@ -53,14 +53,18 @@ The Phase 1 browser obtains a snapshot cursor over read-only REST and opens `/ws
 
 Versioned suppliers, ports, chokepoints, routes, refineries, reserve sites, grades, and baseline flows form a directed NetworkX graph. A snapshot builder resolves one effective time, records every evidence/assumption dependency, validates units and connectivity, and produces a content-addressed immutable `TwinSnapshot`. Simulation and optimisation consume only a snapshot ID, never mutable “latest” tables.
 
+Phase 2 implements this boundary in `sanjiv/twin`. PPAC-, ISPRL-, UN Comtrade-, and repository-shaped importers validate typed offline reference batches without making network calls. Canonical UUIDv5 identifiers are derived from stable domain IDs. A deterministic `MultiDiGraph` validates endpoints, supplier/reserve-to-refinery reachability, weak connectivity, route capacity, grade compatibility, and node/global mass balance before snapshot construction. The snapshot fingerprint covers ordered content, evidence, assumptions, compatibility, and the mass-balance report; the database migration rejects `UPDATE` and `DELETE` on stored snapshots. The current committed twin is an assumption-driven fixture except for cited ISPRL public capacity metadata and is never presented as live operational state.
+
 ### Scenario execution
 
-1. Provider-neutral interpreter returns typed candidate JSON, or the user completes the structured form.
-2. Deterministic validation resolves canonical asset IDs, ranges, defaults, and visible assumptions.
-3. User confirms the scenario; the API freezes scenario and twin fingerprints.
-4. Compute worker runs no-action baseline, disrupted case, and requested uncertainty samples.
-5. Progress events stream over the scenario WebSocket.
-6. Results are persisted as metric envelopes and pass the evidence auditor before display.
+1. The structured form, bounded deterministic parser, or optional provider produces the same typed scenario candidate. Optional provider output is untrusted.
+2. Deterministic validation resolves canonical asset IDs, units, ranges, defaults, visible assumptions, and the selected immutable snapshot.
+3. The user confirms the validated candidate; the API writes an audit event and freezes scenario and twin fingerprints.
+4. The Phase 3 application service executes the deterministic daily baseline/disrupted model. Its persisted job contract is worker-ready, while this checkpoint deliberately uses documented immediate in-process execution.
+5. Clients poll persisted progress events and results. Cancellation and typed failure use the same REST transport; no redundant event framework is introduced.
+6. Results are persisted as metric envelopes and preserve evidence, assumption, truth, freshness, transformation, unit, timestamp, and model provenance.
+
+PostgreSQL stores candidates, validation reports, immutable confirmations, runs, results, and progress payloads. Complete simulation fingerprints provide idempotent reuse and restart-safe result access. The engine only reads the content-addressed Phase 2 snapshot and never mutates it.
 
 ### Procurement optimisation
 
@@ -68,11 +72,31 @@ The simulator produces time-indexed demand, arrivals, inventory, and affected ca
 
 ### Reserve optimisation
 
-Phase 5 adds site/time/refinery release variables, connectivity, draw limits, minimum floors, replenishment, and future-vulnerability penalties. Procurement and reserve models coordinate through a single combined input snapshot and shared mass balance. Policy modes alter calibrated objective weights, never safety constraints.
+Phase 5 implements site/refinery dispatch, transit, receipt, remaining-inventory, and residual-shortage decisions in `sanjiv/reserve`. The input builder binds one exact independently checked Phase 4 plan and the same scenario/result/twin identities. Public storage capacity stays `OBSERVED`; opening fill is accepted only as verified input or an unexpired visible `ASSUMPTION`, and unknown sites are blocked. Procurement and reserve models coordinate through exact committed receipts and shared refinery capacity. Policy modes alter calibrated objective weights and floors, never physical conservation or capacity constraints. Replenishment is absent unless supplied by verified input.
+
+### Risk intelligence
+
+Phase 6 remains a domain module in the FastAPI modular monolith. Provider-neutral adapters emit normalized raw risk signals and typed failures; the deterministic feature engine owns baselines, missingness, contributions, corroboration, severity, confidence, and completeness. The alert evaluator consumes only a complete fingerprinted result and produces analyst-only append-only alerts. PostgreSQL stores baselines, features, contributions, calculations, failures, alerts, timelines, lifecycle transitions, and replay backtests. The Next.js `/risk-intelligence` route reads only the typed risk APIs and holds no provider credential.
+
+The primary demo and CI select a checksummed offline replay adapter. Optional GDELT, PortWatch, EIA/FRED, FIRMS, sanctions-boundary, and Phase 1 AIS fetchers are injected server-side behind bounded timeout/retry/rate-limit policies; they cannot silently switch a record from live to fixture mode.
 
 ### Audit and explanation
 
 The evidence auditor verifies schema completeness, allowed truth transitions, evidence existence, freshness policy, assumption visibility, model versions, claim policy, and metric recomputation hashes. Failed metrics are blocked, not silently omitted. Narrative generation receives only audited structured results and evidence summaries. Every run, mode transition, edit, approval, export, and failure creates an append-only audit event.
+
+Phase 7 implements this boundary in `sanjiv/audit`. Coverage walks every `MetricEnvelope` in the
+immutable procurement or reserve plan. Policies validate evidence hashes and parent links,
+approved/unexpired/scenario-scoped assumptions, freshness, truth transitions, source and
+transformation fields, versions, exact fingerprints, solver state, independent-check results,
+sanctions/compatibility exclusions, and objective/fingerprint recomputation. The deterministic
+explanation builder reads only a passed or explicitly blocked structured audit. Lifecycle state is
+derived from append-only records rather than mutating the optimizer plan. PostgreSQL advisory
+locking serializes concurrent actions; database triggers reject updates and deletes.
+
+Development identities are an explicit configured map. Production governance has no default
+identity: API keys map server-side to actor and role, and absent configuration fails closed. An
+approval is a human decision record only; there is no adapter for purchasing, chartering, reserve
+release, pipeline control, or other operational execution.
 
 ### Replay and fallback
 
@@ -84,9 +108,26 @@ Phase 1 replay datasets have checksummed manifests, classification, source attri
 - API: authentication, authorization, validation, rate limits, CSRF/origin policy, and approval enforcement.
 - Workers: least-privilege source and storage credentials; no interactive user session.
 - Data stores: private network only, separate roles, encrypted transport, restricted object buckets, backups, and retention policy.
-- External/user data: SSRF-safe adapters, size/type limits, malware scanning for uploads, license enforcement, and log redaction.
+- External/user data: SSRF-safe adapters, request size/type limits, license enforcement, and log redaction. No upload endpoint exists; any future upload surface requires quarantine and malware scanning before release.
 - Solver/LLM: bounded resources and strict typed input/output; neither receives secrets or unnecessary raw private data.
 
 ## Deployment topology
 
-Local and demo deployment uses Docker Compose: `web`, `api`, three worker processes, PostgreSQL with PostGIS/TimescaleDB, Redis, MinIO, and an optional reverse proxy/telemetry profile. Production begins with the same containers on a single managed host or small container service, managed databases/object storage where available, TLS termination, backups, and OpenTelemetry export. Scaling is vertical first, then worker replicas by measured queue latency. Kubernetes and domain microservices require an ADR backed by workload measurements.
+Local and demo deployment uses Docker Compose: `web`, `api`, three worker processes, PostgreSQL with PostGIS/TimescaleDB, Redis, and MinIO. Production begins with the same application images on a single managed host or small container service, managed databases/object storage where available, external TLS termination, backups, and an operator-provided OpenTelemetry-compatible collector. Scaling is vertical first, then worker replicas by measured queue latency. Kubernetes and domain microservices require an ADR backed by workload measurements.
+
+### Phase 9 operations boundary
+
+The `app` and credential-free `offline` Compose profiles run the same production images. Liveness
+proves process survival; readiness checks PostgreSQL, Redis, and MinIO. The operations API adds
+source state, worker heartbeats, dependency state and request-runtime aggregates. Structured logs
+and W3C-compatible trace identifiers can be exported by the deployment. Stored performance,
+security, backup/restore and failure reports are release evidence rather than SLAs.
+
+Phase 4 remains inside the FastAPI modular monolith: thin procurement routes call a typed application service, which builds immutable domain inputs, invokes bounded in-process Pyomo/HiGHS, runs a separate arithmetic checker, and writes content-addressed terminal JSONB plus normalized actions/rejections. A worker move is deferred until measured solve concurrency requires it; the public contract and fingerprints do not depend on execution placement.
+Phase 8 adds a separate versioned validation catalogue over the Phase 1 transport replay. The API
+verifies the manifest and payload checksums before exposing any case, executes deterministic case
+timelines, and stores results in PostgreSQL when configured. A typed LPG pipeline reuses the same
+truth, evidence, fingerprint, checker, analysis, export, and monitoring boundaries without sending
+LPG into the crude simulator. The briefing assembler consumes only immutable audited plan context;
+failed audits cannot create plan exports. JSON/PDF bytes are stored with SHA-256 metadata and are
+verified again on download.

@@ -1,0 +1,13 @@
+{
+  "dataset_id": "energy-validation-v1",
+  "version": "1.0.0",
+  "classification": "SYNTHETIC_FIXTURE",
+  "source_or_generator": "Sanjiv deterministic replay generator v1",
+  "payload": "cases.json",
+  "checksum_sha256": "58eba0aacd0a7068207278382ac5175ef791fc689e1b5cb332b46ec69a5a39a6",
+  "license": "CC0-1.0",
+  "redistribution_status": "UNRESTRICTED_SYNTHETIC_REDISTRIBUTION",
+  "case_count": 21,
+  "created_at": "2026-07-21T00:00:00Z",
+  "warning": "Synthetic validation fixture. Never label as live data or recorded history."
+}

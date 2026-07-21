@@ -1,0 +1,55 @@
+{
+  "checks": {
+    "bandit": {
+      "command": "uvx",
+      "exit_code": 0,
+      "stderr_tail": "[manager]\tWARNING\tTest in comment: fixed is not a test name or id, ignoring\n[manager]\tWARNING\tTest in comment: local is not a test name or id, ignoring\n[manager]\tWARNING\tTest in comment: URLs is not a test name or id, ignoring\n[tester]\tWARNING\tnosec encountered (B608), but no failed test on file services/api/sanjiv\\maritime\\repository.py:312\n"
+    },
+    "gitleaks": {
+      "command": "docker",
+      "exit_code": 0,
+      "stderr_tail": "\u001b[90m6:07PM\u001b[0m \u001b[32mINF\u001b[0m \u001b[1mscanned ~5098618 bytes (5.10 MB) in 1.7s\u001b[0m\n\u001b[90m6:07PM\u001b[0m \u001b[32mINF\u001b[0m \u001b[1mno leaks found\u001b[0m\n"
+    },
+    "npm_audit": {
+      "command": "npm",
+      "exit_code": 0,
+      "stderr_tail": ""
+    },
+    "pip_audit": {
+      "command": "uvx",
+      "exit_code": 0,
+      "stderr_tail": "No known vulnerabilities found\n"
+    },
+    "trivy_filesystem": {
+      "command": "docker",
+      "exit_code": 0,
+      "stderr_tail": "2026-07-21T18:07:58Z\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-07-21T18:07:58Z\tINFO\t[misconfig] Misconfiguration scanning is enabled\n2026-07-21T18:07:58Z\tINFO\t[checks-client] Using existing checks from cache\tpath=\"/root/.cache/trivy/policy/content\"\n2026-07-21T18:13:20Z\tINFO\t[npm] Run \"npm install\" to collect the license information of packages\tdir=\"node_modules\"\n2026-07-21T18:13:22Z\tINFO\tNumber of language-specific files\tnum=2\n2026-07-21T18:13:22Z\tINFO\t[npm] Detecting vulnerabilities...\n2026-07-21T18:13:22Z\tINFO\t[uv] Detecting vulnerabilities...\n2026-07-21T18:13:22Z\tINFO\tDetected config files\tnum=2\n"
+    },
+    "trivy_licenses": {
+      "command": "docker",
+      "exit_code": 0,
+      "stderr_tail": "2026-07-21T18:13:22Z\tINFO\t[license] License scanning is enabled\n2026-07-21T18:13:22Z\tINFO\t[npm] Run \"npm install\" to collect the license information of packages\tdir=\"node_modules\"\n2026-07-21T18:13:22Z\tINFO\tSuppressing dependencies for development and testing. To display them, try the '--include-dev-deps' flag.\n2026-07-21T18:13:22Z\tINFO\tNumber of language-specific files\tnum=1\n"
+    },
+    "trivy_sanjiv_api": {
+      "command": "docker",
+      "exit_code": 0,
+      "stderr_tail": "2026-07-21T18:13:23Z\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-07-21T18:13:23Z\tINFO\tDetected OS\tfamily=\"debian\" version=\"12.15\"\n2026-07-21T18:13:23Z\tINFO\t[debian] Detecting vulnerabilities...\tos_version=\"12\" pkg_num=105\n2026-07-21T18:13:23Z\tINFO\tNumber of language-specific files\tnum=1\n2026-07-21T18:13:23Z\tINFO\t[python-pkg] Detecting vulnerabilities...\n2026-07-21T18:13:23Z\tWARN\tUsing severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.72/guide/scanner/vulnerability#severity-selection for details.\n"
+    },
+    "trivy_sanjiv_web": {
+      "command": "docker",
+      "exit_code": 0,
+      "stderr_tail": "2026-07-21T18:13:24Z\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-07-21T18:13:24Z\tINFO\tDetected OS\tfamily=\"alpine\" version=\"3.24.1\"\n2026-07-21T18:13:24Z\tWARN\tThis OS version is not on the EOL list\tfamily=\"alpine\" version=\"3.24\"\n2026-07-21T18:13:24Z\tINFO\t[alpine] Detecting vulnerabilities...\tos_version=\"3.24\" repository=\"3.24\" pkg_num=18\n2026-07-21T18:13:24Z\tINFO\tNumber of language-specific files\tnum=1\n2026-07-21T18:13:24Z\tINFO\t[node-pkg] Detecting vulnerabilities...\n"
+    },
+    "uv_export": {
+      "command": "uv",
+      "exit_code": 0,
+      "stderr_tail": ""
+    }
+  },
+  "failure_names": [],
+  "generated_at": "2026-07-21T18:13:24.499302Z",
+  "notice": "Scanner output is preserved under reports/security using repository-relative paths.",
+  "schema_version": "1.0",
+  "scope": "repository, dependencies, secrets, licenses, configuration, and optional images",
+  "status": "PASS"
+}

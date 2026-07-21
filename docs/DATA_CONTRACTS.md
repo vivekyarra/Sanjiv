@@ -78,4 +78,90 @@ Canonical contracts are Pydantic v2 models exposed through OpenAPI and generated
 - A derived/inferred/modeled metric references all material parent evidence or assumptions.
 - Evidence and audit records cannot be updated; corrections append superseding records.
 - Scenario and plan hashes use canonical JSON. A changed assumption creates a new run.
+
+## Phase 3 frozen contracts
+
+`ScenarioCandidate` contains the stable scenario ID, source/compile modes, typed parameters, disruption effects, explicit quantity units, visible defaults and assumptions, interpreter result, selected `TwinSnapshotReference`, evidence IDs, lifecycle, and canonical input fingerprint. `ScenarioValidationResult` separates blocking errors, warnings, defaults requiring confirmation, assumptions requiring confirmation, and resolved assets. `ConfirmedScenario` preserves the exact validation and twin fingerprints, confirming identity, UTC confirmation timestamp, and scenario fingerprint; any candidate edit produces a different fingerprint and requires confirmation again.
+
+`SimulationRun` contains scenario/snapshot/input/simulation fingerprints, model version, configuration, lifecycle status, UTC timestamps, measured runtime, typed failure, cancellation, and result reference. `SimulationResult` contains paired `BaselineResult` and `DisruptedResult`, daily timeline points, route-flow and refinery results, shortfall and cumulative shortfall metric envelopes, optional assumption-dependent inventory trajectories, deterministic uncertainty bounds, invariant results, evidence and assumption references, and complete provenance. All timestamps on the wire are UTC RFC 3339 and all quantities carry explicit units.
+
+Phase 3 reuses `MetricEnvelope`, `EvidenceRef`, `Assumption`, `AuditEvent`, freshness, confidence, and truth-class contracts. Baseline facts retain their existing classification; simulator outputs are `MODELED`. Missing private inventory is not converted into a number.
 - A plan cannot become `APPROVED` when audit status is failed, evidence is missing, solver status is not feasible/optimal, or the plan hash differs from the reviewed hash.
+
+## Phase 7 audit and approval contracts
+
+`EvidenceAuditResult` binds one procurement or reserve plan to the exact plan, evidence-set,
+assumption-set, scenario, simulation, twin, procurement, and reserve fingerprints. It contains one
+`AuditedMetric` for every decision `MetricEnvelope`; failed metrics remain present with structured
+`AuditFailure` reason codes. Coverage, formula, claim-policy, model, solver, checker, and auditor
+versions are explicit. `PASSED` is valid only with zero structured failures and 100% metric
+coverage; otherwise usable presentation, approval, export, and definitive narrative flags are all
+false.
+
+`PlanExplanation` is deterministic, references the audit ID/fingerprint, and exposes hard
+constraints, objective components/weights, trade-offs, allocation rationale, rejected alternatives,
+evidence, assumptions, sensitivity drivers, residual shortage, and no-action difference. It always
+carries the no-execution boundary.
+
+`PlanLifecycleRecord` is append-only and records the server-resolved actor/role, UTC time, action,
+previous/resulting state, exact plan/assumption/audit fingerprints, comment, optional superseding
+plan, and idempotency fingerprint. State is derived as `RECOMMENDED -> UNDER_REVIEW -> APPROVED |
+REJECTED`, with `APPROVED -> SUPERSEDED`; a review note remains `UNDER_REVIEW`. Approval and
+rejection comments are mandatory. Terminal records are never updated.
+
+## Phase 4 procurement contract checkpoint
+
+The first Phase 4 checkpoint freezes contracts only. `ProcurementOptimisationInput` binds one exact `SimulationRunReference`, `SimulationResultReference`, confirmed-scenario fingerprint, and immutable `TwinSnapshotReference`. It also contains one versioned hard-constraint configuration, a fixed reserve-policy fingerprint with `decision_variables_enabled=false`, bounded candidate options, and the exact SHA-256 hashes of every referenced evidence and approved assumption record. Evidence and assumption fingerprint sets must exactly match the input references; commercial availability, supplier capacity, commodity price, freight, route capacity, and refinery receiving capacity cannot be omitted or hidden outside that set.
+
+`ProcurementPlanRequest` selects one or more unique `ProcurementProfile` values and supplies exactly one versioned `ObjectiveWeights` set for each. Profiles are `LOWEST_COST`, `BALANCED`, and `HIGHEST_RESILIENCE`. Profiles can change only objective weights; physical, sanctions, compatibility, policy, budget, concentration, and fixed-reserve constraints stay in the shared immutable input. The contract does not contain a reserve release decision variable.
+
+`SolverResult` distinguishes `OPTIMAL`, `FEASIBLE`, `INFEASIBLE`, `TIMEOUT`, `ERROR`, and `NOT_RUN`. Only optimal or feasible results may carry actions, allocations, and an objective, and those states require a feasible `ConstraintReport` plus a passed `IndependentCheckResult`. Infeasible, timed-out, errored, not-run, or independently failed output cannot become a `ProcurementPlan`. `RejectedOption` uses bounded reason codes and relevant hard-constraint IDs, including sanctions, incompatibility, unverified commercial availability, and unverified transport availability.
+
+`ProcurementPlanFingerprintInputs` is canonical JSON over the optimiser model version, profile and objective-weight version, exact solver configuration, optimisation-input hash, hard-constraint and fixed-reserve policy versions, evidence and assumption hashes, and immutable simulation/scenario/twin identities. SHA-256 fingerprints are stable under JSON key ordering and change when any material value or version changes. Output quantities and objectives use `MetricEnvelope` with `MODELED` truth; physical and monetary quantities use explicit validated units.
+
+The future POST and GET procurement API request/response schemas are present in generated OpenAPI and TypeScript contracts, but no callable endpoint, solver, storage, plan generation, recommendation, or approval flow exists in this checkpoint.
+
+## Phase 2 digital-twin contracts
+
+- `TwinNode` uses a deterministic UUIDv5 plus a stable canonical ID and one of `SUPPLIER`, `LOAD_PORT`, `CHOKEPOINT`, `INDIAN_PORT`, `REFINERY`, or `RESERVE_SITE`. Coordinates are WGS84. Capacity, baseline supply, and baseline demand are complete metric envelopes when present.
+- `TwinRoute` names canonical endpoints, commodity, capacity, transit time, distance, chokepoint dependencies, availability, evidence, and assumptions. Unknown endpoints and duplicate routes are rejected.
+- `CrudeGrade` carries 12-20 catalogued grades with load-port IDs, enveloped API gravity and sulfur, sanctions-screening state, evidence, and assumptions.
+- `RefineryCompatibility` stores the deterministic component scores, enveloped weighted score, classification, hard `allowed` result, explanation, and complete dependencies.
+- `BaselineFlow` links supplier, grade, and route with `ktonne_per_day` volume and full provenance. The Phase 2 fixture conserves 250.0 ktonne/day of supply and demand with zero residual at the configured `1e-6 ktonne_per_day` tolerance.
+- `TwinSnapshot` contains the complete ordered graph, catalogue, compatibility matrix, flows, evidence, assumptions, and mass-balance report. Its SHA-256 fingerprint and UUIDv5 snapshot ID are recalculated on validation. A changed input produces a new identity; mutation is rejected in storage.
+Phase 4 input construction preserves exact simulation/twin identities,
+evidence-backed commercial values, visible approved assumptions, and stable
+option fingerprints. Missing or stale commercial provenance blocks an input.
+
+Phase 4 adds `ProcurementDemand`, path-bound `ProcurementOption` segment capacities/fingerprints, versioned objective weights with raw and weighted contributions, solver/checker metadata, complete modeled actions, structured rejected options, terminal plan fingerprints, and exact-fingerprint response reuse. Horizon totals use `ktonne`; source daily capacities are explicitly normalized to the same time grid. Every action remains `MODELED` and assumption-dependent.
+
+## Phase 5 reserve contracts
+
+`ReserveOptimisationInput` binds the exact confirmed scenario, simulation run/result, immutable twin snapshot, selected checked procurement plan and input fingerprints, solver/model/checker/policy versions, evidence hashes, assumption hashes, UTC horizon, and tolerance. Each `ReserveSiteInput` separates observed storage capacity from opening-inventory truth, uses explicit `ktonne`, `ktonne_per_day`, `day`, and `USD_per_tonne` units, and carries floor, draw, route, transit, receipt, procurement-commitment, and optional replenishment provenance. `UNKNOWN` opening inventory cannot enter a plan.
+
+`ReserveSolverResult` preserves status, metadata, actions, inventory/cover timeline, raw objective metrics, versioned weights, weighted contributions, constraints, rejected options, typed failure, and `reserve-checker-v1` output. Only checked `OPTIMAL` or `FEASIBLE` results become immutable `ReservePlan` records. Actions are `MODELED`, guidance-only, and do not represent an authorised or executed reserve release.
+
+## Phase 6 risk contracts
+
+`NormalizedRiskFeature` represents each of the six structural components with explicit missingness, raw and normalized values, unit, `DERIVED` truth, source/freshness state, confidence, evidence IDs, effective/fetch times, baseline fingerprint, and transformation version. `CorridorRiskResult` requires all six features and contributions and seals the full calculation with a SHA-256 fingerprint. `RiskSeverity`, `EvidenceConfidence`, and `DataCompleteness` are separate bounded value objects.
+
+`AlertResult` carries corridor/assets, severity, confidence, completeness, contributions, evidence, effective time, status, model/rule versions, explanation, and analyst guidance with `autonomous_action=false`. `BacktestResult` binds the replay library ID, classification, checksum, per-case outputs, lead time, precision, false positives, completeness, failure behavior, stability, runtime, and a runtime-independent deterministic fingerprint. Stored calculations, alerts, timelines, transitions, and backtests are append-only and restart-readable.
+
+## Phase 8 replay, LPG, analysis, and briefing contracts
+
+`ReplayManifest` and `ReplayCase` bind every validation case to its classification, generator,
+original interval, SHA-256 checksum, license, redistribution status, assumptions, invariants, and
+expected detection/plan outcomes. `ReplayRun` stores the exact case and fixture fingerprints,
+timeline, no-action and response metrics, lead time, recommendation runtime, evidence coverage, and
+structured audit status. Synthetic fixtures can never validate as live or recorded history.
+
+`LpgNetwork` uses `tonne_per_day` throughout suppliers, terminals, routes, baseline flow, and demand.
+`LpgPlan` contains only compatible, non-sanctioned, capacity-bounded allocations; the checker must
+pass mass conservation, supplier/route/terminal limits, and unit consistency. Public reserve policy
+is explicitly `NOT_APPLICABLE` and cannot be converted into a reserve recommendation.
+
+`SensitivityResult` stores mode, seed, Latin-hypercube design version, input ranges/correlations,
+sample count, median, P10/P90, best/worst samples, ranked drivers, and a versioned stability score.
+It declares that deterministic sensitivity is not calibrated probability. `BriefingExport` binds
+kind, plan/audit fingerprints, content checksum, exact metric values, truth label, and media type.
+`PlanComment` and `PlanMonitoringRecord` are immutable, server-attributed, idempotent records.

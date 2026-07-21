@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "timestamp": "2026-07-21T18:05:49.646Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "sample_frames": 120,
+  "map_fps": 39.48,
+  "frame_time_ms": {
+    "minimum": 7.3,
+    "median": 16.8,
+    "p95": 63,
+    "maximum": 412.8
+  },
+  "interaction_latency_ms": 129.459,
+  "classification": "MEASURED_LOCAL_BROWSER_REPLAY",
+  "notice": "Actual browser measurements, not an SLA or target claim."
+}

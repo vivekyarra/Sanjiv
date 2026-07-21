@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import psycopg
 import pytest
 from maritime_helpers import GEOFENCES, raw_position
 from sanjiv.maritime.contracts import VesselOperationalView
@@ -26,18 +27,42 @@ async def test_postgres_persists_and_rehydrates_vessel_history(tmp_path: Path) -
         sanctions=SanctionsMatcher().assess(observation.position),
     )
 
-    writer = PostgresMaritimeRepository(settings.database_url)
-    await writer.initialize(geofences)
-    await writer.save_observation(observation.evidence, view)
-    await writer.close()
+    try:
+        writer = PostgresMaritimeRepository(settings.database_url)
+        await writer.initialize(geofences)
+        await writer.save_observation(observation.evidence, view)
+        await writer.close()
 
-    reader = PostgresMaritimeRepository(settings.database_url)
-    await reader.initialize(geofences)
-    hydrated = await reader.latest_views()
-    history = await reader.history(observation.position.vessel_id, 100)
-    await reader.close()
+        reader = PostgresMaritimeRepository(settings.database_url)
+        await reader.initialize(geofences)
+        hydrated = await reader.latest_views()
+        history = await reader.history(observation.position.vessel_id, 100)
+        await reader.close()
 
-    assert any(item.position.vessel_id == observation.position.vessel_id for item in hydrated)
-    assert history is not None
-    assert history.positions[-1].evidence_ids == [observation.evidence.id]
-    assert history.positions[-1].confidence == 1.0
+        assert any(item.position.vessel_id == observation.position.vessel_id for item in hydrated)
+        assert history is not None
+        assert history.positions[-1].evidence_ids == [observation.evidence.id]
+        assert history.positions[-1].confidence == 1.0
+    finally:
+        database_url = settings.database_url.replace("postgresql+asyncpg", "postgresql")
+        with psycopg.connect(database_url) as connection, connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM vessel_track_segments WHERE vessel_id = %s",
+                (observation.position.vessel_id,),
+            )
+            cursor.execute(
+                "DELETE FROM geofence_events WHERE vessel_id = %s",
+                (observation.position.vessel_id,),
+            )
+            cursor.execute(
+                "DELETE FROM vessel_positions WHERE vessel_id = %s",
+                (observation.position.vessel_id,),
+            )
+            cursor.execute(
+                "DELETE FROM vessels WHERE id = %s",
+                (observation.position.vessel_id,),
+            )
+            cursor.execute(
+                "DELETE FROM evidence_records WHERE id = %s",
+                (observation.evidence.id,),
+            )
