@@ -9,13 +9,13 @@ async function capture(page: Page, name: string) {
 
 test("Observe -> Detect -> Simulate -> Optimise -> Approve -> Monitor", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByText(/Live Maritime Watch/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Live Maritime Watch", exact: true })).toBeVisible();
   await expect(page.getByText(/REPLAY|FIXTURE/).first()).toBeVisible();
+  await expect(page.getByText("PORTWATCH CURRENT", { exact: true })).toBeVisible({ timeout: 30_000 });
   await capture(page, "01-live-maritime-watch");
 
   await page.goto("/digital-twin");
-  await expect(page.getByRole("heading", { name: "Sanjiv" })).toBeVisible();
-  await expect(page.getByText(/Digital Twin/).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Digital Twin", exact: true })).toBeVisible();
   await expect(page.getByText("CONSERVED", { exact: true })).toBeVisible();
   await expect(page.getByText(/ASSUMPTION-DRIVEN REFERENCE TWIN/)).toBeVisible();
   await capture(page, "02-digital-twin");
@@ -23,6 +23,7 @@ test("Observe -> Detect -> Simulate -> Optimise -> Approve -> Monitor", async ({
   await page.goto("/risk-intelligence");
   await expect(page.getByRole("heading", { name: "Risk Intelligence" })).toBeVisible();
   await expect(page.getByText(/not disruption probability/i)).toBeVisible();
+  await expect(page.getByRole("region", { name: "Current IMF PortWatch observation" })).toBeVisible({ timeout: 30_000 });
   await capture(page, "03-risk-intelligence");
 
   await page.goto("/scenario-lab");

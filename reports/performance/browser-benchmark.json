@@ -1,19 +1,19 @@
 {
   "schema_version": "1.0",
-  "timestamp": "2026-07-21T20:07:41.898Z",
+  "timestamp": "2026-07-22T15:51:45.116Z",
   "viewport": {
     "width": 1920,
     "height": 1080
   },
   "sample_frames": 120,
-  "map_fps": 42.853,
+  "map_fps": 35.399,
   "frame_time_ms": {
-    "minimum": 7.1,
+    "minimum": 2.2,
     "median": 16.7,
-    "p95": 57.2,
-    "maximum": 201.9
+    "p95": 139.9,
+    "maximum": 417.6
   },
-  "interaction_latency_ms": 800.482,
+  "interaction_latency_ms": 412.407,
   "classification": "MEASURED_LOCAL_BROWSER_REPLAY",
   "notice": "Actual browser measurements, not an SLA or target claim."
 }

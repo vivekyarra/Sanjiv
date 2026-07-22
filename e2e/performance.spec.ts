@@ -4,7 +4,7 @@ import path from "node:path";
 
 test("measure map FPS and interaction latency without prewritten values", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByText(/Live Maritime Watch/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Live Maritime Watch", exact: true })).toBeVisible();
   const frames = await page.evaluate(async () => {
     const values: number[] = [];
     let previous = performance.now();
@@ -17,8 +17,8 @@ test("measure map FPS and interaction latency without prewritten values", async 
     return values;
   });
   const interactionStarted = performance.now();
-  await page.getByRole("link", { name: "Digital Twin" }).click();
-  await expect(page.getByRole("heading", { name: "Sanjiv" })).toBeVisible();
+  await page.getByRole("link", { name: "Network", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Digital Twin", exact: true })).toBeVisible();
   const interactionLatency = performance.now() - interactionStarted;
   const sorted = [...frames].sort((left, right) => left - right);
   const total = frames.reduce((sum, value) => sum + value, 0);
