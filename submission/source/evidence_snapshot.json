@@ -1,6 +1,6 @@
 {
   "document_date": "2026-07-22",
-  "current_commit_sha": "14a7e5deb639aeb6de4e683ec62cd22abbea0838",
+  "current_commit_sha": "de5140a4d25aa88fac001e47030fd0b11d6f4258",
   "repository_url": "https://github.com/vivekyarra/Sanjiv",
   "demo_url": "https://drive.google.com/drive/folders/1JDFeLyQOd4g74BhE63Yuh6OCGmCoaf6K?usp=sharing",
   "contact_name": "Yarra Vivek",
@@ -8,19 +8,19 @@
   "current_test_run": {
     "command": "npm test",
     "exit_code": 0,
-    "elapsed_seconds": 146.6,
+    "elapsed_seconds": 200.537,
     "python_passed": 188,
     "web_passed": 23,
     "contracts_passed": 1,
     "total_passed": 212,
     "failed": 0,
     "skipped": 0,
-    "python_elapsed_seconds": 141.38
+    "python_elapsed_seconds": 190.65
   },
   "current_e2e": {
     "status": "passed",
     "spec_tests": 2,
-    "elapsed_seconds": 15.6,
+    "elapsed_seconds": 39.7,
     "screenshots": 8,
     "viewport": "1920x1080"
   },
@@ -31,7 +31,7 @@
     "freshness_status": "CURRENT",
     "corridor_name": "Strait of Hormuz",
     "effective_date": "2026-07-19",
-    "fetched_at": "2026-07-21T19:59:54.957173Z",
+    "fetched_at": "2026-07-22T15:46:53.816614Z",
     "tanker_transits": 4,
     "total_transits": 15,
     "estimated_tanker_tonnage": 39216,
@@ -42,34 +42,34 @@
   },
   "performance_report": {
     "classification": "MEASURED_LOCAL_SYNTHETIC_FIXTURE",
-    "commit_sha": "14a7e5deb639aeb6de4e683ec62cd22abbea0838",
+    "commit_sha": "de5140a4d25aa88fac001e47030fd0b11d6f4258",
     "source_state": "CLEAN_COMMITTED",
-    "run_id": "54f808c9-c228-41cc-9662-8af1479295a6",
-    "timestamp": "2026-07-21T20:06:46.912821Z",
+    "run_id": "95dce13d-f2fc-49ad-bda6-07aa232f1545",
+    "timestamp": "2026-07-22T16:06:57.578634Z",
     "samples": 5,
     "hardware": "Windows 10 build 26200; 12 logical CPUs; Intel64 Family 6 Model 186; Python 3.11.6",
     "dataset": "19 twin nodes; 18 routes; 23 flows; 21 replay cases",
     "metrics_ms": {
-      "AIS ingest to map": {"median": 25.214, "p95": 25.214, "samples": 1},
-      "Risk scoring": {"median": 36.928, "p95": 48.208, "samples": 5},
-      "Scenario compilation": {"median": 9.541, "p95": 14.313, "samples": 5},
-      "Simulation": {"median": 63.616, "p95": 83.267, "samples": 5},
-      "Procurement optimisation": {"median": 260.506, "p95": 541.371, "samples": 5},
-      "Reserve optimisation": {"median": 180.672, "p95": 220.694, "samples": 5},
-      "Evidence audit": {"median": 53.661, "p95": 61.946, "samples": 5},
-      "Briefing export": {"median": 129.634, "p95": 296.531, "samples": 5},
-      "Signal to recommendation": {"median": 712.521, "p95": 1062.676, "samples": 5}
+      "AIS ingest to map": {"median": 24.296, "p95": 24.296, "samples": 1},
+      "Risk scoring": {"median": 47.758, "p95": 58.768, "samples": 5},
+      "Scenario compilation": {"median": 7.983, "p95": 13.711, "samples": 5},
+      "Simulation": {"median": 55.625, "p95": 77.405, "samples": 5},
+      "Procurement optimisation": {"median": 330.683, "p95": 493.029, "samples": 5},
+      "Reserve optimisation": {"median": 176.739, "p95": 214.952, "samples": 5},
+      "Evidence audit": {"median": 45.007, "p95": 62.722, "samples": 5},
+      "Briefing export": {"median": 125.802, "p95": 309.542, "samples": 5},
+      "Signal to recommendation": {"median": 775.79, "p95": 980.187, "samples": 5}
     },
-    "load": {"requests": 64, "concurrency": 8, "successful": 64, "p95_ms": 428.578},
-    "websocket_resync": {"published": 100, "queue_items_after_overflow": 10, "resync_observed": true, "p95_ms": 1.133}
+    "load": {"requests": 64, "concurrency": 8, "successful": 64, "p95_ms": 408.518},
+    "websocket_resync": {"published": 100, "queue_items_after_overflow": 10, "resync_observed": true, "p95_ms": 2.774}
   },
   "browser_report": {
     "classification": "MEASURED_LOCAL_BROWSER_REPLAY",
-    "timestamp": "2026-07-21T20:07:41.898Z",
+    "timestamp": "2026-07-22T15:51:45.116Z",
     "sample_frames": 120,
-    "map_fps": 42.853,
-    "interaction_latency_ms": 800.482,
-    "frame_time_p95_ms": 57.2
+    "map_fps": 35.399,
+    "interaction_latency_ms": 412.407,
+    "frame_time_p95_ms": 139.9
   },
   "security_report": {
     "status": "PASS",

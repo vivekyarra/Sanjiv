@@ -1067,7 +1067,7 @@ def limitations_refs(c: canvas.Canvas) -> None:
 
 
 def validate_evidence_snapshot() -> None:
-    if EVIDENCE["current_commit_sha"] != "14a7e5deb639aeb6de4e683ec62cd22abbea0838":
+    if EVIDENCE["current_commit_sha"] != "de5140a4d25aa88fac001e47030fd0b11d6f4258":
         raise RuntimeError("Unexpected final commit SHA in evidence snapshot")
     if EVIDENCE["current_test_run"]["total_passed"] != 212:
         raise RuntimeError("Unexpected current test total")
