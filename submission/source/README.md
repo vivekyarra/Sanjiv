@@ -14,10 +14,11 @@ environment containing ReportLab and Pillow:
 python submission/source/generate_sanjiv_submission.py
 ```
 
-The source deliberately labels local benchmarks as fixture/replay evidence, keeps the benchmark
-report's original commit separate from the final repository commit, and uses only real Playwright
-application screenshots from `reports/e2e/screenshots/`. Intermediate screenshot crops and rendered
-QA pages are written under `tmp/pdfs/`.
+The source deliberately labels local benchmarks as fixture/replay evidence, identifies the
+`current_commit_sha` as the product-evidence commit rather than an ambiguous repository-head claim,
+and uses only real Playwright application screenshots from `reports/e2e/screenshots/`. The submitted
+demo duration is recorded as 3 min 55 sec from the submitter's confirmation. Intermediate screenshot
+crops and rendered QA pages are written under `tmp/pdfs/`.
 
 Before regenerating after repository changes, re-verify every value in `evidence_snapshot.json`
-against the named reports and update the current commit SHA intentionally.
+against the named reports and update the product-evidence commit intentionally.

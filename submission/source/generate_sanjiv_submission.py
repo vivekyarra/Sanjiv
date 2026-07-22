@@ -353,7 +353,7 @@ def cover(c: canvas.Canvas) -> None:
 
     links = [
         link_text("GitHub repository", EVIDENCE["repository_url"], "#8EF0C2"),
-        link_text("Demo folder", EVIDENCE["demo_url"], "#8EF0C2"),
+        link_text(f"Demo ({EVIDENCE['demo_duration']})", EVIDENCE["demo_url"], "#8EF0C2"),
         link_text(EVIDENCE["contact_email"], f"mailto:{EVIDENCE['contact_email']}", "#8EF0C2"),
     ]
     para(c, "<br/>".join(links), 610, 247, 190, 70, "white_small", TA_CENTER)
@@ -361,7 +361,7 @@ def cover(c: canvas.Canvas) -> None:
     para(c, f"Submission snapshot  |  {EVIDENCE['document_date']}", 610, 350, 190, 18, "white_small", TA_CENTER)
     para(
         c,
-        f"Commit<br/><font name=\"{FONT_MONO}\">{EVIDENCE['current_commit_sha']}</font>",
+        f"Product evidence commit<br/><font name=\"{FONT_MONO}\">{EVIDENCE['current_commit_sha']}</font>",
         600,
         385,
         210,
@@ -887,24 +887,24 @@ def value_deployment(c: canvas.Canvas) -> None:
     page_base(c, 9, "Business value, scalability and deployment path")
     page_title(
         c,
-        "The value is a better decision record",
-        "The repository proves observed-source ingestion, workflow mechanics and deterministic checks on fixtures. Operational value still requires licensed history and verified operator inputs.",
+        "Business value starts with an approval-ready response package",
+        "Sanjiv gives analysts, procurement and reserve teams one shared view of what is observed, modeled or assumed before they decide. It does not claim savings that have not been measured.",
         "09  /  PATH TO USE",
     )
 
     col_w = 250
     xs = [25, 295, 565]
     rect_top(c, xs[0], 108, col_w, 206, WHITE, LINE)
-    label(c, "Decision value now", xs[0] + 14, 122, 180)
+    label(c, "Business value in the prototype", xs[0] + 14, 122, 220)
     para(
         c,
         bullet_list(
             [
-                "One immutable chain from source state to approval.",
-                "Paired no-action and response alternatives on the same frozen inputs.",
-                "Independent feasibility checks and named rejected options.",
-                "Visible assumption ownership, expiry, freshness and evidence coverage.",
-                "Audited JSON/PDF packages plus monitored replay outcomes.",
+                "One cross-functional decision package from signal to sign-off.",
+                "No-action, cost, shortage and concentration trade-offs stay on the same frozen inputs.",
+                "Feasibility checks and named rejections make choices explainable.",
+                "Evidence, assumptions, expiry and approval stay with the decision.",
+                "Replay closes the loop with a monitored outcome, not an unsupported promise.",
             ]
         ),
         xs[0] + 14,
@@ -913,13 +913,13 @@ def value_deployment(c: canvas.Canvas) -> None:
         137,
         "body_small",
     )
-    para(c, "No rupee savings, avoided-loss value or decision-time reduction was measured.", xs[0] + 14, 287, col_w - 28, 21, "tiny")
+    para(c, "No rupee savings or avoided-loss value is claimed here; a pilot needs an agreed baseline before those outcomes can be measured.", xs[0] + 14, 287, col_w - 28, 21, "tiny")
 
     rect_top(c, xs[1], 108, col_w, 206, INK, INK)
-    label(c, "Verified deployment shape", xs[1] + 14, 122, 210)
+    label(c, "Pilot-ready operating shape", xs[1] + 14, 122, 210)
     para(
         c,
-        "Docker Compose runs the same web/API images, three workers, PostgreSQL with PostGIS and TimescaleDB, Redis and MinIO for local and demo use.",
+        "A first deployment can run in shadow mode alongside existing workflows: the same web/API images, three workers, PostgreSQL with PostGIS and TimescaleDB, Redis and MinIO support local and demo operation.",
         xs[1] + 14,
         150,
         col_w - 28,
@@ -930,9 +930,9 @@ def value_deployment(c: canvas.Canvas) -> None:
         c,
         bullet_list(
             [
-                "Liveness and dependency-aware readiness",
+                "Read-only decision support before any operational integration",
                 "Source, worker and request-runtime status",
-                "Structured logs and trace-compatible identifiers",
+                "Structured logs, immutable fingerprints and review records",
                 "Backup/restore and single-dependency drills",
             ],
             EMERALD,
@@ -964,13 +964,13 @@ def value_deployment(c: canvas.Canvas) -> None:
         "body_small",
     )
 
-    label(c, "Operational adoption roadmap", 25, 343, 300)
+    label(c, "Pilot business case: how value would be measured", 25, 343, 360)
     readiness = [
-        ("01", "Replace fixtures", "Licensed recorded history and verified private/operator inputs."),
-        ("02", "Calibrate", "Out-of-sample thresholds, model weights and decision policies with domain owners."),
-        ("03", "Secure identities", "Deployment IdP, TLS edge, rotation, sessions and least privilege."),
-        ("04", "Scale and recover", "Redis fan-out, managed HA, encrypted off-site backup and multi-region drills."),
-        ("05", "Accept and govern", "Operator acceptance, data rights, model monitoring and change control."),
+        ("01", "Shadow one corridor", "One commodity, one decision cadence and no automatic execution."),
+        ("02", "Bring verified inputs", "Licensed history plus operator-approved inventory, contracts and quotes."),
+        ("03", "Measure decision quality", "Time to reviewable package, evidence completeness and unsafe plans blocked."),
+        ("04", "Prove adoption", "Operator acceptance, repeat use, governance owner and documented hand-offs."),
+        ("05", "Scale with evidence", "Only then add integration, capacity and recovery investment based on measured load."),
     ]
     for idx, (num, title, desc) in enumerate(readiness):
         x = 25 + idx * 158
@@ -980,10 +980,10 @@ def value_deployment(c: canvas.Canvas) -> None:
         para(c, desc, x + 12, 430, 120, 32, "tiny")
 
     rect_top(c, 25, 489, 791, 48, AMBER_PALE, colors.HexColor("#E4C06B"))
-    label(c, "Metrics for a real deployment - not results in this submission", 40, 499, 420)
+    label(c, "Pilot outcome measures - not results in this submission", 40, 499, 420)
     para(
         c,
-        "Shortfall reduction; incremental cost per avoided shortage unit; inventory-cover extension; refinery-utilisation recovery; supplier and corridor concentration; decision time saved. Each requires a baseline, verified input data and an agreed measurement window.",
+        "Time to an approval-ready package; evidence completeness; unsafe plans blocked; analyst and approver acceptance; shortfall reduction; incremental cost per avoided shortage unit; inventory-cover extension. Each requires a baseline, verified inputs and an agreed measurement window.",
         40,
         514,
         758,
@@ -1046,7 +1046,7 @@ def limitations_refs(c: canvas.Canvas) -> None:
     para(
         c,
         f"<b>Repository</b><br/>{link_text(EVIDENCE['repository_url'], EVIDENCE['repository_url'], '#8EF0C2')}<br/><br/>"
-        f"<b>Demo</b><br/>{link_text(EVIDENCE['demo_url'], EVIDENCE['demo_url'], '#8EF0C2')}",
+        f"<b>Demo ({EVIDENCE['demo_duration']})</b><br/>{link_text(EVIDENCE['demo_url'], EVIDENCE['demo_url'], '#8EF0C2')}",
         125,
         449,
         430,
@@ -1056,7 +1056,7 @@ def limitations_refs(c: canvas.Canvas) -> None:
     para(
         c,
         f"<b>Author</b><br/>{escape(EVIDENCE['contact_name'])}<br/>{link_text(EVIDENCE['contact_email'], 'mailto:' + EVIDENCE['contact_email'], '#8EF0C2')}<br/><br/>"
-        f"<b>Application commit</b><br/><font name=\"{FONT_MONO}\">{EVIDENCE['current_commit_sha']}</font>",
+        f"<b>Product evidence commit</b><br/><font name=\"{FONT_MONO}\">{EVIDENCE['current_commit_sha']}</font>",
         575,
         449,
         220,
@@ -1069,6 +1069,8 @@ def limitations_refs(c: canvas.Canvas) -> None:
 def validate_evidence_snapshot() -> None:
     if EVIDENCE["current_commit_sha"] != "de5140a4d25aa88fac001e47030fd0b11d6f4258":
         raise RuntimeError("Unexpected final commit SHA in evidence snapshot")
+    if EVIDENCE["demo_duration"] != "3 min 55 sec":
+        raise RuntimeError("Unexpected submitted demo duration in evidence snapshot")
     if EVIDENCE["current_test_run"]["total_passed"] != 212:
         raise RuntimeError("Unexpected current test total")
     required = [
