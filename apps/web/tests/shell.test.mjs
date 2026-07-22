@@ -5,7 +5,8 @@ import fs from "node:fs";
 test("shell uses final product branding", () => {
   const page = fs.readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
   const watch = fs.readFileSync(new URL("../components/MaritimeWatch.tsx", import.meta.url), "utf8");
-  const renderedShell = `${page}\n${watch}`;
+  const shell = fs.readFileSync(new URL("../components/AppShell.tsx", import.meta.url), "utf8");
+  const renderedShell = `${page}\n${watch}\n${shell}`;
   assert.match(renderedShell, /Sanjiv/);
   assert.match(renderedShell, /Keep India’s energy moving\./);
   assert.match(renderedShell, /REPLAY — NOT LIVE DATA/);

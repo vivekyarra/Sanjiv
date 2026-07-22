@@ -222,7 +222,7 @@ export function ScenarioLab() {
         <div className="brand-lockup">
           <span className="brand-mark">S</span>
           <div>
-            <h1>Sanjiv</h1>
+            <h1>Scenario Lab</h1>
             <p>India&apos;s Energy Resilience Command Center · Scenario Lab</p>
             <small>Keep India&apos;s energy moving.</small>
           </div>

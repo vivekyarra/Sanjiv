@@ -241,7 +241,7 @@ export function MaritimeWatch() {
         <div className="brand-lockup">
           <span className="brand-mark">S</span>
           <div>
-            <h1>Sanjiv</h1>
+            <h1>Live Maritime Watch</h1>
             <p>India’s Energy Resilience Command Center · Live Maritime Watch</p>
             <small>Keep India’s energy moving.</small>
           </div>

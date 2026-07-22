@@ -44,6 +44,7 @@ export function DigitalTwin() {
         ASSUMPTION-DRIVEN REFERENCE TWIN — NOT LIVE OPERATIONAL DATA
       </div>
       <header className="command-header twin-header">
+        <h1 className="standalone-title">Digital Twin</h1>
         <div className="brand-lockup">
           <span className="brand-mark">S</span>
           <div><h1>Sanjiv</h1><p>India&apos;s Energy Resilience Command Center · Digital Twin</p><small>Keep India&apos;s energy moving.</small></div>
